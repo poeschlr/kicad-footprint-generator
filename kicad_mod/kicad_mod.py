@@ -139,9 +139,9 @@ class KicadMod(object):
         output = '  (fp_text {which_text} {text} '.format(which_text=data['which_text']
                                                          ,text=data['text'])
         output += self._savePosition(data['position'], 'at')
-        output += ' (layer {layer})\r\n'.format(layer=data['layer'])
-        output += '    (effects (font (size 1 1) (thickness 0.15)))\r\n'
-        output += '  )\r\n'
+        output += ' (layer {layer})\n'.format(layer=data['layer'])
+        output += '    (effects (font (size 1 1) (thickness 0.15)))\n'
+        output += '  )\n'
         
         return output
 
@@ -151,7 +151,7 @@ class KicadMod(object):
         output += self._savePosition(data['start']['position'], 'start')
         output += ' '
         output += self._savePosition(data['end']['position'], 'end')
-        output += ' (layer {layer}) (width {width}))\r\n'.format(layer=data['layer']
+        output += ' (layer {layer}) (width {width}))\n'.format(layer=data['layer']
                                                                 ,width=data['width'])
         return output
 
@@ -166,7 +166,7 @@ class KicadMod(object):
                      ,'y':data['position']['y']+data['dimensions']['y']}
         
         output += self._savePosition(dimensions, 'end')
-        output += ' (layer {layer}) (width {width}))\r\n'.format(layer=data['layer']
+        output += ' (layer {layer}) (width {width}))\n'.format(layer=data['layer']
                                                                 ,width=data['width'])
         return output
 
@@ -179,7 +179,7 @@ class KicadMod(object):
         output += ' '
         output += self._saveSize(data['size'], 'size')
         output += ' (drill {drill}) '.format(drill=data['drill'])
-        output += '(layers ' + ' '.join(data['layers']) + '))\r\n'
+        output += '(layers ' + ' '.join(data['layers']) + '))\n'
         return output
 
 
@@ -187,16 +187,16 @@ class KicadMod(object):
         '''
         generate kicad_mod content
         '''
-        output = '(module {name} (layer F.Cu) (tedit {timestamp:X})\r\n'.format(name=self.module_name, timestamp=int(time.time()))
+        output = '(module {name} (layer F.Cu) (tedit {timestamp:X})\n'.format(name=self.module_name, timestamp=int(time.time()))
 
         if self.description:
-            output += '  (descr "{description}")\r\n'.format(description=self.description)
+            output += '  (descr "{description}")\n'.format(description=self.description)
 
         if self.tags:
-            output += '  (tags "{tags}")\r\n'.format(tags=self.tags)
+            output += '  (tags "{tags}")\n'.format(tags=self.tags)
 
         if self.attribute:
-            output += '  (attr {attr})\r\n'.format(attr=self.attribute)
+            output += '  (attr {attr})\n'.format(attr=self.attribute)
 
         for text in self.text_array:
             output += self._saveText(text)
