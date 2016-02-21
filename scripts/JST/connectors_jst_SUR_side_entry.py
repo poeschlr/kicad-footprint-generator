@@ -15,29 +15,30 @@ from kicad_mod import KicadMod, createNumberedPadsSMD
 
 #pincount = int(args.pincount[0])
 
-for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
+pad_spacing = 0.8
 
-    pad_spacing = 1
+for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
+
     start_pos_x = -(pincount-1)*pad_spacing/2
     end_pos_x = (pincount-1)*pad_spacing/2
 
-    pad_w = 0.6
-    pad_h = 1.4
+    pad_w = 0.5
+    pad_h = 1.0
 
-    B = 2.8 + pincount
-    A = (pincount - 1) * 1.0
+    B = 3 + (pincount - 1) * pad_spacing
+    A = (pincount - 1) * pad_spacing
 
-    jst_name = "SM{pincount:02}B-SHLS-TF".format(pincount=pincount)
+    jst_name = "SM{pincount:02}B-SURS-TF".format(pincount=pincount)
 
     # SMT type shrouded header, Side entry type (normal type)
-    footprint_name = "JST_SHL_" + jst_name + "_{pincount:02}x1.00mm_Angled_SMT".format(pincount=pincount)
+    footprint_name = "JST_SUR_" + jst_name + "_{pincount:02}x0.80mm_Angled_SMT".format(pincount=pincount)
 
     kicad_mod = KicadMod(footprint_name)
-    kicad_mod.setDescription("JST SHL series connector, " + jst_name) 
+    kicad_mod.setDescription("JST SUR series connector, " + jst_name) 
     kicad_mod.setAttribute('smd')
-    kicad_mod.setTags('connector jst SHL SMT side horizontal entry 1.0mm pitch')
+    kicad_mod.setTags('connector jst SUR SMT side horizontal entry 0.80mm pitch')
 
-    kicad_mod.setCenterPos({'x':0, 'y':-3.1125})
+    kicad_mod.setCenterPos({'x':0, 'y':-1.675})
 
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-6.5}, 'F.SilkS')
@@ -51,8 +52,8 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
     createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, {'x':pad_w,'y':pad_h}, -4.675)
 
     #add mounting pads (no number)
-    mpad_w = 1.0
-    mpad_h = 2.0
+    mpad_w = 1.2
+    mpad_h = 1.7
     mpad_x = (B/2) - (mpad_w/2)
     mpad_y = -0.7 - 1.7/2
 
