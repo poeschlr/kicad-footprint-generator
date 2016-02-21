@@ -32,6 +32,10 @@ class KicadMod(object):
         self.tags = None
         self.attribute = None
         self.center_pos = {'x':0, 'y':0}
+        self.model_pos = {'x':0, 'y':0,'z':0}
+        self.model_scale = {'x':1,'y':1,'z':1}
+        self.model_rot = {'x':0,'y':0,'z':0}
+        self.model = None
 
 
     def setModuleName(self, name):
@@ -181,8 +185,18 @@ class KicadMod(object):
         output += ' (drill {drill}) '.format(drill=data['drill'])
         output += '(layers ' + ' '.join(data['layers']) + '))\n'
         return output
-
-
+        
+    def _saveModel(self):
+        
+        #model path
+        output = "(model {model}\n".format(model=self.model)
+        #model position
+        output += "\t(at (xyz {x} {y} {z}))\n".format(x=self.model_pos['x'],y=self.model_pos['y'],z=self.model_pos['z'])
+        output += "\t(scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
+        output += "\t(rotate (xyz {x} {y} {z})))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
+            
+        return output
+        
     def __str__(self):
         '''
         generate kicad_mod content
@@ -209,6 +223,10 @@ class KicadMod(object):
 
         for pad in self.pad_array:
             output += self._savePad(pad)
+            
+        if (self.model):
+            
+            output += self._saveModel()
 
         output = output + ')'
 
