@@ -27,8 +27,8 @@ for pincount in range(2,16):
     kicad_mod.setTags(tags)
 
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':2.5}, 'F.SilkS')
-    kicad_mod.addText('value', footprint_name, {'x':0, 'y':4}, 'F.Fab')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':3.5}, 'F.SilkS')
+    kicad_mod.addText('value', footprint_name, {'x':0, 'y':5}, 'F.Fab')
     
     drill = 0.6
 
@@ -42,9 +42,9 @@ for pincount in range(2,16):
     B = A + 2.9
     
     x1 = -(B-A) / 2
-    y1 = -2.2
+    y1 = -4.5
     x2 = x1 + B
-    y2 = 1.2
+    y2 = y1 + 5.4
     
     #line offset 
     off = 0.1
@@ -55,75 +55,40 @@ for pincount in range(2,16):
     x2 += off
     y2 += off
     
+    #y offset from pins 'q'
+    q = -0.3
+    
+    #x offset from border w
+    w = 0.55
+    
+    #outline size o
+    o = 0.15
+    
     #draw the main outline around the footprint
-    kicad_mod.addRectLine({'x':x1,'y':y1},{'x':x2,'y':y2})
-    
-    #add pin-1 marker
-    
-    xm = 0
-    ym = -2.8
-    
-    m = 0.3
-    
-    kicad_mod.addPolygoneLine([{'x':xm,'y':ym},
-                               {'x':xm - m,'y':ym - 2 * m},
-                               {'x':xm + m,'y':ym - 2 * m},
-                               {'x':xm,'y':ym}])
+    kicad_mod.addPolygoneLine([{'x':-0.2*pitch,'y':y2-o},
+                               {'x':-0.2*pitch,'y':y2},
+                               {'x':x1,'y':y2},
+                               {'x':x1,'y':y1},
+                               {'x':x2,'y':y1},
+                               {'x':x2,'y':y2},
+                               {'x':(pincount -1 + 0.2) * pitch,'y':y2},
+                               {'x':(pincount -1 + 0.2) * pitch,'y':y2-o}])
                                
-    #side-wall thickness S
+    #line across the middle
+    py = -2.5
+    kicad_mod.addLine({'x':x1+w,'y':py},{'x':x2-w,'y':py})
+    kicad_mod.addLine({'x':x1+w,'y':py+1.5},{'x':x2-w,'y':py+1.5})
     
-    S = 0.5
+    kicad_mod.addLine({'x':x1+w,'y':y1},{'x':x1+w,'y':y2})
+    kicad_mod.addLine({'x':x2-w,'y':y1},{'x':x2-w,'y':y2})
+    #add picture of pins
     
-    #bottom line
-    kicad_mod.addPolygoneLine([{'x':x1,'y':0},
-                               {'x':x1+S,'y':0},
-                               {'x':x1+S,'y':y2-S},
-                               {'x':x2-S,'y':y2-S},
-                               {'x':x2-S,'y':0},
-                               {'x':x2,'y':0}])
-                               
-    #left mark
-    
-    #gap g
-    g = 0.75
-    
-    kicad_mod.addPolygoneLine([{'x':x1,'y':-g},
-                               {'x':x1+S,'y':-g},
-                               {'x':x1+S,'y':y1+S*1.5},
-                               {'x':x1+2*S,'y':y1+S*1.5},
-                               {'x':x1+2*S,'y':y1}])
-    
-    kicad_mod.addPolygoneLine([{'x':x2,'y':-g},
-                               {'x':x2-S,'y':-g},
-                               {'x':x2-S,'y':y1+S*1.5},
-                               {'x':x2-2*S,'y':y1+S*1.5},
-                               {'x':x2-2*S,'y':y1}])
-                               
-    #middle line
-    kicad_mod.addPolygoneLine([{'x':x1+2*S,'y':y1+1.5*S},
-                               {'x':0.2*pitch,'y':y1+1.5*S},
-                               {'x':0.2*pitch,'y':y1+0.5*S},
-                               {'x':0.8*pitch,'y':y1+0.5*S},
-                               {'x':0.8*pitch,'y':y1+1.5*S},
-                               {'x':A-0.8*pitch,'y':y1+1.5*S},
-                               {'x':A-0.8*pitch,'y':y1+0.5*S},
-                               {'x':A-0.2*pitch,'y':y1+0.5*S},
-                               {'x':A-0.2*pitch,'y':y1+1.5*S},
-                               {'x':x2-2*S,'y':y1+1.5*S}])
-    
-    """
-    #add pictures of pins
+     #add pictures of pins
     #pin-width w
     #pin-length l
-    w = 0.32
-    l = 3.5
-    
-    py = -2.5
-    
-    kicad_mod.addLine({'x':x1+T,'y':py},{'x':x2-T,'y':py})
-    
-    kicad_mod.addLine({'x':x1+T,'y':py+1},{'x':x2-T,'y':py+1})
-    
+    w = 0.15
+    l = 1.5
+   
     for p in range(pincount):
         
         px = p * pitch
@@ -135,9 +100,27 @@ for pincount in range(2,16):
                                    {'x': px+w,'y': py-l+0.25*w},
                                    {'x': px+w,'y': py},
                                    {'x': px,'y': py}])
+                                   
+        #add outline around pins
+        
+        if (p > 0):
+            kicad_mod.addPolygoneLine([{'x':px-0.8*pitch,'y':y2-o},
+                                       {'x':px-0.8*pitch,'y':y2},
+                                       {'x':px-0.2*pitch,'y':y2},
+                                       {'x':px-0.2*pitch,'y':y2-o}])
+        
+    #add pin-1 marker
     
+    xm = 0
+    ym = 1.5
     
-    """           
+    m = 0.3
+    
+    kicad_mod.addPolygoneLine([{'x':xm,'y':ym},
+                               {'x':xm - m,'y':ym + 2 * m},
+                               {'x':xm + m,'y':ym + 2 * m},
+                               {'x':xm,'y':ym}])
+                               
     #add a courtyard
     cy = 0.5
     
@@ -153,6 +136,7 @@ for pincount in range(2,16):
         xOff = (pincount / 2) * pitch
         
     kicad_mod.model_pos['x'] = xOff / 25.4
+    kicad_mod.model_pos['y'] = 1.8 / 25.4
     kicad_mod.model_rot['z'] = 180
     
     # output kicad model

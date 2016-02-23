@@ -11,7 +11,7 @@ pitch = 2.50
 
 for pincount in range(2,16):
 
-    jst = "S{pincount:01}B-EH".format(pincount=pincount)
+    jst = "S{pincount:02}B-EH".format(pincount=pincount)
     
     # Through-hole type shrouded header, side entry type
     footprint_name = "JST_EH_" + jst + "_{pincount:02}x2.50mm_Angled_PTH".format(pincount=pincount)
