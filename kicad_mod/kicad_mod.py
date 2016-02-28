@@ -20,7 +20,9 @@ import time
 def getFormatedFloat(val):
     return ('%f' % val).rstrip('0').rstrip('.')
 
-
+def grid(val, spacing = 0.05):
+    return int(val/spacing) * spacing
+    
 class KicadMod(object):
     def __init__(self, name):
         self.setModuleName(name)
