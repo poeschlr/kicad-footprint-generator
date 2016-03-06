@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import os
 sys.path.append(r'''C:\kicad\fp-gen\kicad_mod''') # load kicad_mod path
 
 #import argparse
@@ -31,14 +32,14 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     jst_name = "SM{pincount:02}B-SURS-TF".format(pincount=pincount)
 
     # SMT type shrouded header, Side entry type (normal type)
-    footprint_name = "JST_SUR_" + jst_name + "_{pincount:02}x0.80mm_Angled_SMT".format(pincount=pincount)
+    footprint_name = "JST_SUR_" + jst_name + "_{pincount:02}x0.80mm_Angled".format(pincount=pincount)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST SUR series connector, " + jst_name) 
     kicad_mod.setAttribute('smd')
     kicad_mod.setTags('connector jst SUR SMT side horizontal entry 0.80mm pitch')
 
-    kicad_mod.setCenterPos({'x':0, 'y':-1.675})
+    kicad_mod.setCenterPos({'x':0, 'y':-3.125}) #-1.675})
 
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-6.5}, 'F.SilkS')
@@ -53,9 +54,9 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
 
     #add mounting pads (no number)
     mpad_w = 1.2
-    mpad_h = 1.7
+    mpad_h = 1.75
     mpad_x = (B/2) - (mpad_w/2)
-    mpad_y = -0.7 - 1.7/2
+    mpad_y = -0.7 - 1.7/2 - 0.025
 
     kicad_mod.addPad('""', 'smd', 'rect', {'x':mpad_x, 'y':mpad_y}, {'x':mpad_w, 'y':mpad_h}, 0, ['F.Cu', 'F.Paste', 'F.Mask'])
     kicad_mod.addPad('""', 'smd', 'rect', {'x':-mpad_x, 'y':mpad_y}, {'x':mpad_w, 'y':mpad_h}, 0, ['F.Cu', 'F.Paste', 'F.Mask'])
@@ -78,7 +79,7 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
 
     #add designator for pin #1
 
-    x1 = -B/2 + 1   
+    x1 = -B/2 + 1 - 0.3  
                               
     y1 = -4.9
 
@@ -101,8 +102,8 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     cx1 = int(cx1/0.05) * 0.05
     cx2 = int(cx2/0.05) * 0.05
     
-    cy1 = int(cy1/0.05) * 0.05 - 0.0625
-    cy2 = int(cy2/0.05) * 0.05 + 0.0375
+    cy1 = int(cy1/0.05) * 0.05 - 0.0625  - 0.3125 + 0.4
+    cy2 = int(cy2/0.05) * 0.05 + 0.0375 - 0.0125
     
     kicad_mod.addRectLine({'x':cx1,'y':cy1},{'x':cx2,'y':cy2},'F.CrtYd',0.05)
 
