@@ -11,7 +11,7 @@ pitch = 1.20
 
 manu = "Molex_Pico-EZmate"
 
-suffix = "Angled_SMT"
+suffix = "Angled"
 
 
 for pincount in range(2,8):

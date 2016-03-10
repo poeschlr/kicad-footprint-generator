@@ -9,7 +9,7 @@ pitch = 1.50
 
 manu = "Molex_Pico-Lock"
 
-suffix = "Angled_SMT"
+suffix = "Angled"
 
 
 for pincount in [4,6,7,8,10,12]:

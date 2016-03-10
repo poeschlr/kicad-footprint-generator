@@ -14,7 +14,7 @@ for pincount in range(2,16):
     jst = "S{pincount:02}B-EH".format(pincount=pincount)
     
     # Through-hole type shrouded header, side entry type
-    footprint_name = "JST_EH_" + jst + "_{pincount:02}x2.50mm_Angled_PTH".format(pincount=pincount)
+    footprint_name = "JST_EH_" + jst + "_{pincount:02}x2.50mm_Angled".format(pincount=pincount)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST EH series connector, " + jst + ", 2.50mm pitch, side entry")

@@ -30,7 +30,7 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
     jst_name = "SM{pincount:02}B-SHLS-TF".format(pincount=pincount)
 
     # SMT type shrouded header, Side entry type (normal type)
-    footprint_name = "JST_SHL_" + jst_name + "_{pincount:02}x1.00mm_Angled_SMT".format(pincount=pincount)
+    footprint_name = "JST_SHL_" + jst_name + "_{pincount:02}x1.00mm_Angled".format(pincount=pincount)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST SHL series connector, " + jst_name) 

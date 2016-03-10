@@ -10,7 +10,7 @@ pitch = 1.25
 manu = "Molex"
 series = "Panelmate"
 
-suffix = "Angled_SMT"
+suffix = "Angled"
 
 
 for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:

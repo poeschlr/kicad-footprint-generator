@@ -34,7 +34,7 @@ for pincount in range(2,16):
     jst_name = "BM{pincount:02}B-GHS-TBT".format(pincount=pincount)
 
     # SMT type shrouded header,
-    footprint_name = "JST_GH_" + jst_name + "_{pincount:02}x1.25mm_Straight_SMT".format(pincount=pincount)
+    footprint_name = "JST_GH_" + jst_name + "_{pincount:02}x1.25mm_Straight".format(pincount=pincount)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST GH series connector, " + jst_name + ", top entry type") 

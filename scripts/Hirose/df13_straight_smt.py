@@ -11,7 +11,7 @@ pitch = 1.25
 
 manu = "Hirose"
 
-suffix = "Straight_SMT"
+suffix = "Straight"
 
 desc = "Hirose DF13 series connector, 1.25mm pitch, top entry SMT"
 tags = "connector hirose df13 top straight vertical surface mount SMD SMT"

@@ -11,7 +11,7 @@ pitch = 1.25
 
 manu = "Hirose"
 
-suffix = "Angled_PTH"
+suffix = "Angled"
 
 desc = "Hirose DF13 DS series connector, 1.25mm pitch, side entry PTH"
 tags = "connector hirose df13 side angled horizontal through thru hole"

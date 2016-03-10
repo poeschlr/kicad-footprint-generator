@@ -11,7 +11,7 @@ pitch = 1.25
 
 manu = "Hirose"
 
-suffix = "Straight_PTH"
+suffix = "Straight"
 
 desc = "Hirose DF13 series connector, 1.25mm pitch, top entry PTH"
 tags = "connector hirose df13 top straight vertical through thru hole"
