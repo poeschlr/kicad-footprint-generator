@@ -77,7 +77,6 @@ class KicadMod(object):
     def addValue(self, text, position, layer='F.Fab'):
         self.addText('value', text, position, layer)
 
-
     def addRawLine(self, data):
         self.line_array.append(data)
 
@@ -122,6 +121,16 @@ class KicadMod(object):
     def addPad(self, number, type, form, position, size, drill, layers=['*.Cu', '*.Mask', 'F.SilkS']):
         self.addRawPad({'number':number, 'type':type, 'form':form, 'position':position, 'size':size, 'drill':drill, 'layers':layers})
 
+    def addMountingHole(self, position, size):
+        self.addRawPad({
+            'number': '""',
+            'type': "np_thru_hole",
+            'form': "circle",
+            'position': position,
+            'size': {'x': size, 'y': size}  ,
+            'drill': size,
+            'layers': ["*.Cu"]
+        })
 
     def _savePosition(self, position, keyword='at'):
         if position.get('orientation', 0) != 0:
@@ -235,15 +244,17 @@ class KicadMod(object):
         return output
 
 
-def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size):
-    for pad_number in range(1, pincount+1):
-        pad_pos_x = (pad_number-1)*pad_spacing
+
+#create 
+def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size, x_off=0, y_off=0, starting=1, increment=1):
+    for i,pad_number in enumerate(range(starting, starting + (pincount * increment), increment)):
+        pad_pos_x = (i)*pad_spacing + x_off
         if pad_number == 1:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':0}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
         elif pad_size['x'] == pad_size['y']:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'circle', {'x':pad_pos_x, 'y':0}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'circle', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
         else:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':0}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
 
 
 def createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, pad_size, pad_pos_y):
