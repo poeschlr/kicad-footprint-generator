@@ -215,9 +215,9 @@ class KicadMod(object):
         #model path
         output = "(model {model}\n".format(model=self.model)
         #model position
-        output += "\t(at (xyz {x} {y} {z}))\n".format(x=self.model_pos['x'],y=self.model_pos['y'],z=self.model_pos['z'])
-        output += "\t(scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
-        output += "\t(rotate (xyz {x} {y} {z})))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
+        output += "  (at (xyz {x} {y} {z}))\n".format(x=self.model_pos['x'],y=self.model_pos['y'],z=self.model_pos['z'])
+        output += "  (scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
+        output += "  (rotate (xyz {x} {y} {z})))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
             
         return output
         
@@ -252,11 +252,9 @@ class KicadMod(object):
             
             output += self._saveModel()
 
-        output = output + ')'
+        output = output + '\n)'
 
         return output
-
-
 
 #create 
 def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size, x_off=0, y_off=0, starting=1, increment=1):
