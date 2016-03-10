@@ -256,9 +256,17 @@ class KicadMod(object):
 
         return output
 
-#create 
-def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size, x_off=0, y_off=0, starting=1, increment=1):
+"""
+Create THT pads in a horizontal sequence, with the first pin located at the given position
+- Default position is (0,0)
+- Pin-1 is rectangular, all others are oval
+- Default starting number is 1, but can be set to another value
+- Default numbering increment is 1, but can be set to another value
+- Individual pins can be skipped by placing their numbers in the 'skip' kwarg
+"""
+def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size, x_off=0, y_off=0, starting=1, increment=1, skip=[]):
     for i,pad_number in enumerate(range(starting, starting + (pincount * increment), increment)):
+        if pad_number in skip: continue
         pad_pos_x = (i)*pad_spacing + x_off
         if pad_number == 1:
             kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
@@ -267,9 +275,17 @@ def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_si
         else:
             kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
 
-
-def createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, pad_size, pad_pos_y):
-    start_pos_x = -(pincount-1)*pad_spacing/2.
-    for pad_number in range(1, pincount+1):
-        pad_pos_x = start_pos_x+(pad_number-1)*pad_spacing
+"""
+Create SMD pads in a horizontal sequence, with the line of pads centered at the given position
+- Default position is (0, pad_pos_y)
+- Can give a different x_offset with x_off (default 0)
+- Default starting number is 1, but can be set to another value
+- Default numbering increment is 1, but can be set to another value
+- Individual pads can be skipped by placing their numbers in the 'skip' kwarg
+"""
+def createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, pad_size, pad_pos_y, x_off=0, starting=1, increment=1, skip=[]):
+    start_pos_x = -(pincount-1)*pad_spacing/2. + x_off
+    for i,pad_number in enumerate(range(starting, starting + (pincount * increment), increment)):
+        if pad_number in skip: continue
+        pad_pos_x = start_pos_x+(i-1)*pad_spacing
         kicad_mod.addPad(pad_number, 'smd', 'rect', {'x':pad_pos_x, 'y':pad_pos_y}, pad_size, 0, ['F.Cu', 'F.Paste', 'F.Mask'])
