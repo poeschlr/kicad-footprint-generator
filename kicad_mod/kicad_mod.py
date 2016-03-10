@@ -121,6 +121,19 @@ class KicadMod(object):
     def addPad(self, number, type, form, position, size, drill, layers=['*.Cu', '*.Mask', 'F.SilkS']):
         self.addRawPad({'number':number, 'type':type, 'form':form, 'position':position, 'size':size, 'drill':drill, 'layers':layers})
 
+    #create an un-numbered SMD mounting pad
+    def addMountingPad(self, position, size):
+        self.addRawPad({
+            'number': '""',
+            'type': 'smd',
+            'form': 'rect',
+            'position': position,
+            'size': size,
+            'drill': 0,
+            'layers': ["F.Cu","F.Paste","F.Mask"]
+        })
+      
+    #create an un-numbered NPTH mechanical mounting pad
     def addMountingHole(self, position, size):
         self.addRawPad({
             'number': '""',
