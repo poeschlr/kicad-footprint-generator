@@ -54,6 +54,7 @@ for pincount in range(2,17):
 
     # create odd numbered pads
     createNumberedPadsTHT(kicad_mod, ceil(pincount/2), pitch * 2, drill, {'x':dia, 'y':dia},  increment=2)
+    #create even numbered pads
     createNumberedPadsTHT(kicad_mod, floor(pincount/2), pitch * 2, drill, {'x':dia, 'y':dia}, starting=2, increment=2, y_off=y_spacing, x_off=pitch)
 
     #add mounting holes
