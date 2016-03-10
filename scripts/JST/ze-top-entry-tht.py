@@ -16,7 +16,10 @@ pitch = 1.5
 #Boss or Noss?
 boss = True
 
-for pincount in range(3,17):
+minPins = 3
+
+if boss: minPins = 2
+for pincount in range(minPins,17):
 
     if boss:
         suffix="1D"
