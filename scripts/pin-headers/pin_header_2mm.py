@@ -20,9 +20,9 @@ for rows in [1,2]:
 
         kicad_mod = KicadMod(footprint_name)
         
-        if (rows == 1):
+        if rows == 1:
             rlabel = "single"
-        elif (rows == 2):
+        elif rows == 2:
             rlabel = "double"
         
         kicad_mod.setDescription("Through hole pin header, {rows}x{pincount:02}, 2.00mm pitch, ".format(rows=rows,pincount=pincount) + rlabel + " row")
@@ -40,7 +40,7 @@ for rows in [1,2]:
                 
                 num = r + 1 + (p * rows)
                 
-                if (num == 1): type = "rect"
+                if num == 1: type = "rect"
                 else: type = "circle"
                 
                 kicad_mod.addPad(num, "thru_hole", type, {'x':X,'y':Y}, {'x':size,'y':size}, drill, ['*.Cu', '*.Mask'])
@@ -52,10 +52,10 @@ for rows in [1,2]:
         x2 = (rows - 1) * pitch + 1
         y2 = (pincount - 1) * pitch + 1
         
-        if (rows == 1):
+        if rows == 1:
             kicad_mod.addPolygoneLine([{'x':x1,'y':y1 + pitch},{'x':x2,'y':y1+pitch}])
             
-        elif (rows == 2):
+        elif rows == 2:
             kicad_mod.addPolygoneLine([{'x':x1,'y':y1 + pitch},
                                        {'x':x1 + pitch,'y':y1+pitch},
                                        {'x':x1 + pitch,'y':y1},
@@ -88,10 +88,10 @@ for rows in [1,2]:
         #add the model
         kicad_mod.model = "Pin_Headers.3dshapes/" + footprint_name + ".wrl"
         kicad_mod.model_rot['z'] = 90
-        if (rows == 2):
+        if rows == 2:
             kicad_mod.model_pos['x'] = pitch * 0.5 / 25.4
             
-        if (pincount % 2 == 0): #even
+        if pincount % 2 == 0: #even
             kicad_mod.model_pos['y'] = -(pincount / 2 - 0.5) * pitch / 25.4
         else:
             kicad_mod.model_pos['y'] = -(pincount / 2) * pitch / 25.4

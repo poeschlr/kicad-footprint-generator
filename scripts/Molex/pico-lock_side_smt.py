@@ -124,10 +124,6 @@ for pincount in [4,6,7,8,10,12]:
     
     xOff = 0
     yOff = 2.4
-    #if (pincount % 2 == 0): #even
-    #    xOff = (pincount / 2 - 0.5) * pitch
-    #else:
-    #    xOff = (pincount / 2) * pitch
         
     kicad_mod.model_pos['x'] = xOff / 25.4
     kicad_mod.model_pos['y'] = yOff / 25.4

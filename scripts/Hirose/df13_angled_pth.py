@@ -103,7 +103,7 @@ for pincount in range(2,16):
                                    
         #add outline around pins
         
-        if (p > 0):
+        if p > 0:
             kicad_mod.addPolygoneLine([{'x':px-0.8*pitch,'y':y2-o},
                                        {'x':px-0.8*pitch,'y':y2},
                                        {'x':px-0.2*pitch,'y':y2},
@@ -130,7 +130,7 @@ for pincount in range(2,16):
     
     #shift the model along
     
-    if (pincount % 2 == 0): #even
+    if pincount % 2 == 0: #even
         xOff = (pincount / 2 - 0.5) * pitch
     else:
         xOff = (pincount / 2) * pitch

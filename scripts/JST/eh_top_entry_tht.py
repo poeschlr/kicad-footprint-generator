@@ -93,7 +93,7 @@ for pincount in range(2,16):
     
     #shift the model along
     
-    if (pincount % 2 == 0): #even
+    if pincount % 2 == 0: #even
         xOff = (pincount / 2 - 0.5) * pitch
     else:
         xOff = (pincount / 2) * pitch

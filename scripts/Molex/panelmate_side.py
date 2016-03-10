@@ -129,7 +129,7 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     
     xOff = 0
     yOff = -1
-    #if (pincount % 2 == 0): #even
+    #if pincount % 2 == 0: #even
     #    xOff = (pincount / 2 - 0.5) * pitch
     #else:
     #    xOff = (pincount / 2) * pitch

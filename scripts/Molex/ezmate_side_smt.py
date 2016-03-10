@@ -18,7 +18,7 @@ for pincount in range(2,8):
 
     part = "78181-"
 
-    if (pincount < 6):
+    if pincount < 6:
         part += "00"
     else:
         part += "50"
@@ -179,11 +179,7 @@ for pincount in range(2,8):
     
     xOff = 0
     yOff = 2.1
-    #if (pincount % 2 == 0): #even
-    #    xOff = (pincount / 2 - 0.5) * pitch
-    #else:
-    #    xOff = (pincount / 2) * pitch
-        
+    
     kicad_mod.model_pos['x'] = xOff / 25.4
     kicad_mod.model_pos['y'] = yOff / 25.4
     #kicad_mod.model_rot['z'] = 180

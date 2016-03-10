@@ -24,6 +24,7 @@ for pincount in [5]: #range(2,16):
     kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-5}, 'F.SilkS')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':4}, 'F.Fab')
 
+    #TODO 
     # create Silkscreen
     """
     kicad_mod.addRectLine({'x':-1.95, 'y':2.8}, {'x':(pincount-1)*2+1.95, 'y':-1.7}, 'F.SilkS', 0.15)
@@ -67,7 +68,7 @@ for pincount in [5]: #range(2,16):
     
     drill = 1
     
-    if (pincount > 2): drill = 0.9
+    if pincount > 2: drill = 0.9
 
     dia = 2
     

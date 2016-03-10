@@ -20,9 +20,9 @@ for rows in [1,2]:
 
         kicad_mod = KicadMod(footprint_name)
         
-        if (rows == 1):
+        if rows == 1:
             rlabel = "single"
-        elif (rows == 2):
+        elif rows == 2:
             rlabel = "double"
         
         kicad_mod.setDescription("Through hole socket strip, {rows}x{pincount:02}, 2.00mm pitch, ".format(rows=rows,pincount=pincount) + rlabel + " row")
@@ -54,10 +54,10 @@ for rows in [1,2]:
         x2 = (rows - 1) * pitch + 1
         y2 = (pincount - 1) * pitch + 1
         
-        if (rows == 1):
+        if rows == 1:
             kicad_mod.addPolygoneLine([{'y':x1,'x':y1 + pitch},{'y':x2,'x':y1+pitch}])
             
-        elif (rows == 2):
+        elif rows == 2:
             kicad_mod.addPolygoneLine([{'y':x1,'x':y1 + pitch},
                                        {'y':x1 + pitch,'x':y1+pitch},
                                        {'y':x1 + pitch,'x':y1},
@@ -90,10 +90,10 @@ for rows in [1,2]:
         #add the model
         kicad_mod.model = "Socket_Strips.3dshapes/" + footprint_name + ".wrl"
         kicad_mod.model_rot['z'] = 0
-        if (rows == 2):
+        if rows == 2:
             kicad_mod.model_pos['y'] = -pitch * 0.5 / 25.4
             
-        if (pincount % 2 == 0): #even
+        if pincount % 2 == 0: #even
             kicad_mod.model_pos['x'] = (pincount / 2 - 0.5) * pitch / 25.4
         else:
             kicad_mod.model_pos['x'] = (pincount / 2) * pitch / 25.4
