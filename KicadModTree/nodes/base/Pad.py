@@ -15,9 +15,9 @@ along with kicad-footprint-generator. If not, see < http://www.gnu.org/licenses/
 (C) 2016 by Thomas Pointhuber, <thomas.pointhuber@gmx.at>
 '''
 
-from .Point import *
-from .Node import Node
-from .kicad_util import lispString
+from KicadModTree.Point import *
+from KicadModTree.nodes.Node import Node
+from KicadModTree.util.kicad_util import lispString
 
 
 class Pad(Node):
@@ -91,16 +91,16 @@ class Pad(Node):
 
 
     def _initDrill(self, **kwargs):
-        if self.type in [Pad.TYPE_SMT, Pad.TYPE_NPTH]:
+        if self.type in [Pad.TYPE_THT, Pad.TYPE_NPTH]:
             if not kwargs.get('drill'):
                 raise KeyError('drill size required (like "drill=1")')
-            if type(kwargs.get('size')) in [int, float]:
+            if type(kwargs.get('drill')) in [int, float]:
                 # when the attribute is a simple number, use it for x and y
                 self.drill = Point([kwargs.get('drill'), kwargs.get('drill')])
             else:
                 self.drill = Point(kwargs.get('drill'))
             if self.drill.x < 0 or self.drill.y < 0:
-                raise ValueError("negativ drill size not allowed")
+                raise ValueError("negative drill size not allowed")
         else:
             self.drill = None
             if kwargs.get('drill'):

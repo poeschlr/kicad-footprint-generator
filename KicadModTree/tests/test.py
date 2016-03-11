@@ -13,10 +13,20 @@ You should have received a copy of the GNU General Public License
 along with kicad-footprint-generator. If not, see < http://www.gnu.org/licenses/ >.
 '''
 
-from KicadModTree.Point import *
+import os
+import sys
+import unittest
 
-# all different types of nodes
-from KicadModTree.nodes import *
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../../"))
 
-# File Handlers
-from KicadModTree.KicadFileHandler import KicadFileHandler
+from nodes import *
+
+#sys.path.append("../")
+
+
+
+def main():
+    unittest.main()
+
+if __name__ == '__main__':
+    main()

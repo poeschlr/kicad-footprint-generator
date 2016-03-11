@@ -15,10 +15,9 @@ along with kicad-footprint-generator. If not, see < http://www.gnu.org/licenses/
 (C) 2016 by Thomas Pointhuber, <thomas.pointhuber@gmx.at>
 '''
 
-from .FileHandler import FileHandler
-from .KicadModTree import *
-from .kicad_util import *
-from .Pad import Pad # TODO: why .KicadModTree is not enough?
+from KicadModTree.FileHandler import FileHandler
+from KicadModTree.util.kicad_util import *
+from KicadModTree.nodes.base.Pad import Pad # TODO: why .KicadModTree is not enough?
 
 
 class KicadFileHandler(FileHandler):
@@ -165,7 +164,7 @@ class KicadFileHandler(FileHandler):
             render_strings.append(node.getRealPosition(node.at).render('(at {x} {y})'))
 
         render_strings.append(node.size.render('(size {x} {y})'))
-        if node.type in [Pad.TYPE_SMT, Pad.TYPE_NPTH]:
+        if node.type in [Pad.TYPE_THT, Pad.TYPE_NPTH]:
             if node.drill.x == node.drill.y:
                 render_strings.append('(drill {})'.format(node.drill.x))
             else:
