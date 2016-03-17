@@ -41,6 +41,9 @@ from KicadModTree.nodes.specialized.PadArray import PadArray
 
 """
 footprint specific details to go here
+
+Datasheet: http://www.jst-mfg.com/product/pdf/eng/eXH.pdf
+
 """
 pitch = 2.50
 pincount = [i for i in range(2,17)] + [20]
@@ -103,7 +106,7 @@ if __name__ == '__main__':
         footprint.append(cy)
         
         #offset the outline around the connector
-        off = 0.2
+        off = 0.15
         
         xo1 = x1 - off
         yo1 = y1 - off
@@ -122,20 +125,26 @@ if __name__ == '__main__':
         footprint.append(RectLine(start=[xo1,yo1],end=[xo2,yo2]))
         
         outline = [
-        {'x': -0.5,'y': yo2},
-        {'x': -0.5,'y': yo2 - wall},
-        {'x': xo1 + wall,'y': yo2-wall},
+        {'x': xo1,'y': yo2-wall - 1},
+        {'x': xo1 + wall,'y': yo2-wall - 1},
         {'x': xo1 + wall,'y': yo1+wall},
         {'x': x_mid,'y': yo1+wall},
         ]
         
-        footprint.append(PolygoneLine(polygone=outline,width="0.15",layer="F.SilkS"))
-        footprint.append(PolygoneLine(polygone=outline,width="0.15",layer="F.SilkS",x_mirror=x_mid))
+        footprint.append(PolygoneLine(polygone=outline))
+        footprint.append(PolygoneLine(polygone=outline,x_mirror=x_mid))
+        
+        footprint.append(RectLine(start=[xo1,yo2-wall],end=[xo1+notch,yo2]))
+        footprint.append(RectLine(start=[xo2,yo2-wall],end=[xo2-notch,yo2]))
         
         #draw the middle tab
         nx1 = -0.5 + notch
         nx2 = A + 0.5 - notch
         footprint.append(RectLine(start=[nx1, yo2 - wall],end=[nx2,yo2]))
+        
+        #Add a model
+        footprint.append(Model(filename="Connectors_JST.3dshapes/" + fp_name + ".wrl"))
+        
         
         #filename
         filename = output_dir + fp_name + ".kicad_mod"
