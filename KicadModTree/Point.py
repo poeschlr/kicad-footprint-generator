@@ -48,6 +48,8 @@ class Point(object):
 
             if len(coordinates) > 3:
                 raise TypeError('invalid list size (to big)')
+        else:
+            raise TypeError('dict or list type required')
                 
         #is a grid specified?
         if type(grid) in [float,int]:
@@ -56,8 +58,6 @@ class Point(object):
             self.y = int(self.y/grid) * grid
             self.z = int(self.z/grid) * grid
 
-        else:
-            raise TypeError('dict or list type required')
 
 
     def __add__(self, obj):
