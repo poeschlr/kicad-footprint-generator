@@ -94,7 +94,7 @@ for pincount in range(2,16):
     x1 = 0
 
     if pincount % 2 == 1: #odd pins
-        x1 = -pincount//2 * pad_spacing
+        x1 = -(pincount//2) * pad_spacing
     else: #even pins
         x1 = (-pincount/2 + 0.5) * pad_spacing
                               
