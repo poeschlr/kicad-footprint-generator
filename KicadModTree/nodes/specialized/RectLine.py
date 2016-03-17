@@ -31,7 +31,7 @@ class RectLine(PolygoneLine):
                         ,{'x':self.end_pos.x, 'y':self.start_pos.y}
                         ,{'x':self.start_pos.x, 'y':self.start_pos.y}]
 
-        PolygoneLine.__init__(self, polygone=polygone_line, layer=kwargs['layer'], width=kwargs['width'])
+        PolygoneLine.__init__(self, polygone=polygone_line, layer=kwargs['layer'], width=kwargs['width'], grid=kwargs.get('grid',None))
 
 
     def _getRenderTreeText(self):

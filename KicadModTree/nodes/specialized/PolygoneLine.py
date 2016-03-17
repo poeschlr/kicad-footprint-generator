@@ -28,14 +28,14 @@ class PolygoneLine(Node):
         self.layer = kwargs['layer']
         self.width = kwargs['width']
 
-        self.virtual_childs = self._createChildNodes(self.polygone_line)
+        self.virtual_childs = self._createChildNodes(self.polygone_line, **kwargs)
 
 
-    def _createChildNodes(self, polygone_line):
+    def _createChildNodes(self, polygone_line, **kwargs):
         nodes = []
 
         for line_start, line_end in zip(polygone_line, polygone_line[1:]):
-            new_node = Line(start=line_start, end=line_end, layer=self.layer, width=self.width)
+            new_node = Line(start=line_start, end=line_end, layer=self.layer, width=self.width, grid=kwargs.get('grid',None)))
             new_node._parent = self
             nodes.append(new_node)
 
