@@ -50,7 +50,7 @@ class Point(object):
                 raise TypeError('invalid list size (to big)')
                 
         #is a grid specified?
-        if type(grid) is in [float,int]:
+        if type(grid) in [float,int]:
             #ensure coordinates fall on a grid
             self.x = int(self.x/grid) * grid
             self.y = int(self.y/grid) * grid
