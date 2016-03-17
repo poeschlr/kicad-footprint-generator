@@ -284,8 +284,8 @@ Create SMD pads in a horizontal sequence, with the line of pads centered at the 
 - Individual pads can be skipped by placing their numbers in the 'skip' kwarg
 """
 def createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, pad_size, pad_pos_y, x_off=0, starting=1, increment=1, skip=[]):
-    start_pos_x = -(pincount-1)*pad_spacing/2. + x_off
+    start_pos_x = -(pincount-1)*pad_spacing/2 + x_off
     for i,pad_number in enumerate(range(starting, starting + (pincount * increment), increment)):
         if pad_number in skip: continue
-        pad_pos_x = start_pos_x+(i-1)*pad_spacing
+        pad_pos_x = start_pos_x + i*pad_spacing
         kicad_mod.addPad(pad_number, 'smd', 'rect', {'x':pad_pos_x, 'y':pad_pos_y}, pad_size, 0, ['F.Cu', 'F.Paste', 'F.Mask'])

@@ -92,11 +92,11 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     #add courtyard
     
     #courtyard corners
-    cx1 = -B/2 - 0.5
-    cx2 =  B/2 + 0.5
+    cx1 = -B/2 - 0.6
+    cx2 =  B/2 + 0.6
     
     cy1 = -5.8
-    cy2 = 0.6
+    cy2 = 0.7
     
     #make sure they lie on an 0.05mm grid
     
