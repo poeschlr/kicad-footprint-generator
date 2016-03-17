@@ -22,8 +22,8 @@ from KicadModTree.nodes.Node import Node
 class Line(Node):
     def __init__(self, **kwargs):
         Node.__init__(self)
-        self.start_pos = Point(kwargs['start'])
-        self.end_pos = Point(kwargs['end'])
+        self.start_pos = Point(kwargs['start'],grid=kwargs.get('grid',None))
+        self.end_pos = Point(kwargs['end'],grid=kwargs.get('grid',None))
 
         self.layer = kwargs.get('layer','F.SilkS')
         self.width = kwargs.get('width',0.15)

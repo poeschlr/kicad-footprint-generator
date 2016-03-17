@@ -31,7 +31,7 @@ class PolygoneLine(Node):
         
         self._initPolygone(**kwargs)
 
-        self.virtual_childs = self._createChildNodes(self.polygone_line)
+        self.virtual_childs = self._createChildNodes(self.polygone_line, **kwargs)
 
     def _initMirror(self, **kwargs):
     
@@ -51,12 +51,11 @@ class PolygoneLine(Node):
             if self.mirror[1] is not None:
                 point['y'] = 2 * self.mirror[1] - point['y']
             
-    def _createChildNodes(self, polygone_line):
+    def _createChildNodes(self, polygone_line, **kwargs):
         nodes = []
 
         for line_start, line_end in zip(polygone_line, polygone_line[1:]):
-        
-            new_node = Line(start=line_start, end=line_end, layer=self.layer, width=self.width)
+            new_node = Line(start=line_start, end=line_end, layer=self.layer, width=self.width, grid=kwargs.get('grid',None)))
             new_node._parent = self
             nodes.append(new_node)
 

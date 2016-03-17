@@ -19,7 +19,7 @@ from KicadModTree.util.kicad_util import formatFloat
 
 
 class Point(object):
-    def __init__(self, coordinates=None):
+    def __init__(self, coordinates=None, grid=None):
         if coordinates is None:
             coordinates = {}
 
@@ -48,6 +48,13 @@ class Point(object):
 
             if len(coordinates) > 3:
                 raise TypeError('invalid list size (to big)')
+                
+        #is a grid specified?
+        if type(grid) is in [float,int]:
+            #ensure coordinates fall on a grid
+            self.x = int(self.x/grid) * grid
+            self.y = int(self.y/grid) * grid
+            self.z = int(self.z/grid) * grid
 
         else:
             raise TypeError('dict or list type required')
