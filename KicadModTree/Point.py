@@ -19,7 +19,7 @@ from KicadModTree.util.kicad_util import formatFloat
 
 
 class Point(object):
-    def __init__(self, coordinates=None, grid=None):
+    def __init__(self, coordinates=None, **kwargs):
         if coordinates is None:
             coordinates = {}
 
@@ -51,6 +51,7 @@ class Point(object):
         else:
             raise TypeError('dict or list type required')
                 
+		grid=kwargs.get('grid',None)
         #is a grid specified?
         if type(grid) in [float,int]:
             #ensure coordinates fall on a grid
