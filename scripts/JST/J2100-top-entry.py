@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
         footprint = Footprint(fp_name)
         
-        description = "JST J2100 series connector, 2x" + part.format(n=pins) + ", top entry type, through hole"
+        description = "JST J2100 series connector, dual row, center locking, " + part.format(n=2*pins) + ", top entry type, through hole"
         
         #set the FP description
         footprint.setDescription(description)
@@ -112,12 +112,12 @@ if __name__ == '__main__':
         footprint.append(ol)
         
         #courtyard
-        cy = RectLine(start=[x1,y1],end=[x2,y2],offset=0.5,layer='F.CrtYd',width=0.05)
+        cy = RectLine(start=[x1,y1],end=[x2,y2],offset=0.5,layer='F.CrtYd',width=0.05,grid=0.05)
         footprint.append(cy)
         
         #add mounting holes 
-        m1 = Pad(at=[0,3.3],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3, drill=2)
-        m2 = Pad(at=[A,3.3],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3, drill=2)
+        m1 = Pad(at=[0,3.3],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,size=3, drill=2)
+        m2 = Pad(at=[A,3.3],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,size=3, drill=2)
         
         footprint.append(m1)
         footprint.append(m2)
@@ -146,7 +146,7 @@ if __name__ == '__main__':
             
         #draw the inside of the connector
         #connector thickness t
-        t = 0.5
+        t = 0.55
         #notch size n
         n = 1.2
         inside = [
