@@ -23,14 +23,11 @@ from KicadModTree.nodes.base.Line import Line
 class PolygoneLine(Node):
     def __init__(self, **kwargs):
         Node.__init__(self)
+        self.polygone_line = kwargs['polygone']
 
-        self.layer = kwargs.get('layer','F.SilkS')
-        self.width = kwargs.get('width',0.15)
-        
         self._initMirror(**kwargs)
         
         self._initPolygone(**kwargs)
-
         self.virtual_childs = self._createChildNodes(self.polygone_line, **kwargs)
 
     def _initMirror(self, **kwargs):
@@ -55,7 +52,7 @@ class PolygoneLine(Node):
         nodes = []
 
         for line_start, line_end in zip(polygone_line, polygone_line[1:]):
-            new_node = Line(start=line_start, end=line_end, layer=self.layer, width=self.width, grid=kwargs.get('grid',None))
+            new_node = Line(start=line_start, end=line_end, **kwargs)
             new_node._parent = self
             nodes.append(new_node)
 
