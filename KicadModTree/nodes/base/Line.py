@@ -21,8 +21,8 @@ from KicadModTree.nodes.Node import Node
 
 class Line(Node):
 
-	_width_default = 0.15
-	_layer_default = "F.SilkS"
+    _width_default = 0.15    
+    _layer_default = "F.SilkS"
 
     def __init__(self, **kwargs):
         Node.__init__(self)

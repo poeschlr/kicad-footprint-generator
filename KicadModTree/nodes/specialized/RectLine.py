@@ -31,6 +31,10 @@ class RectLine(PolygoneLine):
                         ,{'x':self.end_pos.x, 'y':self.start_pos.y}
                         ,{'x':self.start_pos.x, 'y':self.start_pos.y}]
 
+        #don't pass [start] and [end] down to Line primitive
+        del kwargs['start']
+        del kwargs['end']
+                        
         PolygoneLine.__init__(self, polygone=polygone_line, **kwargs)
 
 
