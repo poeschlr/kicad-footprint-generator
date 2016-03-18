@@ -68,9 +68,11 @@ for inductor in inductors:
 	pw = (x-g) / 2
 	c = g/2 + pw/2
 	
+	layers = ["F.Cu","F.Paste","F.Mask"]
+	
 	#add pads
-	fp.append(Pad(number=1,at=[-c,0],layers=["F.Cu"],shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
-	fp.append(Pad(number=2,at=[c,0],layers=["F.Cu"],shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
+	fp.append(Pad(number=1,at=[-c,0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
+	fp.append(Pad(number=2,at=[c,0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
 	
 	#add inductor outline
 	fp.append(RectLine(start=[-l/2,-w/2],end=[l/2,w/2],width=0.05,layer="Eco1.User"))
