@@ -17,37 +17,37 @@ along with kicad-footprint-generator. If not, see < http://www.gnu.org/licenses/
 
 from KicadModTree.Point import *
 from KicadModTree.nodes.Node import Node
+from KicadModTree.nodes.specialized import RectLine
+from KicadModTree.nodes.specialized import RectFill
 
 
-class Arc(Node):
+class FilledRect(Node):
     def __init__(self, **kwargs):
         Node.__init__(self)
         self.start_pos = Point(kwargs['start'])
         self.end_pos = Point(kwargs['end'])
-        self.angle = kwargs['angle']
 
         self.layer = kwargs.get('layer', 'F.SilkS')
-        self.width = kwargs.get('width')
+        self.width = kwargs.get('width', 0.15) # TODO: better variation to get line width
+
+        rect_line = RectLine(**kwargs)
+        rect_line._parent = self
+
+        rect_fill = RectFill(**kwargs)
+        rect_fill._parent = self
+
+        self.virtual_childs = [rect_line, rect_fill]
 
 
-    def calculateBoundingBox(self):
-        min_x = min(self.start_pos.x, self.end_pos.x)
-        min_y = min(self.start_pos.y, self.end_pos.y)
-        max_x = max(self.start_pos.x, self.end_pos.x)
-        max_y = max(self.start_pos.y, self.end_pos.y)
-
-        return Node.calculateBoundingBox({'min':Point((min_x, min_y)), 'max':Point((max_x, max_y))})
+    def getVirtualChilds(self):
+        return self.virtual_childs
 
 
     def _getRenderTreeText(self):
-        render_strings = ['fp_arc']
-        render_strings.append(self.start_pos.render('(center {x} {y})'))
-        render_strings.append(self.end_pos.render('(end {x} {y})'))
-        render_strings.append('(angle {angle})'.format(angle=self.angle))
-        render_strings.append('(layer {layer})'.format(layer=self.layer))
-        render_strings.append('(width {width})'.format(width=self.width))
-
         render_text = Node._getRenderTreeText(self)
-        render_text += ' ({})'.format(' '.join(render_strings))
+        render_text += " [start: [x: {sx}, y: {sy}] end: [x: {ex}, y: {ey}]]".format(sx=self.start_pos.x
+                                                                                    ,sy=self.start_pos.y
+                                                                                    ,ex=self.end_pos.x
+                                                                                    ,ey=self.end_pos.y)
 
         return render_text

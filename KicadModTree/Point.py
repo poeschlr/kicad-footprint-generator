@@ -19,9 +19,17 @@ from KicadModTree.util.kicad_util import formatFloat
 
 
 class Point(object):
-    def __init__(self, coordinates=None, **kwargs):
+    def __init__(self, coordinates=None, y=None, z=None, **kwargs):
         if coordinates is None:
             coordinates = {}
+        elif type(coordinates) in [int, float]:
+            if y is not None:
+                if z is not None:
+                    coordinates = [coordinates, y, z]
+                else:
+                    coordinates = [coordinates, y]
+            else:
+                raise TypeError('you have to give at least x and y coordinate')
 
         if isinstance(coordinates, Point):
             self.x = coordinates.x
@@ -68,9 +76,9 @@ class Point(object):
         else:
             other_point = Point(obj)
 
-        return Point({'x':self.x + other_point.x
-                     ,'y':self.y + other_point.y
-                     ,'z':self.z + other_point.z})
+        return Point({'x': self.x + other_point.x,
+                      'y': self.y + other_point.y,
+                      'z': self.z + other_point.z})
 
     def __sub__(self, obj):
         other_point = None
@@ -79,9 +87,9 @@ class Point(object):
         else:
             other_point = Point(obj)
 
-        return Point({'x':self.x - other_point.x
-                     ,'y':self.y - other_point.y
-                     ,'z':self.z - other_point.z})
+        return Point({'x': self.x - other_point.x,
+                      'y': self.y - other_point.y,
+                      'z': self.z - other_point.z})
 
     def __mul__(self, obj):
         other_point = None
@@ -98,10 +106,9 @@ class Point(object):
         if other_point.z == 0:
             other_point.z = 1
 
-        return Point({'x':self.x * other_point.x
-                     ,'y':self.y * other_point.y
-                     ,'z':self.z * other_point.z})
-
+        return Point({'x': self.x * other_point.x,
+                      'y': self.y * other_point.y,
+                      'z': self.z * other_point.z})
 
     def __div__(self, obj):
         other_point = None
@@ -118,28 +125,23 @@ class Point(object):
         if other_point.z == 0:
             other_point.z = 1
 
-        return Point({'x':self.x / other_point.x
-                     ,'y':self.y / other_point.y
-                     ,'z':self.z / other_point.z})
-
+        return Point({'x': self.x / other_point.x,
+                      'y': self.y / other_point.y,
+                      'z': self.z / other_point.z})
 
     def __truediv__(self, obj):
         return self.__div__(obj)
 
-
     def render(self, formatcode):
-        return formatcode.format(x=formatFloat(self.x)
-                                ,y=formatFloat(self.y)
-                                ,z=formatFloat(self.z))
-
+        return formatcode.format(x=formatFloat(self.x),
+                                 y=formatFloat(self.y),
+                                 z=formatFloat(self.z))
 
     def __dict__(self):
-        return {'x':self.x, 'y':self.y, 'z':self.z}
-
+        return {'x': self.x, 'y': self.y, 'z': self.z}
 
     def __repr__(self):
         return self.render("Point (x={x}, y={y}, z={z})")
-
 
     def __str__(self):
         return self.render("(x={x}, y={y}, z={z})")

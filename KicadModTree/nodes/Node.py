@@ -170,7 +170,7 @@ class Node(object):
         return self._parent.getRealPosition(coordinate, rotation)
 
 
-    def calculateOutline(self, outline=None):
+    def calculateBoundingBox(self, outline=None):
         min_x, min_y = 0, 0
         max_x, max_y = 0, 0
 
@@ -181,13 +181,14 @@ class Node(object):
             max_y = outline['max'].y
 
         for child in self.getAllChilds():
-            child_outline = child.calculateOutline()
-            min_x = min([min_x, child_outline['min'].x])
-            min_y = min([min_y, child_outline['min'].y])
-            max_x = max([max_x, child_outline['max'].x])
-            max_y = max([max_y, child_outline['max'].y])
-            
-        return {'min':Point(coordinates=[min_x, min_y]), 'max':Point(coordinates=[max_x, max_y])}
+            child_outline = child.calculateBoundingBox()
+
+            min_x = min([min_x, child_outline['min']['x']])
+            min_y = min([min_y, child_outline['min']['y']])
+            max_x = max([max_x, child_outline['max']['x']])
+            max_y = max([max_y, child_outline['max']['y']])
+
+        return {'min':Point(min_x, min_y), 'max':Point(max_x, max_y)}
 
 
     def _getRenderTreeText(self):

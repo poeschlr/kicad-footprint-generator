@@ -118,7 +118,7 @@ class Pad(Node):
 
 
     #calculate the outline of a pad
-    def calculateOutline(self):
+    def calculateBoundingBox(self):
         x_min = self.at.x - self.size.x / 2
         x_max = self.at.x + self.size.x / 2
         
@@ -126,7 +126,7 @@ class Pad(Node):
         y_max = self.at.y + self.size.y / 2
         
         outline = {'min':Point(coordinates=[x_min,y_min]), 'max':Point(coordinates=[x_max,y_max])}
-        return Node.calculateOutline(self, outline=outline)
+        return Node.calculateBoundingBox(self, outline=outline)
 
 
     def _getRenderTreeText(self):
