@@ -57,6 +57,7 @@ for inductor in inductors:
 	description = desc.format(pn = part.format(pn=str(name))) + ", " + dims.format(l=l,w=w)
 	
 	fp.setTags(tags)
+    fp.setAttribute("smd")
 	fp.setDescription(description)
 	
 	# set general values
