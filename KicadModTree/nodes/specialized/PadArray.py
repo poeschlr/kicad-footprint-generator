@@ -65,8 +65,8 @@ class PadArray(Node):
                
                
             #now calculate the desired starting position of the array
-            self.startingPosition[0] = -(self.pincount - 1) * self.spacing[0]/2.
-            self.startingPosition[1] = -(self.pincount - 1) * self.spacing[1]/2.
+            self.startingPosition[0] = center[0] -(self.pincount - 1) * self.spacing[0]/2.
+            self.startingPosition[1] = center[1] -(self.pincount - 1) * self.spacing[1]/2.
     
     #what number to start with?
     def _initInitialNumber(self, **kwargs):
