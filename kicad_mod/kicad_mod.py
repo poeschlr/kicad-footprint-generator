@@ -213,11 +213,12 @@ class KicadMod(object):
     def _saveModel(self):
         
         #model path
-        output = "(model {model}\n".format(model=self.model)
+        output = "  (model {model}\n".format(model=self.model)
         #model position
-        output += "  (at (xyz {x} {y} {z}))\n".format(x=self.model_pos['x'],y=self.model_pos['y'],z=self.model_pos['z'])
-        output += "  (scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
-        output += "  (rotate (xyz {x} {y} {z})))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
+        output += "    (at (xyz {x} {y} {z}))\n".format(x=self.model_pos['x'],y=self.model_pos['y'],z=self.model_pos['z'])
+        output += "    (scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
+        output += "    (rotate (xyz {x} {y} {z}))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
+        output += "  )"
             
         return output
         
