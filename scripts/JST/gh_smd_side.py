@@ -135,6 +135,8 @@ for pincount in range(2,16):
     cy2 = int(cy2/0.05) * 0.05
     
     kicad_mod.addRectLine({'x':cx1,'y':cy1},{'x':cx2,'y':cy2},'F.CrtYd',0.05)
+    
+    kicad_mod.model = "Connectors_JST.3dshapes/" + footprint_name + ".wrl"
 
     f = open(footprint_name + ".kicad_mod","w")
 

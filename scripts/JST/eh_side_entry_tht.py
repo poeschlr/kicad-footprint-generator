@@ -120,16 +120,6 @@ for pincount in range(2,16):
     
     kicad_mod.model = "Connectors_JST.3dshapes/" + footprint_name + ".wrl"
     
-    #shift the model along
-    
-    if pincount % 2 == 0: #even
-        xOff = (pincount / 2 - 0.5) * pitch
-    else:
-        xOff = (pincount / 2) * pitch
-        
-    kicad_mod.model_pos['x'] = xOff / 25.4
-    kicad_mod.model_rot['z'] = 180
-    
     # output kicad model
     f = open(footprint_name + ".kicad_mod","w")
     

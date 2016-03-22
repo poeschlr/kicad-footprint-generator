@@ -126,6 +126,8 @@ for pincount in range(2,16):
                               
     #add courtyard
     kicad_mod.addRectLine({'x':-B/2-0.5,'y':-6.125},{'x':B/2+0.5,'y':0.525},'F.CrtYd',0.05)
+    
+    kicad_mod.model = "Connectors_JST.3dshapes/" + footprint_name + ".wrl"
 
     f = open(footprint_name + ".kicad_mod","w")
 

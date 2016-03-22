@@ -18,7 +18,7 @@ for pincount in [4,6,7,8,10,12]:
     part = "504051-{0:02}01".format(pincount)
     
     desc = "Molex Pico-Lock series connector, {0:.2f}mm pitch, side entry SMT, P/N: {1:}".format(pitch,part)
-    tags = "connector molex pico lock side angled horizontal surface mount SMD SMT"
+    tags = "conn molex pico lock"
 
     footprint_name = "{0}_{1:02}x{2:.2f}mm_{3}".format(manu,pincount,pitch,suffix)
 
@@ -120,15 +120,6 @@ for pincount in [4,6,7,8,10,12]:
     kicad_mod.addRectLine({'x':cx1,'y':cy1},{'x':cx2,'y':cy2},"F.CrtYd",0.05) 
     
     kicad_mod.model = "Connectors_Molex.3dshapes/" + footprint_name + ".wrl"
-    
-    #shift the model along
-    
-    xOff = 0
-    yOff = 2.4
-        
-    kicad_mod.model_pos['x'] = xOff / 25.4
-    kicad_mod.model_pos['y'] = yOff / 25.4
-    kicad_mod.model_rot['z'] = 180
     
     # output kicad model
     f = open(footprint_name + ".kicad_mod","w")

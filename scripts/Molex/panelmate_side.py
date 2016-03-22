@@ -20,7 +20,7 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     
     desc = "{0:} {1}".format(manu,series)
     desc += " series connector, {0:.2f}mm pitch, side entry SMT, P/N: {1:}".format(pitch,part)
-    tags = "connector molex panelmate side angled horizontal surface mount SMD SMT"
+    tags = "conn molex panelmate"
 
     footprint_name = "{0}_{1:02}x{2:.2f}mm_{3}".format(manu+"_"+series,pincount,pitch,suffix)
 
@@ -125,19 +125,6 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     kicad_mod.addRectLine({'x':cx1,'y':cy1},{'x':cx2,'y':cy2},"F.CrtYd",0.05) 
     
     kicad_mod.model = "Connectors_Molex.3dshapes/" + footprint_name + ".wrl"
-    
-    #shift the model along
-    
-    xOff = 0
-    yOff = -1
-    #if pincount % 2 == 0: #even
-    #    xOff = (pincount / 2 - 0.5) * pitch
-    #else:
-    #    xOff = (pincount / 2) * pitch
-        
-    kicad_mod.model_pos['x'] = xOff / 25.4
-    kicad_mod.model_pos['y'] = yOff / 25.4
-    #kicad_mod.model_rot['z'] = 180
     
     # output kicad model
     f = open(footprint_name + ".kicad_mod","w")
