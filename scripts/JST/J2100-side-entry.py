@@ -123,12 +123,12 @@ if __name__ == '__main__':
         
         #add mounting holes
         
-        if pincount == 3:
-            m = Pad(at=[pitch,7],layers=["*.Cu","*.Mask"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3,drill=2)
-            footprint.add(m)
+        if pins == 3:
+            m = Pad(at=[pitch,7],layers=["*.Cu","*.Mask"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3.4,drill=2)
+            footprint.append(m)
         else:        
-            m1 = Pad(at=[0,7],layers=["*.Cu",'*.Mask'],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3, drill=2)
-            m2 = Pad(at=[A,7],layers=["*.Cu",'*.Mask'],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3, drill=2)
+            m1 = Pad(at=[0,7],layers=["*.Cu",'*.Mask'],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3.4, drill=2)
+            m2 = Pad(at=[A,7],layers=["*.Cu",'*.Mask'],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT,size=3.4, drill=2)
             
             footprint.append(m1)
             footprint.append(m2)

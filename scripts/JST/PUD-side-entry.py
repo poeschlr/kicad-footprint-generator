@@ -125,8 +125,8 @@ if __name__ == '__main__':
         footprint.append(cy)
         
         #add mounting holes
-        m1 = Pad(at=[0,7],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,size=1.6, drill=1.6)
-        m2 = Pad(at=[A,7],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,size=1.6, drill=1.6)
+        m1 = Pad(at=[-0.9,9.7],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,size=1.6, drill=1.6)
+        m2 = Pad(at=[A+0.9,9.7],layers=["*.Cu"],shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,size=1.6, drill=1.6)
         
         footprint.append(m1)
         footprint.append(m2)
