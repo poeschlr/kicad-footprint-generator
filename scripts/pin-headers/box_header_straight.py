@@ -66,8 +66,8 @@ for rows in [2]:
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],offset=-T))
         
         #draw tab
-        footprint.append(Line(start=[D/2-2,y2],end=[D/2-2,y2-T]))
-        footprint.append(Line(start=[D/2+2,y2],end=[D/2+2,y2-T]))
+        footprint.append(Line(start=[D/2-2,y2+0.2],end=[D/2-2,y2-T]))
+        footprint.append(Line(start=[D/2+2,y2+0.2],end=[D/2+2,y2-T]))
         
         #add the courtyard
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],offset=0.5,grid=0.05,width=0.05,layer="F.CrtYd"))
