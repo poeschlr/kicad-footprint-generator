@@ -88,14 +88,6 @@ for rows in [1,2]:
                                    
         #add the model
         kicad_mod.model = "Pin_Headers.3dshapes/" + footprint_name + ".wrl"
-        kicad_mod.model_rot['z'] = 90
-        if rows == 2:
-            kicad_mod.model_pos['x'] = pitch * 0.5 / 25.4
-            
-        if pincount % 2 == 0: #even
-            kicad_mod.model_pos['y'] = -(pincount / 2 - 0.5) * pitch / 25.4
-        else:
-            kicad_mod.model_pos['y'] = -(pincount / 2) * pitch / 25.4
                 
         # output kicad model
         f = open(footprint_name + ".kicad_mod","w")
