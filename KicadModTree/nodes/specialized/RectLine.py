@@ -60,7 +60,10 @@ class RectLine(PolygoneLine):
                         ,{'x':self.end_pos.x, 'y':self.start_pos.y}
                         ,{'x':self.start_pos.x, 'y':self.start_pos.y}]
 
-        PolygoneLine.__init__(self, polygone=polygone_line, layer=kwargs.get('layer', 'F.SilkS'), width=kwargs.get('width',0.15))
+        del kwargs['start']
+        del kwargs['end']
+                        
+        PolygoneLine.__init__(self, polygone=polygone_line, **kwargs)
 
 
     def _getRenderTreeText(self):
