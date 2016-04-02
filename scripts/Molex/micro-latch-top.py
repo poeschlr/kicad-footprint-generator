@@ -107,8 +107,8 @@ if __name__ == '__main__':
         footprint.setTags(tags)
 
         # set general values
-        footprint.append(Text(type='reference', text='REF**', at=[A/2,4], layer='F.SilkS'))
-        footprint.append(Text(type='value', text=fp_name, at=[A/2,-2.8], layer='F.Fab'))
+        footprint.append(Text(type='reference', text='REF**', at=[A/2,3.5], layer='F.SilkS'))
+        footprint.append(Text(type='value', text=fp_name, at=[A/2,-3.5], layer='F.Fab'))
             
         #generate the pads
         footprint.append(PadArray(pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=['*.Cu','*.Mask']))
@@ -123,13 +123,13 @@ if __name__ == '__main__':
         footprint.append(out)
         
         #pin-1 marker
-        y =  y2 + 0.5
+        y =  -2
         m = 0.3
         
         pin = [
         {'x': 0,'y': y},
-        {'x': -m,'y': y+2*m},
-        {'x': m,'y': y+2*m},
+        {'x': -m,'y': y-2*m},
+        {'x': m,'y': y-2*m},
         {'x': 0,'y': y},
         ]
         
