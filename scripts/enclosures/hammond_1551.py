@@ -66,15 +66,15 @@ Params = namedtuple("Params", [
     'iW', #inside width
     
     #screw post dimensions
-    'pL', #horizontal distance between exteriors of mounting posts
-    'pW', #vertical distance between exteriors of mounting postss
+    'pL', #horizontal distance between interiors of mounting posts
+    'pW', #vertical distance between interiors of mounting postss
     
     #PCB parameters
     'pcb_L', #PCB Maximum Length
     'pcb_W', #PCB Maximum Width
     
-    'pcb_v', #offset of hole from vertical edge
-    'pcb_h', #offset of hole from horizontal edge
+    'pcb_x', #horizontal distance between mounting hole centers
+    'pcb_y', #vertical distance between mounting hole centers
 ])
 
 #descriptions of the various enclosures
@@ -87,14 +87,14 @@ enc['N'] = Params(
     iL = 30.17,
     iW = 30.17,
     
-    pL = 28.73,
-    pW = 28.8,
+    pL = 18.5,
+    pW = 18.5,
     
     pcb_L = 29.0,
     pcb_W = 29.0,
     
-    pcb_v = 2.75,
-    pcb_h = 5.75,
+    pcb_x = 17.5,
+    pcb_y = 23.5,
 )
 
 enc['M'] = Params(
@@ -104,14 +104,14 @@ enc['M'] = Params(
     iL = 29.73,
     iW = 29.73,
     
-    pL = 28.73,
-    pW = 28.28,
+    pL = 18.5,
+    pW = 18.5,
     
     pcb_L = 29.0,
     pcb_W = 29.0,
     
-    pcb_v = 2.75,
-    pcb_h = 5.75,
+    pcb_x = 17.5,
+    pcb_y = 23.5,
 )
 
 enc['Q'] = Params(
@@ -121,14 +121,14 @@ enc['Q'] = Params(
     iL = 35.12,
     iW = 35.0,
     
-    pL = 33.8,
-    pW = 33.8,
+    pL = 23.5,
+    pW = 23.5,
     
     pcb_L = 34.5,
     pcb_W = 34.5,
     
-    pcb_v = 3.0,
-    pcb_h = 7.25,
+    pcb_x = 20.0,
+    pcb_y = 28.5,
 )
 
 enc['P'] = Params(
@@ -138,14 +138,14 @@ enc['P'] = Params(
     iL = 34.72,
     iW = 34.72,
     
-    pL = 33.8,
-    pW = 33.8,
+    pL = 23.5,
+    pW = 23.5,
     
     pcb_L = 34.0,
     pcb_W = 34.0,
     
-    pcb_v = 2.75,
-    pcb_h = 7.0,
+    pcb_x = 20.0,
+    pcb_y = 28.5,
 )
     
 enc['F'] = Params(
@@ -155,14 +155,14 @@ enc['F'] = Params(
     iL = 45.17,
     iW = 30.17,
     
-    pL = 43.88,
-    pW = 28.88,
+    pL = 33.5,
+    pW = 18.5,
     
     pcb_L = 44.5,
     pcb_W = 29.5,
     
-    pcb_v = 3.0,
-    pcb_h = 9.75,
+    pcb_x = 25.0,
+    pcb_y = 23.5,
 )
 
 enc['G'] = Params(
@@ -172,14 +172,14 @@ enc['G'] = Params(
     iL = 44.73,
     iW = 29.73,
     
-    pL = 43.88,
-    pW = 28.88,
+    pL = 33.5,
+    pW = 18.5,
     
     pcb_L = 44.0,
     pcb_W = 29.0,
     
-    pcb_v = 2.75,
-    pcb_h = 12.00,
+    pcb_x = 25.0,
+    pcb_y = 23.5,
 )
     
 enc['S'] = Params(
@@ -189,14 +189,14 @@ enc['S'] = Params(
     iL = 45.12,
     iW = 45.12,
     
-    pL = 43.8,
-    pW = 43.73,
+    pL = 33.5,
+    pW = 33.5,
     
     pcb_L = 44.0,
     pcb_W = 44.0,
     
-    pcb_v = 2.75,
-    pcb_h = 9.50,
+    pcb_x = 25.0,
+    pcb_y = 38.5,
 )
 
 enc['R'] = Params(
@@ -206,14 +206,14 @@ enc['R'] = Params(
     iL = 44.72,
     iW = 44.72,
     
-    pL = 43.8,
-    pW = 43.73,
+    pL = 33.5,
+    pW = 33.5,
     
     pcb_L = 44.0,
     pcb_W = 44.0,
     
-    pcb_v = 2.75,
-    pcb_h = 9.50,
+    pcb_x = 25.0,
+    pcb_y = 38.5,
 )
 
 enc['J'] = Params(
@@ -223,14 +223,14 @@ enc['J'] = Params(
     iL = 55.17,
     iW = 30.17,
     
-    pL = 53.88,
-    pW = 28.88,
+    pL = 43.5,
+    pW = 18.5,
     
     pcb_L = 54.5,
     pcb_W = 29.5,
     
-    pcb_v = 3.0,
-    pcb_h = 12.25,
+    pcb_x = 30.0,
+    pcb_y = 23.5,
 )
 
 enc['H'] = Params(
@@ -240,14 +240,14 @@ enc['H'] = Params(
     iL = 54.73,
     iW = 29.73,
     
-    pL = 53.88,
-    pW = 28.88,
+    pL = 43.5,
+    pW = 18.5,
     
     pcb_L = 54.0,
     pcb_W = 29.0,
     
-    pcb_v = 2.75,
-    pcb_h = 12.70,
+    pcb_x = 20.0,
+    pcb_y = 23.5,
 )
 
 enc['L'] = Params(
@@ -257,14 +257,14 @@ enc['L'] = Params(
     iL = 75.17,
     iW = 35.17,
     
-    pL = 73.8,
-    pW = 33.8,
+    pL = 63.5,
+    pW = 23.5,
     
     pcb_L = 74.0,
     pcb_W = 34.0,
     
-    pcb_v = 2.75,
-    pcb_h = 17.0,
+    pcb_x = 40.0,
+    pcb_y = 28.5,
 )
 
 enc['K'] = Params(
@@ -274,14 +274,14 @@ enc['K'] = Params(
     iL = 74.73,
     iW = 34.73,
     
-    pL = 73.8,
-    pW = 33.8,
+    pL = 63.5,
+    pW = 23.5,
     
     pcb_L = 74.0,
     pcb_W = 34.0,
     
-    pcb_v = 2.75,
-    pcb_h = 17.0,
+    pcb_x = 40.0,
+    pcb_y = 28.5,
 )
 
 """
@@ -325,14 +325,17 @@ for k in enc.keys():
     fp.append(Line(start=[0,-1],end=[0,1],layer="Eco1.User",width=0.1))
     
     #add the mounting holes
-    px = prop.pcb_L/2 - prop.pcb_h
-    py = prop.pcb_W/2 - prop.pcb_v
+    px = prop.pcb_x / 2
+    py = prop.pcb_y / 2
     
     fp.append(Pad(at=[px,py],size=2.50,drill=2.50,shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,layers=["*.Cu"]))
     fp.append(Pad(at=[-px,-py],size=2.50,drill=2.50,shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_NPTH,layers=["*.Cu"]))
     
-    fp.append(Circle(center=[px,py],radius=1.5,width=0.15))
-    fp.append(Circle(center=[-px,-py],radius=1.5,width=0.15))   
+    fp.append(Circle(center=[px,py],radius=2.0,width=0.15, layer="B.SilkS"))
+    fp.append(Circle(center=[px,py],radius=2.0,width=0.15, layer="F.SilkS"))
+    
+    fp.append(Circle(center=[-px,-py],radius=2.0,width=0.15, layer="B.SilkS"))   
+    fp.append(Circle(center=[-px,-py],radius=2.0,width=0.15, layer="F.SilkS"))   
     
     #generate the outline of the pcb
     #top side
@@ -351,16 +354,16 @@ for k in enc.keys():
     fp.append(Arc(center=[prop.pcb_L/2 - pcb_C + pcb_R, -prop.pcb_W/2 + pcb_C - pcb_R],end=[prop.pcb_L/2 - pcb_C + pcb_R, -prop.pcb_W/2 + pcb_C], angle=90, layer='Eco1.User', width=0.1))
     fp.append(Arc(center=[-prop.pcb_L/2 + pcb_C - pcb_R, prop.pcb_W/2 - pcb_C + pcb_R],end=[-prop.pcb_L/2 + pcb_C - pcb_R, prop.pcb_W/2 - pcb_C], angle=90, layer='Eco1.User', width=0.1))
     
-    #enclose 'thickness'
+    #enclosure 'thickness'
     T = (prop.W - prop.iW) / 2
     
     #generate the inner dimensions of the enclosure
     fp.append(RectLine(start=[-prop.iL/2,-prop.iW/2],end=[prop.iL/2,prop.iW/2],width=0.1,layer='Eco2.User'))
     fp.append(RectLine(start=[-prop.iL/2,-prop.iW/2],end=[prop.iL/2,prop.iW/2],width=0.1,layer='Eco2.User',offset=T))
     
-    #generate positions of the mounting posts
-    px = prop.pL / 2 - (10.3 / 4)
-    py = prop.pW / 2 - (10.3 / 4)
+    #generate positions of the plastic lid mounting posts
+    px = prop.pL / 2 + 2.5
+    py = prop.pW / 2 + 2.5
     
     fp.append(Circle(center=[px,-py],radius=1.75,layer='Eco2.User',width=0.1))
     fp.append(Circle(center=[px,-py],radius=2.5,layer='Eco2.User',width=0.1))
@@ -369,7 +372,7 @@ for k in enc.keys():
     fp.append(Circle(center=[-px,py],radius=2.5,layer='Eco2.User',width=0.1))
     
     #add a model
-    #fp.append(Model(filename="Enclosures.3dshapes/" + full + ".wrl"))
+    fp.append(Model(filename="Enclosures.3dshapes/" + full + ".wrl"))
     
     #output filename
     filename = output_dir + full + ".kicad_mod"
