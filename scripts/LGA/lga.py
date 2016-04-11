@@ -162,6 +162,7 @@ for key in lga.keys():
     
     #description
     
+    fp.setAttribute("smd")
     fp.setDescription("LGA-{n}, {x}x{y}, p={pitch}".format(n=n,x=part.D1, y=part.E1, pitch=part.N1))
     fp.setTags("LGA {p}".format(p=part.N1))
     
