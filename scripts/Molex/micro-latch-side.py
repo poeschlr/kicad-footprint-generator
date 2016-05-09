@@ -52,7 +52,7 @@ pincount = range(2,16)
 #Molex part number
 part = "53254-{n:02}70"
 
-prefix = "Molex_Micro-Latch_"
+prefix = "Molex_MicroLatch-{pn}_"
 suffix = "{n:02}x{p:.2f}mm_Angled"
 
 drill = 0.8
@@ -88,13 +88,15 @@ if __name__ == '__main__':
         y1 -= o
         x2 += o
         y2 += o
+        
+        pn = part.format(n=pins)
 
         #generate the name
-        fp_name = prefix + suffix.format(n=pins, p=pitch)
+        fp_name = prefix.format(pn=pn) + suffix.format(n=pins, p=pitch)
 
         footprint = Footprint(fp_name)
         
-        description = "Molex Micro-Latch connector, PN:" + part.format(n=pins) + ", side entry type, through hole"
+        description = "Molex Micro-Latch connector, PN:" + pn + ", side entry type, through hole"
         
         #set the FP description
         footprint.setDescription(description)

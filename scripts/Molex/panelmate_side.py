@@ -22,7 +22,7 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     desc += " series connector, {0:.2f}mm pitch, side entry SMT, P/N: {1:}".format(pitch,part)
     tags = "conn molex panelmate"
 
-    footprint_name = "{0}_{1:02}x{2:.2f}mm_{3}".format(manu+"_"+series,pincount,pitch,suffix)
+    footprint_name = "{0}-{1}_{2:02}x{3:.2f}mm_{4}".format(manu+"_"+series,part,pincount,pitch,suffix)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription(desc)
@@ -36,7 +36,7 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     
     #pin pad size
     pad_w = 0.8
-    pad_h = 2.0
+    pad_h = 1.9
     
     #component values
     A = (pincount - 1) * pitch
@@ -48,8 +48,8 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     createNumberedPadsSMD(kicad_mod, pincount, pitch, {'x':pad_w,'y':pad_h},-1.9/2)
     
     #add mounting pads (no number)
-    mpad_w = 1.5
-    mpad_h = 3.5
+    mpad_w = 1.3
+    mpad_h = 3.35
     mpad_x = A/2 + 2.2 + 1.3 / 2
     mpad_y = 2.25 + 3.35 / 2 + 0.005
 
