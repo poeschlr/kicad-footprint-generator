@@ -56,10 +56,7 @@ rows = 2
 
 pincount = [3, 4, 6, 8, 10, 13, 17, 25]
 
-#FP name strings
-part = "S{n:02}B-J21DK-GG" #JST part number format string
-
-name = "Harwin_Gecko-Female_2x{n:02}x{p:.2f}mm_Straight"
+name = "Harwin_Gecko-{pn}_2x{n:02}x{p:.2f}mm_Straight"
 
 desc = "Harwin Gecko Connector, {pins} pins, dual row female, vertical entry, PN:{pn}"
 
@@ -88,13 +85,14 @@ if __name__ == '__main__':
         ymid = (rows - 1) * pitch / 2
         y1 = ymid - WIDTH/2
         y2 = ymid + WIDTH/2
+        
+        pn = part.format(nn=2 * pins)
     
         #generate the name
-        fp_name = name.format(n=pins, p=pitch)
+        fp_name = name.format(n=pins, p=pitch, pn=pn)
 
         footprint = Footprint(fp_name)
         
-        pn = part.format(nn=2 * pins)
         
         #set the FP description
         footprint.setDescription(desc.format(pins = pins * rows, pn=pn))
