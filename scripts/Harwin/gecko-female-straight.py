@@ -40,9 +40,6 @@ from KicadModTree import *
 from KicadModTree.nodes.specialized.PadArray import PadArray
 """
 footprint specific details to go here
-
-Datasheet: http://www.jst-mfg.com/product/pdf/eng/eXH.pdf
-
 """
 pitch = 1.25
 
@@ -60,7 +57,7 @@ name = "Harwin_Gecko-{pn}_2x{n:02}x{p:.2f}mm_Straight"
 
 desc = "Harwin Gecko Connector, {pins} pins, dual row female, vertical entry, PN:{pn}"
 
-part = "G125-FVx{nn}05L0x"
+part = "G125-FVX{nn}05L0X"
 
 tags = "connector harwin gecko"
 #FP description and tags
