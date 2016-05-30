@@ -186,6 +186,9 @@ for key in lga.keys():
     #pad layers
     layers = ['F.Cu','F.Mask','F.Paste']
     
+    #add the outline of the part to the F.Fab layer
+    fp.append(RectLine(start=[-part.D1/2,-part.E1/2],end=[part.D1/2,part.E1/2],layer='F.Fab',width=0.05))
+    
     #draw the left-hand-pads
     fp.append(PadArray(pincount=part.ny, y_spacing=part.N1, center=[-x,0], size=[pl,part.T2], layers=layers, type=Pad.TYPE_SMT, shape=Pad.SHAPE_RECT))
     

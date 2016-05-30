@@ -41,7 +41,7 @@ from KicadModTree import *
 from KicadModTree.nodes.specialized.PadArray import PadArray
 
 prefix = "Inductor_"
-part = "WE-MAPI-{pn}"
+part = "Wurth_MAPI-{pn}"
 dims = "{l:0.1f}mmx{w:0.1f}mm"
 
 desc = "Inductor, Wurth Elektronik, {pn}"
@@ -68,6 +68,9 @@ for inductor in inductors:
     #pad-width pw
     pw = (x-g) / 2
     c = g/2 + pw/2
+    
+    #add the component outline
+    fp.append(RectLine(start=[-l/2,-w/2],end=[l/2,w/2],layer='F.Fab',width=0.15))
     
     layers = ["F.Cu","F.Paste","F.Mask"]
     
