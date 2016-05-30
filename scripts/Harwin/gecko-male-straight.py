@@ -58,7 +58,7 @@ name = "Harwin_Gecko-{pn}_2x{n:02}x{p:.2f}mm_Straight"
 
 desc = "Harwin Gecko Connector, {pins} pins, dual row male, vertical entry, {latch}, PN:{pn}"
 
-part = "G125-MVX{nn}05L{l}X"
+part = "G125-MVX{nn:02}05L{l}X"
 
 tags = "connector harwin gecko"
 #FP description and tags
