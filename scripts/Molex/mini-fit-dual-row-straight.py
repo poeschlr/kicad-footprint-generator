@@ -63,6 +63,8 @@ part_name = "Molex_MiniFit-JR-{part}_2x{n:02}x{p:.2f}mm_Straight"
 drill = 1.40
 size = 2.8
 
+row = 5.5
+
 #FP description and tags
 
 if __name__ == '__main__':
@@ -114,8 +116,8 @@ if __name__ == '__main__':
             x1 = -(A-B)/2
             x2 = x1 + A
             
-            y1 = -(W-pitch) / 2
-            y2 = y1 + W
+            y1 = -(W-row) / 2 - 0.2
+            y2 = y1 + W + 0.1
             
             #tab length
             tab_l = 3.4
@@ -123,21 +125,21 @@ if __name__ == '__main__':
             tab_w = 1.4
 
             # set general values
-            footprint.append(Text(type='reference', text='REF**', at=[B/2,9.5], layer='F.SilkS'))
+            footprint.append(Text(type='reference', text='REF**', at=[B/2,10], layer='F.SilkS'))
             footprint.append(Text(type='value', text=fp_name, at=[B/2,-4], layer='F.Fab'))
                 
             #generate the pads
             footprint.append(PadArray(pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=['*.Cu','*.Mask']))
-            footprint.append(PadArray(pincount=pins, initial=pins+1, start=[0, pitch], x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=['*.Cu','*.Mask']))
+            footprint.append(PadArray(pincount=pins, initial=pins+1, start=[0, row], x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=['*.Cu','*.Mask']))
             
             #add PCB locators if needed
             if boss:
                 loc = 3.00
-                footprint.append(Pad(at=[B/2-C/2, pitch - 0.46],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=loc,drill=loc, layers=["*.Cu"]))
-                footprint.append(Pad(at=[B/2+C/2, pitch - 0.46],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=loc,drill=loc, layers=["*.Cu"]))
+                footprint.append(Pad(at=[B/2-C/2, row - 0.46],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=loc,drill=loc, layers=["*.Cu"]))
+                footprint.append(Pad(at=[B/2+C/2, row - 0.46],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=loc,drill=loc, layers=["*.Cu"]))
                 
-                footprint.append(Circle(center=[B/2-C/2, pitch-0.46],radius=loc/2+0.1))
-                footprint.append(Circle(center=[B/2+C/2, pitch-0.46],radius=loc/2+0.1))
+                footprint.append(Circle(center=[B/2-C/2, row-0.46],radius=loc/2+0.1))
+                footprint.append(Circle(center=[B/2+C/2, row-0.46],radius=loc/2+0.1))
             
             #draw the outline of the shape
             footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
@@ -169,13 +171,13 @@ if __name__ == '__main__':
                 ], layer='F.Fab',width=0.05))
             
             q = 1
-            notch = False
+            notch = True
             for i in range(pins):
                 if notch:
                     y_square = 0
-                    y_notch = pitch
+                    y_notch = row
                 else:
-                    y_square = pitch
+                    y_square = row
                     y_notch = 0
                     
                 square_slot(i * pitch, y_square)
@@ -203,7 +205,7 @@ if __name__ == '__main__':
             footprint.append(PolygoneLine(polygone=outline, x_mirror=B/2))
             
             #pin-1 marker
-            x =  -(A-B)/2 - 0.3
+            x =  -(A-B)/2 - 0.5
             m = 0.3
             
             pin = [
