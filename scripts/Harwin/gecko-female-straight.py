@@ -51,7 +51,7 @@ pad_dia = 0.95
 
 rows = 2
 
-pincount = [3, 4, 6, 8, 10, 13, 17, 25]
+pincount = [3, 5, 6, 8, 10, 13, 17, 25]
 
 name = "Harwin_Gecko-{pn}_2x{n:02}x{p:.2f}mm_Straight"
 
