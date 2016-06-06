@@ -124,7 +124,7 @@ if __name__ == '__main__':
             
             # set general values
             footprint.append(Text(type='reference', text='REF**', at=[B/2,8.5], layer='F.SilkS'))
-            footprint.append(Text(type='value', text=fp_name, at=[B/2,-15.5], layer='F.Fab'))
+            footprint.append(Text(type='value', text=fp_name, at=[B/2,10], layer='F.Fab'))
                 
             #generate the pads
             footprint.append(PadArray(pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=['*.Cu','*.Mask']))
@@ -188,8 +188,24 @@ if __name__ == '__main__':
             #draw the outline of the shape
             footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
             
+            #draw the pins on the Silkscreen layer
+            o = size/2 + 0.3
+            w = 0.3
+            for i in range(pins):
+                x = i * pitch
+                ya = o
+                yb = row - o
+                footprint.append(Line(start=[x-w,ya],end=[x-w,yb]))
+                footprint.append(Line(start=[x+w,ya],end=[x+w,yb]))
             
+            #draw lines between each pin
+            off = 0.1
+            for i in range(pins-1):
+                xa = i * pitch + size / 2 + 0.3
+                xb = (i+1) * pitch - size / 2 - 0.3
             
+                footprint.append(Line(start=[xa,y2+off],end=[xb,y2+off]))
+                
             #pin-1 marker
             x =  -2
             m = 0.3
