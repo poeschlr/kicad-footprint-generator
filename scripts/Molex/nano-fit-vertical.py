@@ -56,7 +56,7 @@ pn_1_row = "105309-xx{n:02}"
 pn_2_row = "105310-xx{n:02}"
 
 #part description format strings
-part_name = "Molex_NanoFit_{r}x{n:02}x{p:.2f}mm_Angled"
+part_name = "Molex_NanoFit_{r}x{n:02}x{p:.2f}mm_Straight"
 part_description = "Molex Nano Fit, {row}, top entry, through hole, Datasheet:{ds}"
 part_tags = "connector molex nano-fit"
 #major dimensions
@@ -67,7 +67,7 @@ row = 2.5
 #drill size
 drill = 1.2
 #pad size
-size = 1.75
+size = 1.9
 
 #FP description and tags
 
