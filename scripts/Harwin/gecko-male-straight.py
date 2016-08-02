@@ -108,8 +108,8 @@ if __name__ == '__main__':
             if latch:
                 #mounting holes
                 m = (n - 2) * 0.625 + 2.5
-                footprint.append(Pad(at=[A/2 - m/2,ymid],size=[1.1,2],drill=[1,1.9],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_OVAL, layers=["*.Cu"]))
-                footprint.append(Pad(at=[A/2 + m/2,ymid],size=[1.1,2],drill=[1,1.9],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_OVAL, layers=["*.Cu"]))
+                footprint.append(Pad(at=[A/2 - m/2,ymid],size=[1.1,2],drill=[1,1.9],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_OVAL, layers=["*.Cu", "*.Mask"]))
+                footprint.append(Pad(at=[A/2 + m/2,ymid],size=[1.1,2],drill=[1,1.9],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_OVAL, layers=["*.Cu", "*.Mask"]))
                 
             #rough outline
             #corner radius
