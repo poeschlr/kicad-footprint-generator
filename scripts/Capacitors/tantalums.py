@@ -1,39 +1,44 @@
-# Tantalum Capacitors
-#https://en.wikipedia.org/wiki/Tantalum_capacitor#Chip_capacitors_.28case_size.29
+"""
+Tantalum Capacitors
 
-#AVX Datasheet
-# http://akizukidenshi.com/download/ds/avx/AVX_datasheet.pdf
+References:
 
-#Kemet Datasheet (use this as master reference)
-# https://www.pa.msu.edu/hep/d0/ftp/run2b/l1cal/hardware/component_information/kemet_tant_and_ceramic_caps.pdfs
+https://en.wikipedia.org/wiki/Tantalum_capacitor#Chip_capacitors_.28case_size.29
+#
 
-# Tantalum capacitor specifications
-# EIAcode (metric) -> L -> W -> H -> EIAcode (inches) -> AVX code -> Kemet code
+"""
+
+#Reflow-soldering dimensions
+#[Z, G, X]
+rR = [3.9, 0.8, 1.8]
+rA = rS = [4.7, 0.8, 1.5]
+rB = rT = [5.0, 1.1, 2.5]
+rC = rU = [7.6, 2.5, 2.5]
+rD = rV = rX = [8.9, 3.8, 2.7]
+rE = [8.9, 3.8, 4.4]
+
+#Wave-soldering dimensions
+#[Z, G, X]
+wR = [4.3, 0.8, 1.26]
+wA = wS = [5.1, 0.8, 1.1]
+wB = wT = [5.4, 1.1, 1.8]
+wC = wU = [8.0, 2.5, 1.8]
+wD = wV = wX = [9.7, 3.8, 2.7]
+wE = [9.7, 3.8, 4.4]
+
+# Designator, EIA, L, W, H, [Zr, Gr, Xr], [Zw, Gw, Xr]
 caps = [
-"""
-["1608-08",1.6,0.8,0.8,0603,"—","—"],
-["1608-10",1.6,0.85,1.05,0603,"L","—"],
-["2012-12",2.05,1.35,1.2,0805,"R","R"],
-["2012-15",2.05,1.35,1.5,0805,"P","—"],
-["3216-10",3.2,1.6,1.0,1206,"K","I"],
-["3216-12",3.2,1.6,1.2,1206,"S","S"],
-["3216-18",3.2,1.6,1.8,1206,"A","A"],
-["3528-12",3.5,2.8,1.2,1210,"T","T"],
-["3528-15",3.5,2.8,1.5,1210,"H","—"],
-["3528-21",3.5,2.8,2.1,1210,"B","B"],
-["6032-15",6.0,3.2,1.5,2312,"W","U"],
-["6032-20",6.0,3.2,2.0,2312,"F","—"],
-["6032-28",6.0,3.2,2.8,2312,"C","C"],
-["7343-15",7.3,4.3,1.5,2917,"X","W"],
-["7343-20",7.3,4.3,2.0,2917,"Y","V"],
-["7343-30",7.3,4.3,3.0,2917,"N","—"],
-["7343-31",7.3,4.3,3.1,2917,"D","D"],
-["7343-40",7.3,4.3,4.0,2917,"—","Y"],
-["7343-43",7,3,4.3,4.3,2917,"E","X"],
-["7360-38",7.3,6.0,3.8,2623,"—","E"],
-["7361-38",7.3,6.1,3.8,2924,"V","—"],
-["7361-438",7.3,6.1,4.3,2924,"U","—"]
-"""
+['A', '3216-18', 3.2, 1.6, 1.6, rA, wA],
+['B', '3528-21', 3.5, 2.8, 1.9, rB, wB],
+['C', '6032-28', 6.0, 3.2, 2.5, rC, wC],
+['D', '7343-31', 7.3, 4.3, 2.8, rD, wD],
+['E', '7260-38', 7.3, 6.0, 3.6, rE, wE],
+['X', '7343-43', 7.3, 4.2, 4.0, rX, wX],
+['R', '2012-12', 2.0, 1.3, 1.2, rR, wR],
+['S', '3216-12', 3.2, 1.6, 1.2, rS, wS],
+['T', '3528-12', 3.5, 2.8, 1.2, rT, wT],
+['U', '6032-15', 6.0, 3.2, 1.5, rU, wU],
+['V', '7343-20', 7.3, 4.3, 2.0, rV, wV],
 ]
 
 import sys
@@ -60,30 +65,101 @@ sys.path.append("..\\..")
 from KicadModTree import *
 from KicadModTree.nodes.specialized.PadArray import PadArray
 
-prefix = "Tantalum_"
-part = "Wurth_MAPI-{pn}"
-dims = "{l:0.1f}mmx{w:0.1f}mm"
+prefix = "Tantalum_Case-{case}_EIA-{eia}"
+suffix = "_{pattern}-Soldering"
 
-desc = "Inductor, Wurth Elektronik, {pn}"
-tags = "inductor wurth smd"
+name = prefix + suffix
 
-for inductor in inductors:
-    name,l,w,x,g,y = inductor
+desc = "Tantalum calacitor, Case {case}, EIA {eia}, {l}x{w}x{h}mm, {pattern} soldering footprint"
+tags = "capacitor tantalum smd"
+
+HAND_SOLDER_SIZE = 2
+
+for cap in caps:
     
-    fp_name = prefix + part.format(pn=str(name))
+    #extract information
+    case, eia, l, w, h, reflow, wave = cap
     
-    fp = Footprint(fp_name)
+    #calculate the hand-soldering values
+    #based on the reflow soldering
     
-    description = desc.format(pn = part.format(pn=str(name))) + ", " + dims.format(l=l,w=w)
+    z,g,x = reflow
+    z = l + 2 * HAND_SOLDER_SIZE
     
-    fp.setTags(tags)
-    fp.setAttribute("smd")
-    fp.setDescription(description)
+    #various patterns to generate
+    patterns = {
+    'Reflow' : reflow,
+    'Wave' : wave,
+    'Hand' : [z,g,x]
+    }
     
-    # set general values
-    fp.append(Text(type='reference', text='REF**', at=[0,-y/2 - 1], layer='F.SilkS'))
-    fp.append(Text(type='value', text=fp_name, at=[0,y/2 + 1.5], layer='F.Fab'))
+    for pattern_name in patterns.keys():
+        fp_name = name.format(
+            case = case,
+            eia  = eia,
+            pattern = pattern_name)
+            
+        fp_description = desc.format(
+            case = case,
+            eia  = eia,
+            l    = l,
+            w    = w,
+            h    = h,
+            pattern = pattern_name)
+            
+        print(fp_name)
+            
+        pattern = patterns[pattern_name]
+        
+        #extract the pattern information
+        Z, G, X = pattern
+        
+        #Make the footprint
+        fp = Footprint(fp_name)
+        fp.setAttribute('smd')
+        fp.setDescription(fp_description)
+        fp.setTags(tags)
+        
+        #set the general values
+        fp.append(Text(type='reference', text='REF**', at=[0,-w/2 - 1], layer='F.SilkS'))
+        fp.append(Text(type='value', text=fp_name, at=[0,w/2 + 1.5], layer='F.Fab'))
     
+        #draw the courtyard
+        cy = max(w/2, X/2)
+        fp.append(RectLine(start=[-Z/2, -cy], end=[Z/2, cy], width=0.05, layer='F.CrtYd', grid=0.05, offset=0.4))
+        
+        #draw the cap outline
+        fp.append(RectLine(start=[-l/2,-w/2],end=[l/2,w/2],layer='F.Fab'))
+        
+        #F.Fab polarization
+        fx1 = -0.40 * l
+        fx2 = -0.35 * l
+        fp.append(Line(start=[fx1,-w/2],end=[fx1,w/2],layer='F.Fab'))
+        fp.append(Line(start=[fx2,-w/2],end=[fx2,w/2],layer='F.Fab'))
+        
+        #draw the pads
+        px = (G + Z) / 4
+        layers = ["F.Cu","F.Paste","F.Mask"]
+        fp.append(Pad(number=1, size=[(Z-G)/2,X], at=[-px, 0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT))
+        fp.append(Pad(number=2, size=[(Z-G)/2,X], at=[px, 0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT))
+        
+        #silkscreen it up like a boss
+        fp.append(Line(start=[0.25*l,-cy-0.2],end=[-Z/2,-cy-0.2]))
+        fp.append(Line(start=[0.25*l,+cy+0.2],end=[-Z/2,+cy+0.2]))
+        #fp.append(Line(start=[-Z/2 - 0.2, -0.75 * cy], end=[-Z/2 - 0.2, 0.75 * cy]))
+        
+        #Add a model
+        model_name = prefix.format(case = case, eia = eia)
+        fp.append(Model(filename="Capacitors_Tantalum_SMD.3dshapes/" + model_name + ".wrl"))
+        
+        #filename
+        filename = output_dir + fp_name + ".kicad_mod"
+        
+        file_handler = KicadFileHandler(fp)
+        file_handler.writeFile(filename)
+        
+    
+    """
     #calculate pad center
     #pad-width pw
     pw = (x-g) / 2
@@ -92,7 +168,6 @@ for inductor in inductors:
     #add the component outline
     fp.append(RectLine(start=[-l/2,-w/2],end=[l/2,w/2],layer='F.Fab',width=0.15))
     
-    layers = ["F.Cu","F.Paste","F.Mask"]
     
     #add pads
     fp.append(Pad(number=1,at=[-c,0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
@@ -108,12 +183,5 @@ for inductor in inductors:
     fp.append(Line(start=[-g/2+0.2,-w/2-0.1],end=[g/2-0.2,-w/2-0.1]))
     fp.append(Line(start=[-g/2+0.2,w/2+0.1],end=[g/2-0.2,w/2+0.1]))
     
-    #Add a model
-    fp.append(Model(filename="Inductors.3dshapes/" + fp_name + ".wrl"))
-    
-    #filename
-    filename = output_dir + fp_name + ".kicad_mod"
-    
-    file_handler = KicadFileHandler(fp)
-    file_handler.writeFile(filename)
+    """
     
