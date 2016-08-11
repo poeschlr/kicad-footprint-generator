@@ -157,31 +157,4 @@ for cap in caps:
         
         file_handler = KicadFileHandler(fp)
         file_handler.writeFile(filename)
-        
-    
-    """
-    #calculate pad center
-    #pad-width pw
-    pw = (x-g) / 2
-    c = g/2 + pw/2
-    
-    #add the component outline
-    fp.append(RectLine(start=[-l/2,-w/2],end=[l/2,w/2],layer='F.Fab',width=0.15))
-    
-    
-    #add pads
-    fp.append(Pad(number=1,at=[-c,0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
-    fp.append(Pad(number=2,at=[c,0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT,size=[pw,y]))
-    
-    #add inductor courtyard
-    cx = c + pw/2
-    cy = y / 2
-    
-    fp.append(RectLine(start=[-cx,-cy],end=[cx,cy],offset=0.35,width=0.05,grid=0.05,layer="F.CrtYd"))
-    
-    #add lines
-    fp.append(Line(start=[-g/2+0.2,-w/2-0.1],end=[g/2-0.2,-w/2-0.1]))
-    fp.append(Line(start=[-g/2+0.2,w/2+0.1],end=[g/2-0.2,w/2+0.1]))
-    
-    """
     
