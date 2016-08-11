@@ -66,7 +66,7 @@ from KicadModTree import *
 from KicadModTree.nodes.specialized.PadArray import PadArray
 
 prefix = "Tantalum_Case-{case}_EIA-{eia}"
-suffix = "_{pattern}-Soldering"
+suffix = "_{pattern}"
 
 name = prefix + suffix
 
