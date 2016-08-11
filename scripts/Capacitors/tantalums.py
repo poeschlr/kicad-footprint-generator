@@ -70,7 +70,7 @@ suffix = "_{pattern}"
 
 name = prefix + suffix
 
-desc = "Tantalum calacitor, Case {case}, EIA {eia}, {l}x{w}x{h}mm, {pattern} soldering footprint"
+desc = "Tantalum capacitor, Case {case}, EIA {eia}, {l}x{w}x{h}mm, {pattern} soldering footprint"
 tags = "capacitor tantalum smd"
 
 HAND_SOLDER_SIZE = 2
