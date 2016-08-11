@@ -2,7 +2,7 @@
 Tantalum Capacitors
 
 References:
-
+http://www.dialelectrolux.ru/files/file/Kemet/f3102.pdf
 https://en.wikipedia.org/wiki/Tantalum_capacitor#Chip_capacitors_.28case_size.29
 #
 
