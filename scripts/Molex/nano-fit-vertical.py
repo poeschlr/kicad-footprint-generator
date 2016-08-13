@@ -143,9 +143,9 @@ if __name__ == '__main__':
             footprint.append(Pad(at=[C,1.34],size=1.3,drill=1.3,type=Pad.TYPE_NPTH,shape=Pad.SHAPE_CIRCLE, layers=["*.Cu"]))
             
             #add outline to F.Fab
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
+            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
             
-            off = 0.1
+            off = 0.15
             #and to the silkscreen
             #and draw the tab
             TL = 5.2
@@ -178,49 +178,6 @@ if __name__ == '__main__':
             {'x': x1-0.5,'y': y1-0.5},
             ]))
             
-            """
-            #add PCB locators
-            r_loc = 3.00
-            y_loc = -7.3
-            
-            #two locators2.
-            if pins > 2:
-                lx1 = P/2 - B/2
-                lx2 = P/2 + B/2
-                
-                footprint.append(Pad(at=[lx1, y_loc],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=r_loc,drill=r_loc, layers=["*.Cu"]))
-                footprint.append(Pad(at=[lx2, y_loc],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=r_loc,drill=r_loc, layers=["*.Cu"]))
-                
-                footprint.append(Circle(center=[lx1, y_loc],radius=r_loc/2+0.1))
-                footprint.append(Circle(center=[lx2, y_loc],radius=r_loc/2+0.1))
-            else:
-                #one locator
-                footprint.append(Pad(at=[P/2,y_loc],type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE, size=r_loc, drill=r_loc, layers=["*.Cu"]))
-                
-                footprint.append(Circle(center=[P/2,y_loc], radius=r_loc/2+0.1))
-                
-            #draw the outline of the shape
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
-            
-            off = 0.1
-            outline = [
-            {'x': P/2,'y': y1-off},
-            {'x': x1-off,'y': y1-off},
-            {'x': x1-off,'y': y2+off},
-            {'x': -2.5,'y': y2+off},
-            ]
-            
-            footprint.append(PolygoneLine(polygone=outline))
-            footprint.append(PolygoneLine(polygone=outline,x_mirror=P/2))
-            
-            #draw lines between each pin
-            for i in range(pins-1):
-                xa = i * pitch + size / 2 + 0.3
-                xb = (i+1) * pitch - size / 2 - 0.3
-                
-                footprint.append(Line(start=[xa,y2+off],end=[xb,y2+off]))
-            
-            """ 
             #draw the pins!
             o = 0.475 * pitch
             for i in range(pins):
@@ -228,7 +185,7 @@ if __name__ == '__main__':
                     x = i * pitch
                     y = -j * pitch
                     
-                    footprint.append(RectLine(start=[x-o,y-o],end=[x+o,y+o], layer='F.Fab', width=0.05))
+                    footprint.append(RectLine(start=[x-o,y-o],end=[x+o,y+o], layer='F.Fab'))
             
             #pin-1 marker
             x = x1 - 0.5

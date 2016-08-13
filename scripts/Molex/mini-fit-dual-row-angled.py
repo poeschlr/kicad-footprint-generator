@@ -186,7 +186,7 @@ if __name__ == '__main__':
                     layer='F.CrtYd',width=0.05,offset=0.5,grid=0.05))
             
             #draw the outline of the shape
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
+            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
             
             #draw the pins on the Silkscreen layer
             o = size/2 + 0.3

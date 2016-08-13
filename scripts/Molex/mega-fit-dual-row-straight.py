@@ -141,7 +141,7 @@ if __name__ == '__main__':
         footprint.append(Circle(center=[lx2, row-offset],radius=loc/2+0.1))
         
         #draw the outline of the shape
-        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
+        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
         
         #draw the outline of the tab
         footprint.append(PolygoneLine(polygone=[
@@ -149,11 +149,11 @@ if __name__ == '__main__':
             {'x': P/2 - tab_l/2,'y': y2 + tab_w},
             {'x': P/2 + tab_l/2,'y': y2 + tab_w},
             {'x': P/2 + tab_l/2,'y': y2},
-        ], layer='F.Fab',width=0.05))
+        ], layer='F.Fab'))
         
         
         #draw the outline of the connector on the silkscreen
-        off = 0.1
+        off = 0.15
         outline = [
         {'x': P/2,'y': y1-off},
         {'x': x1-off,'y': y1-off},

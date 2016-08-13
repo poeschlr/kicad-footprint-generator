@@ -64,10 +64,34 @@ if __name__ == '__main__':
 
     for pins in pincount:
         
+        pn = part.format(n=pins)
+
+        #generate the name
+        fp_name = prefix.format(pn=pn) + suffix.format(n=pins, p=pitch)
+        
+        print(fp_name)
+
+        footprint = Footprint(fp_name)
+        
+        description = "Molex Micro-Latch connector, PN:" + pn + ", top entry type, through hole"
+        
+        #set the FP description
+        footprint.setDescription(description)
+        
+        tags = "conn molex micro latch"
+        
+        #set the FP tags
+        footprint.setTags(tags)
+        
         #calculate fp dimensions
         A = (pins - 1) * pitch
         B = A + 3.1
         C = A + 4
+        
+        # set general values
+        footprint.append(Text(type='reference', text='REF**', at=[A/2,3.5], layer='F.SilkS'))
+        footprint.append(Text(type='value', text=fp_name, at=[A/2,-3.5], layer='F.Fab'))
+         
         
         #connector thickness
         T = 5.75
@@ -81,37 +105,19 @@ if __name__ == '__main__':
         y1 = -1.5
         y2 = y1 + T
         
+        #add simple outline to F.Fab layer
+        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
+        
         #wall-thickness W
         w = 0.4
         
         #offset 
-        o = 0.1
+        o = 0.15
         x1 -= o
         y1 -= o
         x2 += o
         y2 += o
-       
-        pn = part.format(n=pins)
-
-        #generate the name
-        fp_name = prefix.format(pn=pn) + suffix.format(n=pins, p=pitch)
-
-        footprint = Footprint(fp_name)
-        
-        description = "Molex Micro-Latch connector, PN:" + pn + ", top entry type, through hole"
-        
-        #set the FP description
-        footprint.setDescription(description)
-        
-        tags = "conn molex micro latch"
-        
-        #set the FP tags
-        footprint.setTags(tags)
-
-        # set general values
-        footprint.append(Text(type='reference', text='REF**', at=[A/2,3.5], layer='F.SilkS'))
-        footprint.append(Text(type='value', text=fp_name, at=[A/2,-3.5], layer='F.Fab'))
-            
+           
         #generate the pads
         footprint.append(PadArray(pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=['*.Cu','*.Mask']))
         

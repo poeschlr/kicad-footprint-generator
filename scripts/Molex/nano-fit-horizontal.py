@@ -145,16 +145,16 @@ if __name__ == '__main__':
             footprint.append(Pad(at=[x_loc_b,y_loc],size=r_loc,drill=r_loc,type=Pad.TYPE_NPTH,shape=Pad.SHAPE_CIRCLE, layers=["*.Cu"]))
             
             #add outline to F.Fab
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
+            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
             
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],offset=0.1))
+            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],offset=0.15))
             
             #draw the pins
             for i in range(pins):
                 x = i * pitch
                 y = -1 * (rows - 1) * row - size/2 - 0.25
                 w = 0.15
-                footprint.append(RectLine(start=[x-w,y2+0.1],end=[x+w,y]))
+                footprint.append(RectLine(start=[x-w,y2+0.15],end=[x+w,y-0.1]))
             
             #add the courtyard
             footprint.append(RectLine(start=[x1,y1],end=[x2,size/2],layer='F.CrtYd',width=0.05,grid=0.05,offset=0.5))

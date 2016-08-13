@@ -133,7 +133,7 @@ if __name__ == '__main__':
             
             #draw rectangle on F.Fab layer
             w = 0.4 * pitch
-            footprint.append(RectLine(start=[x-w/2,dy2-w/2],end=[x+w/2,dy1+w/2],layer='F.Fab',width=0.05))
+            footprint.append(RectLine(start=[x-w/2,dy2-w/2],end=[x+w/2,dy1+w/2],layer='F.Fab'))
         
             footprint.append(Pad(at=[x,dy1],drill=d_small,size=s_small,shape=Pad.SHAPE_CIRCLE,type=Pad.TYPE_THT, layers=["*.Cu","B.Mask"]))
             footprint.append(PadArray(center=[x-d,dy1],pincount=5,y_spacing=2,drill=d_small,size=s_small,initial=n,increment=0,type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, layers=["*.Cu","B.Mask"]))
@@ -155,7 +155,7 @@ if __name__ == '__main__':
         footprint.append(RectLine(start=[-x_size/2, y_size/2],end=[x_size/2,-4.4-y_size/2],offset=0.4,layer='B.SilkS'))
         
         #draw connector outline (basic)
-        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],width=0.05,layer='F.Fab'))
+        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
 
         #connector outline on F.SilkScreen
         off = 0.25
@@ -219,8 +219,8 @@ if __name__ == '__main__':
             
         #draw the courtyard
         footprint.append(RectLine(
-            start=[x1-TL,-16.86-y_size/2],
-            end=[x2+TL,y_size/2],
+            start=[x1-TL-0.3,-16.86-y_size/2],
+            end=[x2+TL+0.3,y_size/2],
             width=0.05,
             layer='F.CrtYd',
             offset=0.5,

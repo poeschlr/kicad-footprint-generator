@@ -142,7 +142,7 @@ if __name__ == '__main__':
                 footprint.append(Circle(center=[B/2+C/2, row-0.46],radius=loc/2+0.1))
             
             #draw the outline of the shape
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab',width=0.05))
+            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
             
             #draw the outline of the tab
             footprint.append(PolygoneLine(polygone=[
@@ -150,14 +150,14 @@ if __name__ == '__main__':
                 {'x': B/2 - tab_l/2,'y': y2 + tab_w},
                 {'x': B/2 + tab_l/2,'y': y2 + tab_w},
                 {'x': B/2 + tab_l/2,'y': y2},
-            ], layer='F.Fab',width=0.05))
+            ], layer='F.Fab'))
             
             #draw the outline of each pin slot (alternating shapes)
             #slot size
             S = 3.5
             
             def square_slot(x,y):
-                footprint.append(RectLine(start=[x-S/2,y-S/2],end=[x+S/2,y+S/2],layer='F.Fab',width=0.05))
+                footprint.append(RectLine(start=[x-S/2,y-S/2],end=[x+S/2,y+S/2],layer='F.Fab'))
                 
             def notch_slot(x,y):
                 footprint.append(PolygoneLine(polygone=[
@@ -168,7 +168,7 @@ if __name__ == '__main__':
                 {'x': x+S/2, 'y': y-S/4},
                 {'x': x+S/2, 'y': y+S/2},
                 {'x': x-S/2, 'y': y+S/2},
-                ], layer='F.Fab',width=0.05))
+                ], layer='F.Fab'))
             
             q = 1
             notch = True

@@ -24,6 +24,8 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
 
     footprint_name = "{0}-{1}_{2:02}x{3:.2f}mm_{4}".format(manu+"_"+series,part,pincount,pitch,suffix)
 
+    print(footprint_name)
+    
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription(desc)
     kicad_mod.setTags(tags)
@@ -61,8 +63,31 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     x2 = B/2
     y2 = 5.5
     
+    #thickness of "arms"
+    t = 1.9
+    
+    #depth of arms
+    d = 1.0
+    
+    #angle of arms
+    a = 0.4
+    
+    #add outline to F.Fab layer
+    kicad_mod.addPolygoneLine([
+        {'x': x2, 'y': y1},
+        {'x': x1, 'y': y1},
+        {'x': x1, 'y': y2},
+        {'x': x1 + t, 'y': y2},
+        {'x': x1 + t + a, 'y': y2 - d},
+        {'x': x2 - t - a, 'y': y2 - d},
+        {'x': x2 - t, 'y': y2},
+        {'x': x2, 'y': y2},
+        {'x': x2, 'y': y1},
+        ], 'F.Fab', 0.15
+    )
+    
     #line offset 
-    off = 0.1
+    off = 0.15
     
     x1 -= off
     y1 -= off
@@ -73,25 +98,22 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     #offset from pads
     xo = 0.5
     
-    #thickness of "arms"
-    t = 1.9
+    t += 0.25
     
-    #depth of arms
-    d = 1.0
     
-    #angle of arms
-    a = 0.4
-    
+    #left SilkS
     kicad_mod.addPolygoneLine([{'x':-A/2 - pad_w/2 - xo,'y':y1},
                                {'x':x1,'y':y1},
                                {'x':x1,'y':mpad_y - mpad_h/2 - xo}])
                                
-                               
+              
+    #right SilkS
     kicad_mod.addPolygoneLine([{'x':A/2 + pad_w/2 + xo,'y':y1},
                                {'x':x2,'y':y1},
                                {'x':x2,'y':mpad_y - mpad_h/2 - xo}])                               
     
     
+    #bottom SilkS
     kicad_mod.addPolygoneLine([{'x':-mpad_x + mpad_w/2 + xo,'y':y2},
                                {'x':x1+t,'y':y2},
                                {'x':x1+t+a,'y':y2-d},
