@@ -40,6 +40,9 @@ for pincount in range(2,16):
     x2 = x1 + B
     y2 = 1.5
     
+    #draw the main outline around the footprint
+    kicad_mod.addRectLine({'x':x1,'y':y1},{'x':x2,'y':y2},'F.Fab',0.15)
+    
     #line offset 
     off = 0.2
     
@@ -49,8 +52,6 @@ for pincount in range(2,16):
     x2 += off
     y2 += off
     
-    #draw the main outline around the footprint
-    #kicad_mod.addRectLine({'x':x1,'y':y1},{'x':x2,'y':y2})
     
     T = 1.5
     

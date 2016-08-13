@@ -70,6 +70,8 @@ if __name__ == '__main__':
         fp_name = prefix + part.format(n=2*pins) + suffix.format(n=pins, p=pitch)
 
         footprint = Footprint(fp_name)
+
+        print(fp_name)
         
         description = "JST J2100 series connector, dual row, center locking, " + part.format(n=2*pins) + ", side entry type, through hole"
         
@@ -98,8 +100,11 @@ if __name__ == '__main__':
         y1 = -2.5 - 0.62
         y2 = y1 + 17.8
         
+        #draw the main outline around the footprint
+        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
+        
         #offset off
-        off = 0.1
+        off = 0.2
         
         x1 -= off
         y1 -= off

@@ -34,6 +34,7 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
     # SMT type shrouded header, Side entry type (normal type)
     footprint_name = "JST_SHL_" + jst_name + "_{pincount:02}x1.00mm_Angled".format(pincount=pincount)
 
+    print(footprint_name)
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST SHL series connector, " + jst_name) 
     kicad_mod.setAttribute('smd')
@@ -61,24 +62,37 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
     kicad_mod.addPad('""', 'smd', 'rect', {'x':mpad_x, 'y':mpad_y}, {'x':mpad_w, 'y':mpad_h}, 0, ['F.Cu', 'F.Paste', 'F.Mask'])
     kicad_mod.addPad('""', 'smd', 'rect', {'x':-mpad_x, 'y':mpad_y}, {'x':mpad_w, 'y':mpad_h}, 0, ['F.Cu', 'F.Paste', 'F.Mask'])
 
+    #offset
+    o = 0.2
+    
+    
     #add bottom line
-    kicad_mod.addPolygoneLine([{'x':-B/2-0.1,'y':-0.1},
-                             {'x':-B/2-0.1,'y':0.2},
-                             {'x':B/2+0.1,'y':0.2},
-                             {'x':B/2+0.1,'y':-0.1}])
+    kicad_mod.addPolygoneLine([{'x':-B/2-o,'y':-0.1},
+                             {'x':-B/2-o,'y':0.2},
+                             {'x':B/2+o,'y':0.2},
+                             {'x':B/2+o,'y':-0.1}])
                              
     #add left line
-    kicad_mod.addPolygoneLine([{'x':-B/2-0.1,'y':-3.1},
-                                {'x':-B/2-0.1,'y':-4.1},
-                                {'x':-A/2-pad_w/2-0.5,'y':-4.1}])
+    kicad_mod.addPolygoneLine([{'x':-B/2-o,'y':-3.1},
+                                {'x':-B/2-o,'y':-4.5},
+                                {'x':-A/2-pad_w/2-0.5,'y':-4.5}])
 
     #add right line
-    kicad_mod.addPolygoneLine([{'x':B/2+0.1,'y':-3.1},
-                                {'x':B/2+0.1,'y':-4.1},
-                                {'x':A/2+pad_w/2+0.5,'y':-4.1}])                                  
+    kicad_mod.addPolygoneLine([{'x':B/2+o,'y':-3.1},
+                                {'x':B/2+o,'y':-4.5},
+                                {'x':A/2+pad_w/2+0.5,'y':-4.5}])
+
+    #add connector outline to F.Fab
+    y1 = -4.3
+    y2 = y1 + 4.3
 
     #add designator for pin #1
-
+    kicad_mod.addRectLine(
+        {'x': -B/2,'y': y1},
+        {'x': B/2,'y': y2},
+        'F.Fab', 0.15
+    )
+    
     x1 = -B/2 + 1   
                               
     y1 = -4.9

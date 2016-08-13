@@ -88,6 +88,7 @@ if __name__ == '__main__':
             y2 = V
             y1= y2 - T
             
+            
             #y at which the plastic tabs end
             y3 = y2 - 7
         
@@ -95,6 +96,7 @@ if __name__ == '__main__':
             part = part_base + variant
             fp_name = prefix + part.format(n=pins) + suffix.format(n=pins, p=pitch)
 
+            print(fp_name)
             footprint = Footprint(fp_name)
             
             description = "JST XH series connector, " + part.format(n=pins) + ", side entry type, through hole"
@@ -111,13 +113,15 @@ if __name__ == '__main__':
             footprint.append(Text(type='reference', text='REF**', at=[x_mid,-3.5], layer='F.SilkS'))
             footprint.append(Text(type='value', text=fp_name, at=[x_mid,y2 + 1.1], layer='F.Fab'))
 
+            #draw simple outline on F.Fab layer
+            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
+            
             drill = 0.9
                 
             #generate the pads
             pa = PadArray(pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=1.75, drill=drill, layers=['*.Cu','*.Mask','F.SilkS'])
             
             footprint.append(pa)
-
             
             #draw the courtyard
             cy = RectLine(start=[x1,y1],end=[x2,y2],layer='F.CrtYd',width=0.05,offset = 0.5)

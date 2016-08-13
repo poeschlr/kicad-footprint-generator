@@ -44,6 +44,15 @@ for pincount in range(2,16):
 
     kicad_mod.setCenterPos({'x':0, 'y':-3.075})
 
+    #draw outline on the F.Fab layer
+    y1 = -4.25 / 2 - 2.25
+    y2 = y1 + 4.25
+    kicad_mod.addRectLine(
+        {'x': -B/2,'y': y1},
+        {'x':  B/2,'y': y2},
+        'F.Fab', 0.15
+    )
+    
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-7.5}, 'F.SilkS')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':1.5}, 'F.Fab')
@@ -68,27 +77,27 @@ for pincount in range(2,16):
     T = 0.5
     
     #add bottom line
-    kicad_mod.addPolygoneLine([{'x':-B/2+mpad_w+0.6,'y':-0.1},
-                            {'x':B/2-mpad_w-0.6,'y':-0.1},
-                            {'x':B/2-mpad_w-0.6,'y':-0.1 - T},
-                            {'x':-B/2+mpad_w+0.6,'y':-0.1 - T},
-                            {'x':-B/2+mpad_w+0.6,'y':-0.1}])
+    kicad_mod.addPolygoneLine([{'x':-B/2+mpad_w+0.6,'y':0.05},
+                            {'x':B/2-mpad_w-0.6,'y':0.05},
+                            {'x':B/2-mpad_w-0.6,'y':0.05 - T},
+                            {'x':-B/2+mpad_w+0.6,'y':0.05 - T},
+                            {'x':-B/2+mpad_w+0.6,'y':0.05}])
                              
     #add left line
     kicad_mod.addPolygoneLine([{'x':-B/2-0.1,'y':-3.3},
-                                {'x':-B/2-0.1,'y':-4.4},
-                                {'x':-A/2-pad_w/2-0.4,'y':-4.4},
-                                {'x':-A/2-pad_w/2-0.4,'y':-4.4+T},
-                                {'x':-B/2-0.1+T,'y':-4.4+T},
+                                {'x':-B/2-0.1,'y':-4.5},
+                                {'x':-A/2-pad_w/2-0.4,'y':-4.5},
+                                {'x':-A/2-pad_w/2-0.4,'y':-4.5+T},
+                                {'x':-B/2-0.1+T,'y':-4.5+T},
                                 {'x':-B/2-0.1+T,'y':-3.3},
                                 {'x':-B/2-0.1,'y':-3.3}])
 
     #add right line
     kicad_mod.addPolygoneLine([{'x':B/2+0.1,'y':-3.3},
-                                {'x':B/2+0.1,'y':-4.4},
-                                {'x':A/2+pad_w/2+0.4,'y':-4.4},
-                                {'x':A/2+pad_w/2+0.4,'y':-4.4+T},
-                                {'x':B/2+0.1-T, 'y':-4.4+T},
+                                {'x':B/2+0.1,'y':-4.5},
+                                {'x':A/2+pad_w/2+0.4,'y':-4.5},
+                                {'x':A/2+pad_w/2+0.4,'y':-4.5+T},
+                                {'x':B/2+0.1-T, 'y':-4.5+T},
                                 {'x':B/2+0.1-T, 'y':-3.3},
                                 {'x':B/2+0.1,'y':-3.3}])                                  
                                 

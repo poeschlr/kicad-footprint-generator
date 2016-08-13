@@ -41,12 +41,12 @@ from KicadModTree.nodes.specialized.PadArray import PadArray
 """
 footprint specific details to go here
 
-Datasheet: http://www.jst-mfg.com/product/pdf/eng/eXH.pdf
+Datasheet: http://www.jst-mfg.com/product/pdf/eng/ePUD.pdf
 
 """
 pitch = 2.0
 
-pincount = [4,5,6,8,10,11,12,13,14,15,16,17,18,19,20] #number of pins in each row
+pincount = [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] #number of pins in each row
 rows = 2
 row_pitch = 2
 
@@ -69,6 +69,8 @@ if __name__ == '__main__':
         #generate the name
         fp_name = prefix + part.format(n=2*pins) + suffix.format(n=pins, p=pitch)
 
+        print(fp_name)
+        
         footprint = Footprint(fp_name)
         
         description = "JST PUD series connector, dual row, " + part.format(n=2*pins) + ", top entry type, through hole"
@@ -92,6 +94,9 @@ if __name__ == '__main__':
         x2 = x1 + B
         y2 = 2 + 2.4
         y1 = y2 - 8.3
+        
+        #draw simple outline on F.Fab layer
+        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
         
         #offset off
         off = 0.1

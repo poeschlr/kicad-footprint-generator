@@ -66,6 +66,15 @@ for pincount in range(2,16):
 
     T = 0.5
     
+    y1 = -4.25
+    y2 = y1 + 4.05
+    #add outline to F.Fab
+    kicad_mod.addRectLine(
+        {'x': -B/2,'y': y1},
+        {'x':  B/2,'y': y2},
+        'F.Fab', 0.15
+    )
+    
     #add bottom line
     kicad_mod.addPolygoneLine([{'x':-B/2+mpad_w+0.6,'y':-0.1},
                             {'x':B/2-mpad_w-0.6,'y':-0.1}])

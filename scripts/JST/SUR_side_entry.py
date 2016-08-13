@@ -48,6 +48,7 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     # SMT type shrouded header, Side entry type (normal type)
     fp_name = "JST_SUR_" + jst_name + "_{pincount:02}x{pitch:.2f}mm_Angled".format(pincount=pincount,pitch=pitch)
 
+    print(fp_name)
     fp = Footprint(fp_name)
     fp.setDescription("JST SUR series connector, " + jst_name + ", side entry, 0.80mm pitch") 
     fp.setAttribute('smd')
@@ -89,7 +90,7 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     xb = MX - mw / 2 - 0.3
     yb = YP + mh / 2 - 0.25
     
-    fp.append(Line(start=[-xb,yb],end=[xb,yb]))
+    fp.append(Line(start=[-xb,yb + 0.2],end=[xb,yb + 0.2]))
     
     #draw the outside line
     #offset from pads o
@@ -104,12 +105,30 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     {'x': x1,'y': y1},
     {'x': x1 + 0.3,'y': y1},
     {'x': x1 + 0.3,'y': y2},
-    {'x': B/2 + 0.1,'y': y2},
-    {'x': B/2 + 0.1,'y': YP - mh/2 - o},
+    {'x': B/2 + 0.2,'y': y2},
+    {'x': B/2 + 0.2,'y': YP - mh/2 - o},
     ]
     
     fp.append(PolygoneLine(polygone=right))
     fp.append(PolygoneLine(polygone=right,x_mirror=0))
+    
+    W = 2.7
+    yA = y1 + 0.2
+    yB = y2 + 0.2
+    yC = yA + W
+    
+    #add the outline of the connector to F.Fab layer
+    out = [
+    {'x': 0,'y': yA},
+    {'x': x1 + 0.1,'y': yA},
+    {'x': x1 + 0.1,'y': yB},
+    {'x': B/2,'y': yB},
+    {'x': B/2,'y': yC},
+    {'x': 0,'y': yC},
+    ]
+    
+    fp.append(PolygoneLine(polygone=out,layer='F.Fab'))
+    fp.append(PolygoneLine(polygone=out,layer='F.Fab',x_mirror=0))
     
     #add pin-1 mark
     mx = -A/2

@@ -40,6 +40,8 @@ for pincount in range(2,16):
     x2 = x1 + B
     y2 = y1 + 3.8
     
+    #draw the main outline on F.Fab layer
+    kicad_mod.addRectLine({'x':x1,'y':y1},{'x':x2,'y':y2},'F.Fab',0.15)
     
     #line offset 
     off = 0.2

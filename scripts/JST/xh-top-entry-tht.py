@@ -104,6 +104,9 @@ if __name__ == '__main__':
             tags += " boss"
         #set the FP tags
         footprint.setTags(tags)
+        
+        #draw simple outline on F.Fab layer
+        footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
 
         # set general values
         footprint.append(Text(type='reference', text='REF**', at=[x_mid,-3.5], layer='F.SilkS'))
