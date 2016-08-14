@@ -22,11 +22,12 @@ for pincount in range(2,16):
     part = "DF13-{pincount:02}P-1.25DS".format(pincount=pincount)
     
     footprint_name = "{0}_{1}_{2:02}x{3:.2f}mm_{4}".format(manu,part,pincount,pitch,suffix)
+    
+    print(footprint_name)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription(desc)
     kicad_mod.setTags(tags)
-
     
     drill = 0.6
 
@@ -49,8 +50,15 @@ for pincount in range(2,16):
     x2 = x1 + B
     y2 = y1 + 5.4
     
+    #draw the connector outline on the F.Fab layer
+    kicad_mod.addRectLine(
+        {'x': x1,'y': y1},
+        {'x': x2,'y': y2},
+        'F.Fab', 0.15
+    )
+    
     #line offset 
-    off = 0.1
+    off = 0.15
     
     x1 -= off
     y1 -= off
