@@ -33,7 +33,8 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
     kicad_mod.setAttribute('smd')
 
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-4}, 'F.SilkS')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-3}, 'F.SilkS')
+    kicad_mod.addText('user', '%R', {'x':0, 'y':-3}, 'F.Fab')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':7}, 'F.Fab')
     
     #pin pad size
@@ -124,15 +125,20 @@ for pincount in [2,3,4,5,6,7,8,9,10,12,14,15,18,20,30]:
                                
     #add pin-1 marker
     
-    xm = -A/2
-    ym = -2.4
+    xm = -A/2 - pad_w/2 - 0.5
+    ym = -1.9/2 - 0.3
     
-    m = -0.3
+    m = 0.6
+
+    pin1 = [
+            {'x':xm,'y':ym},
+            {'x':xm - m,'y':ym - m / 2},
+            {'x':xm - m,'y':ym + m / 2},
+            {'x':xm,'y':ym}]
+            
+    kicad_mod.addPolygoneLine(pin1)
+    kicad_mod.addPolygoneLine(pin1,'F.Fab')
     
-    kicad_mod.addPolygoneLine([{'x':xm,'y':ym},
-                               {'x':xm - m,'y':ym + 2 * m},
-                               {'x':xm + m,'y':ym + 2 * m},
-                               {'x':xm,'y':ym}])
                                
     #add a courtyard
     cy = 0.5

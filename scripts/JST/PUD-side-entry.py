@@ -85,6 +85,7 @@ if __name__ == '__main__':
 
         # set general values
         footprint.append(Text(type='reference', text='REF**', at=[A/2,-2], layer='F.SilkS'))
+        footprint.append(Text(type='user', text='%R', at=[A/2,-2], layer='F.Fab'))
         footprint.append(Text(type='value', text=fp_name, at=[A/2,13.5], layer='F.Fab'))
             
         #generate the pads (row 1)
@@ -107,7 +108,7 @@ if __name__ == '__main__':
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
         
         #offset off
-        off = 0.1
+        off = 0.15
         
         x1 -= off
         y1 -= off
@@ -148,6 +149,7 @@ if __name__ == '__main__':
         ]
         
         footprint.append(PolygoneLine(polygone=marker))
+        footprint.append(PolygoneLine(polygone=marker,layer='F.Fab'))
         
         #Add a model
         footprint.append(Model(filename="Connectors_JST.3dshapes/" + fp_name + ".wrl"))

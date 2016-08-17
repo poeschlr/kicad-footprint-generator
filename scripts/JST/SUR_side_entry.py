@@ -66,7 +66,7 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     YP = (ymiddle - ym)
     
     # set general values
-    fp.append(Text(type='reference', text='REF**', at=[0,-3.2], layer='F.SilkS'))
+    fp.append(Text(type='reference', text='REF**', at=[0,-2.75], layer='F.SilkS'))
     fp.append(Text(type='value', text=fp_name, at=[0,3], layer='F.Fab'))
 
     #create outline
@@ -90,7 +90,7 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     xb = MX - mw / 2 - 0.3
     yb = YP + mh / 2 - 0.25
     
-    fp.append(Line(start=[-xb,yb + 0.2],end=[xb,yb + 0.2]))
+    fp.append(Line(start=[-xb,yb + 0.15],end=[xb,yb + 0.15]))
     
     #draw the outside line
     #offset from pads o
@@ -102,11 +102,11 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     x1 = A/2 + pad_w/2 + o
     
     right = [
-    {'x': x1,'y': y1},
-    {'x': x1 + 0.3,'y': y1},
-    {'x': x1 + 0.3,'y': y2},
-    {'x': B/2 + 0.2,'y': y2},
-    {'x': B/2 + 0.2,'y': YP - mh/2 - o},
+    {'x': x1,'y': y1 + 0.05},
+    {'x': x1 + 0.25,'y': y1 + 0.05},
+    {'x': x1 + 0.25,'y': y2 + 0.05},
+    {'x': B/2 + 0.15,'y': y2 + 0.05},
+    {'x': B/2 + 0.15,'y': YP - mh/2 - o},
     ]
     
     fp.append(PolygoneLine(polygone=right))
@@ -131,18 +131,13 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     fp.append(PolygoneLine(polygone=out,layer='F.Fab',x_mirror=0))
     
     #add pin-1 mark
-    mx = -A/2
-    my = -1.9
-    m = 0.25
+    mx = -MX
+    my = -1.5
+    r = 0.2
     
-    arrow = [
-    {'x': mx,'y': my},
-    {'x': mx-m,'y': my-2*m},
-    {'x': mx+m,'y': my-2*m},
-    {'x': mx,'y': my},
-    ]
+    fp.append(Circle(center=[mx,my],radius=r,width=0.15))
     
-    fp.append(PolygoneLine(polygone=arrow))
+    #fp.append(PolygoneLine(polygone=arrow))
     
     #add a courtyard
     cx = -MX - mw/2 - 0.5

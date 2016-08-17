@@ -36,6 +36,8 @@ for pincount in range(2,16):
 
     # SMT type shrouded header,
     footprint_name = "JST_GH_" + jst_name + "_{pincount:02}x1.25mm_Straight".format(pincount=pincount)
+    
+    print(footprint_name)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST GH series connector, " + jst_name + ", top entry type") 
@@ -54,7 +56,7 @@ for pincount in range(2,16):
     )
     
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-7.5}, 'F.SilkS')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-6.75}, 'F.SilkS')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':1.5}, 'F.Fab')
 
     #create outline
@@ -104,19 +106,22 @@ for pincount in range(2,16):
                                 
     #add designator for pin #1
 
-    y1 = -6.25
-    x1 = 0
+    y1 = -5.25
 
     if pincount % 2 == 1: #odd pins
         x1 = -(pincount//2) * pad_spacing
     else: #even pins
         x1 = (-pincount/2 + 0.5) * pad_spacing
-                              
+        
+    xp = x1 - 1
 
-    kicad_mod.addPolygoneLine([{'x':x1,'y':y1},
-                               {'x':x1-0.25,'y':y1-0.5},
-                               {'x':x1+0.25,'y':y1-0.5},
-                               {'x':x1,'y':y1}])
+    m = 0.6
+        
+
+    kicad_mod.addPolygoneLine([{'x':xp,'y':y1},
+                               {'x':xp-m,'y':y1-m/2},
+                               {'x':xp-m,'y':y1+m/2},
+                               {'x':xp,'y':y1}])
                                
                                
     #add picture of each pin

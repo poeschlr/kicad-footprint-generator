@@ -40,7 +40,8 @@ for pincount in range(2,8):
     kicad_mod.setAttribute('smd')
 
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-5}, 'F.SilkS')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-4.5}, 'F.SilkS')
+    kicad_mod.addText('user', '%R', {'x':0, 'y':-4.5}, 'F.Fab')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':3.5}, 'F.Fab')
     
     #pin pad size

@@ -90,6 +90,7 @@ if __name__ == '__main__':
         
         # set general values
         footprint.append(Text(type='reference', text='REF**', at=[A/2,3.5], layer='F.SilkS'))
+        footprint.append(Text(type='user', text='%R', at=[A/2,3.5], layer='F.Fab'))
         footprint.append(Text(type='value', text=fp_name, at=[A/2,-3.5], layer='F.Fab'))
          
         

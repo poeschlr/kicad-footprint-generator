@@ -22,7 +22,7 @@ for pincount in range(2,16):
     part = "DF13-{pincount:02}P-1.25DSA".format(pincount=pincount)
     
     footprint_name = "{0}_{1}_{2:02}x{3:.2f}mm_{4}".format(manu,part,pincount,pitch,suffix)
-z
+
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription(desc)
     kicad_mod.setTags(tags)
@@ -32,6 +32,7 @@ z
     
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':A/2, 'y':-4}, 'F.SilkS')
+    kicad_mod.addText('user', '%R', {'x':A/2, 'y':-4}, 'F.Fab')
     kicad_mod.addText('value', footprint_name, {'x':A/2, 'y':2.5}, 'F.Fab')
     
     drill = 0.6

@@ -124,6 +124,7 @@ if __name__ == '__main__':
             
             # set general values
             footprint.append(Text(type='reference', text='REF**', at=[B/2,8.5], layer='F.SilkS'))
+            footprint.append(Text(type='user', text='%R', at=[B/2,-4.5], layer='F.Fab'))
             footprint.append(Text(type='value', text=fp_name, at=[B/2,10], layer='F.Fab'))
                 
             #generate the pads
@@ -157,6 +158,10 @@ if __name__ == '__main__':
                 
                 footprint.append(PolygoneLine(polygone=poly))
                 footprint.append(PolygoneLine(polygone=poly,x_mirror=B/2))
+                
+                #draw the outline of the shape
+                footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
+            
             #draw the 'screw' version
             #http://www.molex.com/pdm_docs/sd/039291027_sd.pdf
             else:
@@ -169,7 +174,6 @@ if __name__ == '__main__':
                 poly = [
                 {'x': B/2,'y': y1-o},
                 {'x': x1-o,'y': y1-o},
-                {'x': x1-o,'y': y1-o},
                 {'x': x1-o,'y': y2-6.2-o},
                 {'x': -15.4/2 - o,'y': y2-6.2-o},
                 {'x': -15.4/2 - o,'y': y2+o},
@@ -179,14 +183,26 @@ if __name__ == '__main__':
                 footprint.append(PolygoneLine(polygone=poly))
                 footprint.append(PolygoneLine(polygone=poly,x_mirror=B/2))
                 
+                #draw the outline of the connector
+                out = [
+                {'x': B/2,'y': y1},
+                {'x': x1,'y': y1},
+                {'x': x1,'y': y2-6.2},
+                {'x': -15.4/2,'y': y2-6.2},
+                {'x': -15.4/2,'y': y2},
+                {'x': B/2,'y': y2},
+                ]
+                
+                footprint.append(PolygoneLine(polygone=out,layer='F.Fab'))
+                footprint.append(PolygoneLine(polygone=out,layer='F.Fab',x_mirror=B/2))
+                
                 #draw courtyard
                 footprint.append(RectLine(
                     start=[-15.4/2,y1],
                     end=[B+15.4/2,row+size/2],
                     layer='F.CrtYd',width=0.05,offset=0.5,grid=0.05))
             
-            #draw the outline of the shape
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
+            
             
             #draw the pins on the Silkscreen layer
             o = size/2 + 0.3

@@ -94,7 +94,8 @@ for pincount in pins:
     fp.setAttribute('smd')
     
     # text
-    fp.append(Text(type='reference', text='REF**', at=[0, -3.5], layer='F.SilkS'))
+    fp.append(Text(type='reference', text='REF**', at=[0, -2.5], layer='F.SilkS'))
+    fp.append(Text(type='user', text='%R', at=[0, -2.5], layer='F.Fab'))
     fp.append(Text(type='value', text=footprint_name, at=[0,3], layer='F.Fab'))
     
     #Major dimensions
@@ -152,12 +153,16 @@ for pincount in pins:
         {'x': -B/2, 'y': yt + a}], layer='F.Fab'))
         
     #draw pin-1 indicator on Silk.S
-    ya = -2
+    ya = yp
+    xa = -B/2 - pw/2 - 1
+    
+    a = 0.5
+    
     fp.append(PolygoneLine(polygone=[
-        {'x': -B/2, 'y': ya},
-        {'x': -B/2 - a/2, 'y': ya - a},
-        {'x': -B/2 + a/2, 'y': ya - a},
-        {'x': -B/2, 'y': ya},
+        {'x': xa , 'y': ya},
+        {'x': xa-a, 'y': ya - a/2},
+        {'x': xa-a, 'y': ya + a/2},
+        {'x': xa, 'y': ya},
         ]))
     
     #silkscreen
