@@ -270,11 +270,11 @@ def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_si
         if pad_number in skip: continue
         pad_pos_x = (i)*pad_spacing + x_off
         if pad_number == 1:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask'])
         elif pad_size['x'] == pad_size['y']:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'circle', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'circle', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask'])
         else:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask'])
 
 """
 Create SMD pads in a horizontal sequence, with the line of pads centered at the given position
