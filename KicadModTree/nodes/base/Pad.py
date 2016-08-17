@@ -32,6 +32,10 @@ class Pad(Node):
     SHAPE_RECT = 'rect'
     SHAPE_TRAPEZE = 'trapezoid'
     _SHAPES = [SHAPE_CIRCLE, SHAPE_OVAL, SHAPE_RECT, SHAPE_TRAPEZE]
+    
+    LAYERS_SMT = ['F.Cu','F.Mask','F.Paste']
+    LAYERS_THT = ['*.Cu','*.Mask']
+    LAYERS_NPTH = ['*.Cu']
 
     def __init__(self, **kwargs):
         Node.__init__(self)
