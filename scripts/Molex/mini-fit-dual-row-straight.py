@@ -126,7 +126,7 @@ if __name__ == '__main__':
 
             # set general values
             footprint.append(Text(type='reference', text='REF**', at=[B/2,10], layer='F.SilkS'))
-            footprint.append(Text(type='user', text='%R', at=[B/2,10], layer='F.Fab'))
+            #footprint.append(Text(type='user', text='%R', at=[B/2,10], layer='F.Fab'))
             footprint.append(Text(type='value', text=fp_name, at=[B/2,-4], layer='F.Fab'))
                 
             #generate the pads

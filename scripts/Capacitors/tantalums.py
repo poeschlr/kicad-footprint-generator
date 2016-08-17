@@ -122,7 +122,7 @@ for cap in caps:
         
         #set the general values
         fp.append(Text(type='reference', text='REF**', at=[0,-w/2 - 1.75], layer='F.SilkS'))
-        fp.append(Text(type='user', text='%R', at=[0,-w/2 - 1.75], layer='F.Fab'))
+        #fp.append(Text(type='user', text='%R', at=[0,-w/2 - 1.75], layer='F.Fab'))
         fp.append(Text(type='value', text=fp_name, at=[0,w/2 + 1.75], layer='F.Fab'))
     
         #draw the courtyard

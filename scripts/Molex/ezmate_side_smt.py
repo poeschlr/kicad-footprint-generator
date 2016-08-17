@@ -40,8 +40,8 @@ for pincount in range(2,8):
     kicad_mod.setAttribute('smd')
 
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-4.5}, 'F.SilkS')
-    kicad_mod.addText('user', '%R', {'x':0, 'y':-4.5}, 'F.Fab')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-3.75}, 'F.SilkS')
+    #kicad_mod.addText('user', '%R', {'x':0, 'y':-4.5}, 'F.Fab')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':3.5}, 'F.Fab')
     
     #pin pad size
@@ -72,7 +72,7 @@ for pincount in range(2,8):
     y2 = 2.2
     
     #offset from pads
-    xo = 0.5
+    xo = 0.4
     
     #offset of angled setction
     ao = 0.5
@@ -109,6 +109,12 @@ for pincount in range(2,8):
                                {'x':x1,'y':y1},
                                {'x':x1,'y':mpad_y - mpad_h/2 - xo}])
                                
+    kicad_mod.addPolygoneLine([
+        {'x': -A/2 - pad_w/2 - xo ,'y': y1},
+        {'x': -A/2 - pad_w/2 - xo ,'y': y1 - 0.5},
+        {'x': -A/2,'y': y1 - 0.5},
+    ])
+                               
                     
     #right hand SilkS
     kicad_mod.addPolygoneLine([{'x':A/2 + pad_w/2 + xo,'y':y1},
@@ -127,16 +133,17 @@ for pincount in range(2,8):
                                
     #add pin-1 marker
     
-    xm = -A/2
-    ym = -3
+    xm = -A/2 - pad_w/2 - 0.9
+    ym = y1 - 0.4
+    rm = 0.2
     
-    m = -0.3
-    
+    kicad_mod.addCircle({'x': xm, 'y': ym},{'x': rm, 'y': 0})
+    """
     kicad_mod.addPolygoneLine([{'x':xm,'y':ym},
                                {'x':xm - m,'y':ym + 2 * m},
                                {'x':xm + m,'y':ym + 2 * m},
                                {'x':xm,'y':ym}])
-                               
+    """                           
     #add a courtyard
     cy = 0.5
     

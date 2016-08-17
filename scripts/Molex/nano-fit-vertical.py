@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
             # set general values
             footprint.append(Text(type='reference', text='REF**', at=[B/2,-3-(rows-1)*pitch], layer='F.SilkS'))
-            footprint.append(Text(type='user', text='%R', at=[B/2,-3-(rows-1)*pitch], layer='F.Fab'))
+            #footprint.append(Text(type='user', text='%R', at=[B/2,-3-(rows-1)*pitch], layer='F.Fab'))
             footprint.append(Text(type='value', text=fp_name, at=[B/2,-4.5-(rows-1)*pitch], layer='F.Fab'))
                 
             #generate the pads
@@ -144,7 +144,7 @@ if __name__ == '__main__':
             footprint.append(Pad(at=[C,1.34],size=1.3,drill=1.3,type=Pad.TYPE_NPTH,shape=Pad.SHAPE_CIRCLE, layers=["*.Cu"]))
             
             #add outline to F.Fab
-            footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
+            #footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
             
             off = 0.15
             #and to the silkscreen
@@ -152,17 +152,23 @@ if __name__ == '__main__':
             TL = 5.2
             TW = 2.86
             
-            outline = [
-            {'x': B/2,'y': y1-off},
-            {'x': x1-off,'y': y1-off},
-            {'x': x1-off,'y': y2+off},
-            {'x': B/2-TL/2-off,'y': y2+off},
-            {'x': B/2-TL/2-off,'y': y2+TW+off},
-            {'x': B/2,'y': y2+TW+off}
-            ]
+            def outline(off=0):
+                out = [
+                {'x': B/2,'y': y1-off},
+                {'x': x1-off,'y': y1-off},
+                {'x': x1-off,'y': y2+off},
+                {'x': B/2-TL/2-off,'y': y2+off},
+                {'x': B/2-TL/2-off,'y': y2+TW+off},
+                {'x': B/2,'y': y2+TW+off}
+                ]
+                
+                return out
             
-            footprint.append(PolygoneLine(polygone=outline))
-            footprint.append(PolygoneLine(polygone=outline,x_mirror=B/2))
+            footprint.append(PolygoneLine(polygone=outline(), layer='F.Fab'))
+            footprint.append(PolygoneLine(polygone=outline(), layer='F.Fab', x_mirror=B/2))
+            
+            footprint.append(PolygoneLine(polygone=outline(off = 0.15)))
+            footprint.append(PolygoneLine(polygone=outline(off = 0.16), x_mirror=B/2))
             
             footprint.append(RectLine(start=[B/2-TL/2,y2+2*off],end=[B/2+TL/2,y2+TW],offset=-0.5))
             

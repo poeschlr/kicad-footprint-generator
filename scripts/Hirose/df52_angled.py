@@ -95,7 +95,7 @@ for pincount in pins:
     
     # text
     fp.append(Text(type='reference', text='REF**', at=[0, -2.5], layer='F.SilkS'))
-    fp.append(Text(type='user', text='%R', at=[0, -2.5], layer='F.Fab'))
+    #fp.append(Text(type='user', text='%R', at=[0, -2.5], layer='F.Fab'))
     fp.append(Text(type='value', text=footprint_name, at=[0,3], layer='F.Fab'))
     
     #Major dimensions

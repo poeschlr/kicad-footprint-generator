@@ -32,7 +32,7 @@ for pincount in range(2,16):
     
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':A/2, 'y':-4}, 'F.SilkS')
-    kicad_mod.addText('user', '%R', {'x':A/2, 'y':-4}, 'F.Fab')
+    #kicad_mod.addText('user', '%R', {'x':A/2, 'y':-4}, 'F.Fab')
     kicad_mod.addText('value', footprint_name, {'x':A/2, 'y':2.5}, 'F.Fab')
     
     drill = 0.6

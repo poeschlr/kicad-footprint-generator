@@ -44,7 +44,7 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
 
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-6.5}, 'F.SilkS')
-    kicad_mod.addText('user', '%R', {'x':0, 'y':-6.5}, 'F.Fab')
+    #kicad_mod.addText('user', '%R', {'x':0, 'y':-6.5}, 'F.Fab')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':2}, 'F.Fab')
 
     #create outline
