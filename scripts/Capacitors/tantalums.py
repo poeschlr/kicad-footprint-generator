@@ -148,9 +148,13 @@ for cap in caps:
         fp.append(Pad(number=2, size=[(Z-G)/2,X], at=[px, 0],layers=layers,shape=Pad.SHAPE_RECT,type=Pad.TYPE_SMT))
         
         #silkscreen it up like a boss
-        fp.append(Line(start=[0.5*l,-cy-0.2],end=[-Z/2,-cy-0.2]))
-        fp.append(Line(start=[0.5*l,+cy+0.2],end=[-Z/2,+cy+0.2]))
         #fp.append(Line(start=[-Z/2 - 0.2, -0.75 * cy], end=[-Z/2 - 0.2, 0.75 * cy]))
+        
+        x1 = -Z/2 - 0.3
+        x2 = 0.5 * l
+        fp.append(Line(start=[x1,-cy-0.25],end=[x2,-cy-0.25]))
+        fp.append(Line(start=[x1,+cy+0.25],end=[x2,+cy+0.25]))
+        fp.append(Line(start=[x1,-cy-0.25],end=[x1,+cy+0.25]))
         
         #polarization marks on the side
         pw = 0.1
@@ -161,13 +165,8 @@ for cap in caps:
         {'x': -px + pw,'y': -cy - 0.2},
         ]
         
-        fp.append(PolygoneLine(polygone=polar))
-        fp.append(PolygoneLine(polygone=polar, y_mirror=0))
-        
-        #polarization marks on the end
-        x = -Z/2 - 0.25
-        y = 0.75 * cy
-        fp.append(Line(start=[x,-y],end=[x,y]))
+        #fp.append(PolygoneLine(polygone=polar))
+        #   fp.append(PolygoneLine(polygone=polar, y_mirror=0))
         
         #Add a model
         model_name = prefix.format(case = case, eia = eia)
