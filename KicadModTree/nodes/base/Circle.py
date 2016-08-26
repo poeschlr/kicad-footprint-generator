@@ -28,7 +28,7 @@ class Circle(Node):
         self.end_pos = {'x': self.center_pos.x+self.radius, 'y': self.center_pos.y}
 
         self.layer = kwargs.get('layer', 'F.SilkS')
-        self.width = kwargs.get('width')
+        self.width = kwargs.get('width', 0.15)
 
     def calculateBoundingBox(self):
         min_x = self.center_pos.x-self.radius
