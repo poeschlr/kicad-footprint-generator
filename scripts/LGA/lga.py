@@ -160,6 +160,8 @@ for key in lga.keys():
     
     fp = Footprint(partname)
     
+    print(partname)
+    
     #description
     
     fp.setAttribute("smd")
@@ -187,7 +189,21 @@ for key in lga.keys():
     layers = ['F.Cu','F.Mask','F.Paste']
     
     #add the outline of the part to the F.Fab layer
-    fp.append(RectLine(start=[-part.D1/2,-part.E1/2],end=[part.D1/2,part.E1/2],layer='F.Fab',width=0.05))
+    if part.D1 < 2:
+        b = 0.5
+    else:
+        b = 1
+    outline = [
+    {'x': -part.D1/2 + b,'y': -part.E1/2},
+    {'x': part.D1/2,'y': -part.E1/2},
+    {'x': part.D1/2,'y': part.E1/2},
+    {'x': -part.D1/2,'y': part.E1/2},
+    {'x': -part.D1/2,'y': -part.E1/2 + b},
+    {'x': -part.D1/2 + b,'y': -part.E1/2},
+    ]
+    
+    fp.append(PolygoneLine(polygone=outline, layer='F.Fab'))
+    #fp.append(RectLine(start=[-part.D1/2,-part.E1/2],end=[part.D1/2,part.E1/2],layer='F.Fab'))
     
     #draw the left-hand-pads
     fp.append(PadArray(pincount=part.ny, y_spacing=part.N1, center=[-x,0], size=[pl,part.T2], layers=layers, type=Pad.TYPE_SMT, shape=Pad.SHAPE_RECT))
@@ -205,18 +221,28 @@ for key in lga.keys():
     L2 = (part.ny - 1) * part.N1 + part.T2
     
     #component outline
-    off = 0.1
+    off = 0.15
     out = [
-    {'x': L1/2 + 0.25,'y': -part.E1/2 - off},
+    {'x': L1/2 + 0.3,'y': -part.E1/2 - off},
     {'x': part.D1/2 + off ,'y': -part.E1/2 - off},
-    {'x': part.D1/2 + off,'y': -L2/2 - 0.25},
+    {'x': part.D1/2 + off,'y': -L2/2 - 0.3},
     ]
 
     fp.append(PolygoneLine(polygone=out))
     fp.append(PolygoneLine(polygone=out, y_mirror=0))
     fp.append(PolygoneLine(polygone=out, x_mirror=0))
     
-    fp.append(Line(start=[-L1/2-0.25,-part.E1/2-off],end=[-part.D1/2-0.2,-part.E1/2-off]))
+    #pin-1 indication
+    p1 = [
+        {'x': -L1/2 - 0.3,'y': -part.E1/2-off},
+        {'x': -part.D1/2 - off,'y': -part.E1/2-off},
+        #{'x': -part.D1/2 - off,'y': -L2/2 - 0.3},
+        #{'x': -x-pl/2,'y': -L2/2 - 0.3},
+    ]
+    
+    fp.append(PolygoneLine(polygone=p1))
+    #fp.append(Line( start = [-L1/2-0.25,-part.E1/2-off],
+    #                end  = [-part.D1/2-0.2,-part.E1/2-off]))
     
     #max dims
     xmax = x + pl / 2
