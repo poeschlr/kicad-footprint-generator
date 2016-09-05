@@ -4,7 +4,7 @@ import sys
 import os
 from helpers import *
 from global_params import *
-
+import copy
 
 sys.path.append(os.path.join(sys.path[0],"..","..")) # load KicadModTree path
 from KicadModTree import *
@@ -12,18 +12,7 @@ from KicadModTree import *
 
 from mstb_params import seriesParams, dimensions, generate_description, all_params
 
-m ='GMSTBV_01x03_7.62mm_MH'
-m1='GMSTBV_01x03_7.62mm'
-m2='MSTBV_01x03_5.00mm_MH'
-m3='MSTBV_01x03_5.08mm_MH'
-m4='GMSTBVA_01x03_7.62mm'
-#to_generate = {m:all_params[m],m1:all_params[m1],m2:all_params[m2],m3:all_params[m3],m4:all_params[m4]}
-to_generate=all_params
-
-if not os.path.exists(out_dir):
-    os.makedirs(out_dir)
-
-for model, params in to_generate.iteritems():
+def generate_one_footprint(model, params, with_fabLayer=False):
 
     # Through-hole type shrouded header, Top entry type
     footprint_name = params.file_name
@@ -41,7 +30,7 @@ for model, params in to_generate.iteritems():
 
 
     kicad_mod.setDescription(generate_description(params))
-    kicad_mod.setTags(generate_keyword_str(model))
+    kicad_mod.setTags(manufacturer_tag + model)
 
 
     #add the pads
@@ -68,7 +57,8 @@ for model, params in to_generate.iteritems():
     # create silscreen
 
     kicad_mod.append(RectLine(start=silk_top_left, end=silk_bottom_right, layer='F.SilkS'))
-
+    if with_fabLayer:
+        kicad_mod.append(RectLine(start=body_top_left, end=body_bottom_right, layer='F.Fab', width=globalParams.fab_line_width))
     if params.angled:
         lock_poly=[
             {'x':-1, 'y':0},
@@ -77,18 +67,34 @@ for model, params in to_generate.iteritems():
             {'x':-1.5/2, 'y':-1.5},
             {'x':-1, 'y':0}
         ]
+        lock_poly_fab=[
+            {'x':-1, 'y':-globalParams.silk_body_offset},
+            {'x':1, 'y':-globalParams.silk_body_offset},
+            {'x':1.5/2, 'y':-1.5},
+            {'x':-1.5/2, 'y':-1.5},
+            {'x':-1, 'y':-globalParams.silk_body_offset}
+        ]
         kicad_mod.append(RectLine(start=[silk_top_left[0],silk_bottom_right[1]-1.5], end=[silk_bottom_right[0], silk_bottom_right[1]-1.5-1.8], layer='F.SilkS'))
+        if with_fabLayer:
+            kicad_mod.append(RectLine(start=[body_top_left[0],silk_bottom_right[1]-1.5], end=[body_bottom_right[0], silk_bottom_right[1]-1.5-1.8],
+                layer='F.Fab', width=globalParams.fab_line_width))
         if params.flanged:
             lock_translation = Translation(mount_hole_left[0], silk_bottom_right[1])
             lock_translation.append(PolygoneLine(polygone=lock_poly))
+            if with_fabLayer:
+                lock_translation.append(PolygoneLine(polygone=lock_poly_fab, layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(lock_translation)
             lock_translation = Translation(mount_hole_right[0], silk_bottom_right[1])
             lock_translation.append(PolygoneLine(polygone=lock_poly))
+            if with_fabLayer:
+                lock_translation.append(PolygoneLine(polygone=lock_poly_fab, layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(lock_translation)
 
         for i in range(params.num_pins):
             lock_translation = Translation(i*params.pin_pitch, silk_bottom_right[1])
             lock_translation.append(PolygoneLine(polygone=lock_poly))
+            if with_fabLayer:
+                lock_translation.append(PolygoneLine(polygone=lock_poly_fab, layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(lock_translation)
     else:
         inner_width = 5.3 #measured
@@ -103,31 +109,49 @@ for model, params in to_generate.iteritems():
         outher_line_len = (-left_to_pin-1 + mount_hole_left[0]) if params.flanged else (-left_to_pin-1)
         kicad_mod.append(Line(start=[silk_top_left[0], pi1[1]-1], end=[silk_top_left[0]+outher_line_len, pi1[1]-1]))
         kicad_mod.append(Line(start=[silk_bottom_right[0], pi1[1]-1], end=[silk_bottom_right[0]-outher_line_len, pi1[1]-1]))
+        if with_fabLayer:
+            kicad_mod.append(Line(start=[body_top_left[0], pi1[1]-1], end=[body_top_left[0]+outher_line_len, pi1[1]-1], layer='F.Fab', width=globalParams.fab_line_width))
+            kicad_mod.append(Line(start=[body_bottom_right[0], pi1[1]-1], end=[body_bottom_right[0]-outher_line_len, pi1[1]-1], layer='F.Fab', width=globalParams.fab_line_width))
+
         for i in range(params.num_pins -1):
             chamfer_edge = Translation(i*params.pin_pitch, pi1[1]-1)
             chamfer_edge.append(Line(start=[first_center-line_len/2.0, 0], end=[first_center+line_len/2.0, 0]))
+            if with_fabLayer:
+                chamfer_edge.append(Line(start=[first_center-line_len/2.0, 0], end=[first_center+line_len/2.0, 0], layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(chamfer_edge)
 
         flanged_line_left = (mount_hole_left[0]+1)
+        lock_rect_silk={'start':[-1,0], 'end':[1,-top_thickness], 'layer':'F.SilkS'}
+        lock_rect_fab={'start':[-1,0], 'end':[1,-top_thickness+globalParams.silk_body_offset], 'layer':'F.Fab', 'width':globalParams.fab_line_width}
         if params.flanged:
             lock_translation = Translation(mount_hole_left[0], pi1[1])
-            lock_translation.append(RectLine(start=[-1,0], end=[1,-top_thickness], layer='F.SilkS'))
+            lock_translation.append(RectLine(**lock_rect_silk))
+            if with_fabLayer:
+                lock_translation.append(RectLine(**lock_rect_fab))
             kicad_mod.append(lock_translation)
             lock_translation = Translation(mount_hole_right[0], pi1[1])
-            lock_translation.append(RectLine(start=[-1,0], end=[1,-top_thickness], layer='F.SilkS'))
+            lock_translation.append(RectLine(**lock_rect_silk))
+            if with_fabLayer:
+                lock_translation.append(RectLine(**lock_rect_fab))
             kicad_mod.append(lock_translation)
 
             chamfer_edge = Translation(0, pi1[1]-1)
             chamfer_edge.append(Line(start=[flanged_line_left, 0], end=[-1, 0]))
+            if with_fabLayer:
+                chamfer_edge.append(Line(start=[flanged_line_left, 0], end=[-1, 0], layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(chamfer_edge)
             chamfer_edge = Translation((params.num_pins-1)*params.pin_pitch+params.mount_hole_to_pin, pi1[1]-1)
             chamfer_edge.append(Line(start=[flanged_line_left, 0], end=[-1, 0]))
+            if with_fabLayer:
+                chamfer_edge.append(Line(start=[flanged_line_left, 0], end=[-1, 0], layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(chamfer_edge)
 
 
         for i in range(params.num_pins):
             lock_translation = Translation(i*params.pin_pitch, pi1[1])
-            lock_translation.append(RectLine(start=[-1,0], end=[1,-top_thickness], layer='F.SilkS'))
+            lock_translation.append(RectLine(**lock_rect_silk))
+            if with_fabLayer:
+                lock_translation.append(RectLine(**lock_rect_fab))
             kicad_mod.append(lock_translation)
 
         if params.flanged:
@@ -137,16 +161,26 @@ for model, params in to_generate.iteritems():
                 kicad_mod.append(Circle(center=mount_hole_left, radius=1, layer='F.SilkS'))
                 kicad_mod.append(Circle(center=mount_hole_right, radius=1, layer='F.SilkS'))
 
+            if with_fabLayer:
+                kicad_mod.append(Circle(center=mount_hole_left, radius=1.9, layer='F.Fab', width=globalParams.fab_line_width))
+                kicad_mod.append(Circle(center=mount_hole_right, radius=1.9, layer='F.Fab', width=globalParams.fab_line_width))
+                kicad_mod.append(Circle(center=mount_hole_left, radius=1, layer='F.Fab', width=globalParams.fab_line_width))
+                kicad_mod.append(Circle(center=mount_hole_right, radius=1, layer='F.Fab', width=globalParams.fab_line_width))
+
         angle = -100.5
         arc_width = 4.0
         for i in range(params.num_pins):
             plug_arc = Translation(i*params.pin_pitch,0)
             plug_arc.append(Arc(start=[-arc_width/2.0,pi2[1]], center=[0,0.55], angle=angle))
+            if with_fabLayer:
+                plug_arc.append(Arc(start=[-arc_width/2.0,pi2[1]], center=[0,0.55], angle=angle, layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(plug_arc)
 
         for i in range(params.num_pins-1):
             lower_line = Translation(i*params.pin_pitch,pi2[1])
             lower_line.append(Line(start=[arc_width/2.0, 0], end=[params.pin_pitch-arc_width/2.0, 0], layer='F.SilkS'))
+            if with_fabLayer:
+                lower_line.append(Line(start=[arc_width/2.0, 0], end=[params.pin_pitch-arc_width/2.0, 0], layer='F.Fab', width=globalParams.fab_line_width))
             kicad_mod.append(lower_line)
 
         arc_to_side = pi1[0]+arc_width/2.0
@@ -159,6 +193,8 @@ for model, params in to_generate.iteritems():
             {'x':pi2[0]+arc_to_side, 'y':pi2[1]}
         ]
         kicad_mod.append(PolygoneLine(polygone=poly))
+        if with_fabLayer:
+            kicad_mod.append(PolygoneLine(polygone=poly, layer='F.Fab', width=globalParams.fab_line_width))
     # create courtyard
     #if params.angled:
         #p1=[p1[0],-seriesParams.pin_Sy/2]
@@ -168,11 +204,14 @@ for model, params in to_generate.iteritems():
     if params.mount_hole:
         kicad_mod.append(Circle(center=mount_hole_left, radius=seriesParams.mount_screw_head_r, layer='B.SilkS'))
         kicad_mod.append(Circle(center=mount_hole_right, radius=seriesParams.mount_screw_head_r, layer='B.SilkS'))
-        # kicad_mod.append(Circle(center=mount_hole_left, radius=mount_screw_head_r+0.25, layer='B.CrtYd'))
-        # kicad_mod.append(Circle(center=mount_hole_right, radius=mount_screw_head_r+0.25, layer='B.CrtYd'))
+        if with_fabLayer:
+            kicad_mod.append(Circle(center=mount_hole_left, radius=seriesParams.mount_screw_head_r, layer='B.Fab', width=globalParams.fab_line_width))
+            kicad_mod.append(Circle(center=mount_hole_right, radius=seriesParams.mount_screw_head_r, layer='B.Fab', width=globalParams.fab_line_width))
 
 
     kicad_mod.append(Text(type='reference', text='REF**', at=[center_x + (0 if params.num_pins > 2 else 1), crtyd_top_left[1]-0.7], layer='F.SilkS'))
+    if with_fabLayer:
+        kicad_mod.append(Text(type='user', text='%R', at=[center_x, (3 if params.angled else 0)], layer='F.Fab'))
     kicad_mod.append(Text(type='value', text=footprint_name, at=[center_x, crtyd_bottom_right[1]+1], layer='F.Fab'))
 
     kicad_mod.append(create_marker(crtyd_top_left[1]))
@@ -183,3 +222,33 @@ for model, params in to_generate.iteritems():
 
     file_handler = KicadFileHandler(kicad_mod)
     file_handler.writeFile(out_dir+footprint_name + ".kicad_mod")
+
+
+if __name__ == "__main__":
+
+    if len(sys.argv) < 2:
+        print('No variant name is given! building all')
+        to_generate=all_params
+    else:
+        variant=sys.argv[1]
+        if variant == "all":
+            to_generate=all_params
+        elif variant in all_params.keys():
+            to_generate = {variant:all_params[variant]}
+        else:
+            print('ERROR: Variant "'+ str(variant) + '" is not part of this package!')
+            sys.exit(1)
+        if len(sys.argv) < 3:
+            with_fabLayer = False
+        else:
+            with_fabLayer = sys.argv[2] == "WITH_FFAB"
+
+
+    #m2='MSTBV_01x02_GF_5.00mm_MH'
+
+
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
+    for model, params in to_generate.iteritems():
+        generate_one_footprint(model, params, with_fabLayer)

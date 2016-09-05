@@ -9,6 +9,7 @@ class globalParams():
     mount_hole_layers = ['*.Cu', '*.Mask']
     courtyard_distance = 0.5
     silk_body_offset = 0.08
+    fab_line_width = 0.05
 
 lib_name="Connectors_Phoenix"
 out_dir=lib_name+".pretty"+os.sep
