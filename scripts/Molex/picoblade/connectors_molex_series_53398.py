@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.join(sys.path[0],"..","..","..")) # load KicadModTree path
+# export PYTHONPATH="${PYTHONPATH}<path to kicad-footprint-generator directory>"
 from KicadModTree import *
 
 def round_to(n, precision):
@@ -41,8 +41,8 @@ class footprintParams():
     y_mount_body_top = -1.7
     y_mount_body_bottom = 1.1
 
-    fab_first_marker_w = 3
-    fab_first_marker_h = 1.5
+    fab_first_marker_w = 1.25
+    fab_first_marker_h = 1
 
     silk_first_marker_w = 0.8
     silk_first_marker_h = 0.5
@@ -50,20 +50,15 @@ class footprintParams():
 
     courtyard_distance = 0.5
 
-def generate_footprint_name(num_pins):
-    return "Molex_PicoBlade_53398-"+ ('%02d' % num_pins) +"71"
-
-def generate_description(num_pins):
-    return "Molex PicoBlade "+ ('%.2f' % footprintParams.pin_pitch) +"mm shrouded header. Vertical, SMD. " + ('%02d' % num_pins) + " ways"
-
 
 def generate_footprint(num_pins, lib_name = "Connectors_Molex", ref_on_ffab=False):
-    footprint_name = generate_footprint_name(num_pins)
+    footprint_name = "Molex_PicoBlade_53398-"+ ('%02d' % num_pins) +"71_" + ('%02d' % num_pins) + "x" + ('%.2f' % footprintParams.pin_pitch) +"mm_Straight"
+    description = "Molex PicoBlade, single row, top entry type, surface mount, PN:53398-" + ('%02d' % num_pins) + "71"
     out_dir=lib_name+".pretty"+os.sep
     packages_3d=lib_name+".3dshapes"+os.sep
     kicad_mod = Footprint(footprint_name)
 
-    kicad_mod.setDescription(generate_description(num_pins))
+    kicad_mod.setDescription(description)
     kicad_mod.setTags(footprintParams.tags)
 
     #########################################################################################################
@@ -229,4 +224,4 @@ if __name__ == "__main__":
     all_possible_pin_numbers=[2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
     for pin_number in all_possible_pin_numbers:
-        generate_footprint(pin_number)
+        generate_footprint(pin_number, lib_name = "tera_Connectors_Molex", ref_on_ffab=True)
