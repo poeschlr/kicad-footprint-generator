@@ -20,10 +20,14 @@ from KicadModTree.nodes.Node import Node
 
 
 class Line(Node):
+
+    _width_default = 0.15    
+    _layer_default = "F.SilkS"
+
     def __init__(self, **kwargs):
         Node.__init__(self)
-        self.start_pos = Point(kwargs['start'])
-        self.end_pos = Point(kwargs['end'])
+        self.start_pos = Point(kwargs['start'],**kwargs)
+        self.end_pos = Point(kwargs['end'],**kwargs)
 
         self.layer = kwargs.get('layer', 'F.SilkS')
         self.width = kwargs.get('width')

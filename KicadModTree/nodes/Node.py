@@ -161,10 +161,10 @@ class Node(object):
         max_x, max_y = 0, 0
 
         if outline:
-            min_x = outline['min']['x']
-            min_y = outline['min']['y']
-            max_x = outline['max']['x']
-            max_y = outline['max']['y']
+            min_x = outline['min'].x
+            min_y = outline['min'].y
+            max_x = outline['max'].x
+            max_y = outline['max'].y
 
         for child in self.getAllChilds():
             child_outline = child.calculateBoundingBox()

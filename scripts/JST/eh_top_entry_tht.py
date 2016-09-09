@@ -40,6 +40,8 @@ for pincount in range(2,16):
     x2 = x1 + B
     y2 = y1 + 3.8
     
+    #draw the main outline on F.Fab layer
+    kicad_mod.addRectLine({'x':x1,'y':y1},{'x':x2,'y':y2},'F.Fab',0.15)
     
     #line offset 
     off = 0.2
@@ -91,15 +93,6 @@ for pincount in range(2,16):
     kicad_mod.addRectLine({'x':x1-cy,'y':y1-cy},{'x':x2+cy,'y':y2+cy},"F.CrtYd",0.05)
     
     kicad_mod.model = "Connectors_JST.3dshapes/" + footprint_name + ".wrl"
-    
-    #shift the model along
-    
-    if pincount % 2 == 0: #even
-        xOff = (pincount / 2 - 0.5) * pitch
-    else:
-        xOff = (pincount / 2) * pitch
-        
-    kicad_mod.model_pos['x'] = xOff / 25.4
     
     # output kicad model
     f = open(footprint_name + ".kicad_mod","w")

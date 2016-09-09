@@ -20,7 +20,9 @@ import time
 def getFormatedFloat(val):
     return ('%f' % val).rstrip('0').rstrip('.')
 
-
+def grid(val, spacing = 0.05):
+    return int(val/spacing) * spacing
+    
 class KicadMod(object):
     def __init__(self, name):
         self.setModuleName(name)
@@ -32,6 +34,10 @@ class KicadMod(object):
         self.tags = None
         self.attribute = None
         self.center_pos = {'x':0, 'y':0}
+        self.model_pos = {'x':0, 'y':0,'z':0}
+        self.model_scale = {'x':1,'y':1,'z':1}
+        self.model_rot = {'x':0,'y':0,'z':0}
+        self.model = None
 
 
     def setModuleName(self, name):
@@ -70,7 +76,6 @@ class KicadMod(object):
 
     def addValue(self, text, position, layer='F.Fab'):
         self.addText('value', text, position, layer)
-
 
     def addRawLine(self, data):
         self.line_array.append(data)
@@ -116,6 +121,29 @@ class KicadMod(object):
     def addPad(self, number, type, form, position, size, drill, layers=['*.Cu', '*.Mask', 'F.SilkS']):
         self.addRawPad({'number':number, 'type':type, 'form':form, 'position':position, 'size':size, 'drill':drill, 'layers':layers})
 
+    #create an un-numbered SMD mounting pad
+    def addMountingPad(self, position, size):
+        self.addRawPad({
+            'number': '""',
+            'type': 'smd',
+            'form': 'rect',
+            'position': position,
+            'size': size,
+            'drill': 0,
+            'layers': ["F.Cu","F.Paste","F.Mask"]
+        })
+      
+    #create an un-numbered NPTH mechanical mounting pad
+    def addMountingHole(self, position, size):
+        self.addRawPad({
+            'number': '""',
+            'type': "np_thru_hole",
+            'form': "circle",
+            'position': position,
+            'size': {'x': size, 'y': size}  ,
+            'drill': size,
+            'layers': ["*.Cu"]
+        })
 
     def _savePosition(self, position, keyword='at'):
         if position.get('orientation', 0) != 0:
@@ -139,9 +167,9 @@ class KicadMod(object):
         output = '  (fp_text {which_text} {text} '.format(which_text=data['which_text']
                                                          ,text=data['text'])
         output += self._savePosition(data['position'], 'at')
-        output += ' (layer {layer})\r\n'.format(layer=data['layer'])
-        output += '    (effects (font (size 1 1) (thickness 0.15)))\r\n'
-        output += '  )\r\n'
+        output += ' (layer {layer})\n'.format(layer=data['layer'])
+        output += '    (effects (font (size 1 1) (thickness 0.15)))\n'
+        output += '  )\n'
         
         return output
 
@@ -151,7 +179,7 @@ class KicadMod(object):
         output += self._savePosition(data['start']['position'], 'start')
         output += ' '
         output += self._savePosition(data['end']['position'], 'end')
-        output += ' (layer {layer}) (width {width}))\r\n'.format(layer=data['layer']
+        output += ' (layer {layer}) (width {width}))\n'.format(layer=data['layer']
                                                                 ,width=data['width'])
         return output
 
@@ -166,7 +194,7 @@ class KicadMod(object):
                      ,'y':data['position']['y']+data['dimensions']['y']}
         
         output += self._savePosition(dimensions, 'end')
-        output += ' (layer {layer}) (width {width}))\r\n'.format(layer=data['layer']
+        output += ' (layer {layer}) (width {width}))\n'.format(layer=data['layer']
                                                                 ,width=data['width'])
         return output
 
@@ -179,24 +207,35 @@ class KicadMod(object):
         output += ' '
         output += self._saveSize(data['size'], 'size')
         output += ' (drill {drill}) '.format(drill=data['drill'])
-        output += '(layers ' + ' '.join(data['layers']) + '))\r\n'
+        output += '(layers ' + ' '.join(data['layers']) + '))\n'
         return output
-
-
+        
+    def _saveModel(self):
+        
+        #model path
+        output = "  (model {model}\n".format(model=self.model)
+        #model position
+        output += "    (at (xyz {x} {y} {z}))\n".format(x=self.model_pos['x'],y=self.model_pos['y'],z=self.model_pos['z'])
+        output += "    (scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
+        output += "    (rotate (xyz {x} {y} {z}))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
+        output += "  )"
+            
+        return output
+        
     def __str__(self):
         '''
         generate kicad_mod content
         '''
-        output = '(module {name} (layer F.Cu) (tedit {timestamp:X})\r\n'.format(name=self.module_name, timestamp=int(time.time()))
+        output = '(module {name} (layer F.Cu) (tedit {timestamp:X})\n'.format(name=self.module_name, timestamp=int(time.time()))
 
         if self.description:
-            output += '  (descr "{description}")\r\n'.format(description=self.description)
+            output += '  (descr "{description}")\n'.format(description=self.description)
 
         if self.tags:
-            output += '  (tags "{tags}")\r\n'.format(tags=self.tags)
+            output += '  (tags "{tags}")\n'.format(tags=self.tags)
 
         if self.attribute:
-            output += '  (attr {attr})\r\n'.format(attr=self.attribute)
+            output += '  (attr {attr})\n'.format(attr=self.attribute)
 
         for text in self.text_array:
             output += self._saveText(text)
@@ -209,25 +248,45 @@ class KicadMod(object):
 
         for pad in self.pad_array:
             output += self._savePad(pad)
+            
+        if (self.model):
+            
+            output += self._saveModel()
 
-        output = output + ')'
+        output = output + '\n)'
 
         return output
 
-
-def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size):
-    for pad_number in range(1, pincount+1):
-        pad_pos_x = (pad_number-1)*pad_spacing
+"""
+Create THT pads in a horizontal sequence, with the first pin located at the given position
+- Default position is (0,0)
+- Pin-1 is rectangular, all others are oval
+- Default starting number is 1, but can be set to another value
+- Default numbering increment is 1, but can be set to another value
+- Individual pins can be skipped by placing their numbers in the 'skip' kwarg
+"""
+def createNumberedPadsTHT(kicad_mod, pincount, pad_spacing, pad_diameter, pad_size, x_off=0, y_off=0, starting=1, increment=1, skip=[]):
+    for i,pad_number in enumerate(range(starting, starting + (pincount * increment), increment)):
+        if pad_number in skip: continue
+        pad_pos_x = (i)*pad_spacing + x_off
         if pad_number == 1:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':0}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'rect', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask'])
         elif pad_size['x'] == pad_size['y']:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'circle', {'x':pad_pos_x, 'y':0}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'circle', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask'])
         else:
-            kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':0}, pad_size, pad_diameter, ['*.Cu', '*.Mask', 'F.SilkS'])
+            kicad_mod.addPad(pad_number, 'thru_hole', 'oval', {'x':pad_pos_x, 'y':y_off}, pad_size, pad_diameter, ['*.Cu', '*.Mask'])
 
-
-def createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, pad_size, pad_pos_y):
-    start_pos_x = -(pincount-1)*pad_spacing/2.
-    for pad_number in range(1, pincount+1):
-        pad_pos_x = start_pos_x+(pad_number-1)*pad_spacing
+"""
+Create SMD pads in a horizontal sequence, with the line of pads centered at the given position
+- Default position is (0, pad_pos_y)
+- Can give a different x_offset with x_off (default 0)
+- Default starting number is 1, but can be set to another value
+- Default numbering increment is 1, but can be set to another value
+- Individual pads can be skipped by placing their numbers in the 'skip' kwarg
+"""
+def createNumberedPadsSMD(kicad_mod, pincount, pad_spacing, pad_size, pad_pos_y, x_off=0, starting=1, increment=1, skip=[]):
+    start_pos_x = -(pincount-1)*pad_spacing/2 + x_off
+    for i,pad_number in enumerate(range(starting, starting + (pincount * increment), increment)):
+        if pad_number in skip: continue
+        pad_pos_x = start_pos_x + i*pad_spacing
         kicad_mod.addPad(pad_number, 'smd', 'rect', {'x':pad_pos_x, 'y':pad_pos_y}, pad_size, 0, ['F.Cu', 'F.Paste', 'F.Mask'])

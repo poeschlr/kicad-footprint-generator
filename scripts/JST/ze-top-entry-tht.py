@@ -51,6 +51,13 @@ for pincount in range(minPins,17):
 
     y2 = 0.65
     y1 = y2 - 5.75
+    
+    #add outline to F.Fab
+    kicad_mod.addRectLine(
+        {'x': x1, 'y': y1},
+        {'x': x2, 'y': y2},
+        'F.Fab', 0.15
+        )
 
     #expand the outline a little bit
     out = 0.2
