@@ -102,16 +102,16 @@ if __name__ == '__main__':
         footprint.append(Text(type='reference', text='REF**', at=[B/2,-2.25], layer='F.SilkS'))
         footprint.append(Text(type='value', text=fp_name, at=[B/2,5.75], layer='F.Fab'))
             
-        #refdes
-        footprint.append(Text(type='user', text='%R', at=[B/2,3], layer='F.Fab'))
+        # refdes
+        #footprint.append(Text(type='user', text='%R', at=[B/2,3], layer='F.Fab'))
             
-        #generate the pads
+        # generate the pads
         footprint.append(PadArray(start=[0,0], pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=Pad.LAYERS_THT))
         
-        #distance from pins in y dir
+        # distance from pins in y dir
         P = 0.75
         
-        #thickness of end bosses
+        # thickness of end bosses
         T = 0.85
         
         #pin-1 marker
@@ -130,12 +130,12 @@ if __name__ == '__main__':
             
             
             out = [
-            {'x': A/2, 'y': -P - off},
+            {'x': B/2, 'y': -P - off},
             {'x': x1 + T + off, 'y': -P  - off},
             {'x': x1 + T + off, 'y': y1 - off},
             {'x': x1 - off, 'y': y1 - off},
             {'x': x1 - off, 'y': y2 + off},
-            {'x': A/2, 'y': y2 + off},
+            {'x': B/2, 'y': y2 + off},
             ]
             
             return out

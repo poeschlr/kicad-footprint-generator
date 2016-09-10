@@ -105,21 +105,21 @@ if __name__ == '__main__':
         footprint.append(Text(type='reference', text='REF**', at=[A/2,2.5], layer='F.SilkS'))
         footprint.append(Text(type='value', text=fp_name, at=[A/2,-3.25], layer='F.Fab'))
             
-        #add ref-des
-        footprint.append(Text(type='user',text='%R', at=[A/2,-1.25],layer='F.Fab'))
+        # add ref-des
+        #footprint.append(Text(type='user',text='%R', at=[A/2,-1.25],layer='F.Fab'))
             
-        #generate the pads
+        # generate the pads
         footprint.append(PadArray(start=[0,0], pincount=pins, x_spacing=pitch, type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE, size=size, drill=drill, layers=Pad.LAYERS_THT))
         
-        #courtyard
+        # courtyard
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.CrtYd',width=0.05,grid=0.05,offset=0.5))
         
-        #outline on Fab
+        # outline on Fab
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
         
         footprint.append(Circle(center=[x1+T,y2-T],radius=0.2,layer='F.Fab'))
         
-        #outline on SilkScreen
+        # outline on SilkScreen
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],offset=0.15))
         
         inline = [
