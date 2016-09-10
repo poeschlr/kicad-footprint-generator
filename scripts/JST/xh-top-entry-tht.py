@@ -78,7 +78,6 @@ if __name__ == '__main__':
         #corners
         x1 = -2.45
         x2 = x1 + B
-
         
         x_mid = (x1 + x2) / 2
         
@@ -89,6 +88,8 @@ if __name__ == '__main__':
         fp_name = prefix + part.format(n=pins) + suffix.format(n=pins, p=pitch)
 
         footprint = Footprint(fp_name)
+        
+        print(fp_name)
         
         description = "JST XH series connector, " + part.format(n=pins) + ", top entry type, through hole"
 
@@ -164,17 +165,16 @@ if __name__ == '__main__':
         footprint.append(PolygoneLine(polygone=line,x_mirror=A/2))
         
         #pin-1 marker
-        y =  -2.75
-        m = 0.3
+        D = 0.3
+        L = 2.5
         
         pin = [
-        {'x': 0,'y': y},
-        {'x': -m,'y': y-2*m},
-        {'x': m,'y': y-2*m},
-        {'x': 0,'y': y},
+            {'x': x1-D+L,'y': y1-D},
+            {'x': x1-D,'y': y1-D},
+            {'x': x1-D,'y': y1-D+L},
         ]
-        
         footprint.append(PolygoneLine(polygone=pin))
+        footprint.append(PolygoneLine(polygone=pin,layer='F.Fab'))
         
         #Add a model
         footprint.append(Model(filename="Connectors_JST.3dshapes/" + fp_name + ".wrl"))

@@ -176,6 +176,7 @@ if __name__ == '__main__':
             ]
             
             footprint.append(PolygoneLine(polygone=pin1))
+            footprint.append(PolygoneLine(polygone=pin1,layer='F.Fab'))
             
             #Add a model
             footprint.append(Model(filename="Connectors_JST.3dshapes/" + fp_name + ".wrl"))

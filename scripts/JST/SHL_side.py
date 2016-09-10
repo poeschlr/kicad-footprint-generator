@@ -45,7 +45,7 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
     # set general values
     kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-6.5}, 'F.SilkS')
     #kicad_mod.addText('user', '%R', {'x':0, 'y':-6.5}, 'F.Fab')
-    kicad_mod.addText('value', footprint_name, {'x':0, 'y':2}, 'F.Fab')
+    kicad_mod.addText('value', footprint_name, {'x':0, 'y':1.5}, 'F.Fab')
 
     #create outline
     # create Courtyard
@@ -97,12 +97,17 @@ for pincount in [2,5,6,7,8,10,11,12,14,16,20,22,26,30]:
     x1 = -B/2 + 1   
                               
     y1 = -5
+    
+    marker = [
+        {'x':x1,'y':y1},
+        {'x':x1-0.5,'y':y1-0.25},
+        {'x':x1-0.5,'y':y1+0.25},
+        {'x':x1,'y':y1}
+        ]
 
     #add designator for pin #1
-    kicad_mod.addPolygoneLine([{'x':x1,'y':y1},
-                               {'x':x1-0.5,'y':y1-0.25},
-                               {'x':x1-0.5,'y':y1+0.25},
-                               {'x':x1,'y':y1}])
+    kicad_mod.addPolygoneLine(marker)
+    kicad_mod.addPolygoneLine(marker,layer='F.Fab')
                               
     #add courtyard
     

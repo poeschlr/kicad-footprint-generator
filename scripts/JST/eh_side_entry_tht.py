@@ -16,14 +16,19 @@ for pincount in range(2,16):
     
     # Through-hole type shrouded header, side entry type
     footprint_name = "JST_EH_" + jst + "_{pincount:02}x2.50mm_Angled".format(pincount=pincount)
+    
+    print(footprint_name)
+    
+    A = (pincount - 1) * pitch
+    B = A + 5.0
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST EH series connector, " + jst + ", 2.50mm pitch, side entry")
     kicad_mod.setTags('connector jst eh side horizontal angled')
 
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':4}, 'F.SilkS')
-    kicad_mod.addText('value', footprint_name, {'x':0, 'y':6}, 'F.Fab')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':3}, 'F.SilkS')
+    kicad_mod.addText('value', footprint_name, {'x':A/2, 'y':-8}, 'F.Fab')
     
     drill = 0.9
 
@@ -31,9 +36,6 @@ for pincount in range(2,16):
     
     # create pads
     createNumberedPadsTHT(kicad_mod, pincount, pitch, drill, {'x':dia, 'y':dia})
-    
-    A = (pincount - 1) * pitch
-    B = A + 5.0
     
     x1 = -2.5
     y1 = -6.7
@@ -44,7 +46,7 @@ for pincount in range(2,16):
     kicad_mod.addRectLine({'x':x1,'y':y1},{'x':x2,'y':y2},'F.Fab',0.15)
     
     #line offset 
-    off = 0.2
+    off = 0.15
     
     x1 -= off
     y1 -= off
@@ -109,10 +111,12 @@ for pincount in range(2,16):
     
     m = 0.3
     
-    kicad_mod.addPolygoneLine([{'x':xm,'y':ym},
-                               {'x':xm - m,'y':ym + 2 * m},
-                               {'x':xm + m,'y':ym + 2 * m},
-                               {'x':xm,'y':ym}])
+    pin = [{'x':xm,'y':ym},
+           {'x':xm - m,'y':ym + 2 * m},
+           {'x':xm + m,'y':ym + 2 * m},
+           {'x':xm,'y':ym}]
+    kicad_mod.addPolygoneLine(pin)
+    kicad_mod.addPolygoneLine(pin,layer='F.Fab')
                                
     #add a courtyard
     cy = 0.5

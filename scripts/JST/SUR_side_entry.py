@@ -136,6 +136,7 @@ for pincount in [2,3,4,5,6,8,10,12,14,15,16,17,20,22]:
     r = 0.2
     
     fp.append(Circle(center=[mx,my],radius=r,width=0.15))
+    fp.append(Circle(center=[mx,my],radius=r,width=0.15,layer='F.Fab'))
     
     #fp.append(PolygoneLine(polygone=arrow))
     

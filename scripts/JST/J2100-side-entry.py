@@ -104,7 +104,7 @@ if __name__ == '__main__':
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab'))
         
         #offset off
-        off = 0.2
+        off = 0.15
         
         x1 -= off
         y1 -= off
@@ -150,6 +150,7 @@ if __name__ == '__main__':
         ]
         
         footprint.append(PolygoneLine(polygone=marker))
+        footprint.append(PolygoneLine(polygone=marker,layer='F.Fab'))
         
         #Add a model
         footprint.append(Model(filename="Connectors_JST.3dshapes/" + fp_name + ".wrl"))

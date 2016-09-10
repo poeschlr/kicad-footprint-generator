@@ -137,15 +137,15 @@ if __name__ == '__main__':
         footprint.append(m1)
         footprint.append(m2)
         
-        #add p1 marker
-        py = -1
-        m = 0.3
+        D = 0.3
+        L = 2.5
         
+        #add p1 marker
         marker = [
-        {'x': 0,'y': py},
-        {'x': -m,'y': py-2*m},
-        {'x': m,'y': py-2*m},
-        {'x': 0,'y': py},
+            {'x': pitch/2 , 'y': y1-D+0.25},
+            {'x': pitch/2 , 'y': y1-D},
+            {'x': x1-D,'y': y1-D},
+            {'x': x1-D,'y': y1-D+L},
         ]
         
         footprint.append(PolygoneLine(polygone=marker))

@@ -112,10 +112,13 @@ for pincount in range(2,16):
     m = 0.6
     xp = x1 - 1
 
-    kicad_mod.addPolygoneLine([{'x':xp,'y':y1},
-                               {'x':xp-m,'y':y1-m/2},
-                               {'x':xp-m,'y':y1+m/2},
-                               {'x':xp,'y':y1}])
+    marker = [{'x':xp,'y':y1},
+               {'x':xp-m,'y':y1-m/2},
+               {'x':xp-m,'y':y1+m/2},
+               {'x':xp,'y':y1}]
+               
+    kicad_mod.addPolygoneLine(marker)
+    kicad_mod.addPolygoneLine(marker,layer='F.Fab')
                                
     #add pin picures
     p = 0.25
