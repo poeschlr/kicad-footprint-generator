@@ -45,6 +45,7 @@ if not os.path.isdir(output_dir): #returns false if path does not yet exist!! (D
     os.makedirs(output_dir)
 
 #import KicadModTree files
+# export PYTHONPATH="${PYTHONPATH}<path to kicad-footprint-generator directory>"
 sys.path.append("..\\..")
 from KicadModTree import *
 from KicadModTree.nodes.specialized.PadArray import PadArray
@@ -205,7 +206,7 @@ if __name__ == '__main__':
         footprint.append(PolygoneLine(polygone=pin))
 
         #Add a model
-        footprint.append(Model(filename="Connectors_JST.3dshapes/" + fp_name + ".wrl"))
+        footprint.append(Model(filename=_3dshapes + fp_name + ".wrl"))
 
 
         #filename

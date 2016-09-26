@@ -44,6 +44,7 @@ if not os.path.isdir(output_dir): #returns false if path does not yet exist!! (D
     os.makedirs(output_dir)
 
 #import KicadModTree files
+# export PYTHONPATH="${PYTHONPATH}<path to kicad-footprint-generator directory>"
 sys.path.append("..\\..")
 from KicadModTree import *
 from KicadModTree.nodes.specialized.PadArray import PadArray
