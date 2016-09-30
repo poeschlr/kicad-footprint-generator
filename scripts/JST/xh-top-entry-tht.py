@@ -133,7 +133,7 @@ if __name__ == '__main__':
         #footprint.append(Text(type='reference', text='REF**', at=[x_mid,-3.5], layer='F.SilkS'))
 
         ref_pos_1=[x_mid +(1.5 if pins == 2 else 0),-3.5]
-        ref_pos_2=[x_mid, 0.5]
+        ref_pos_2=[x_mid, 2]
         footprint.append(Text(type='reference', text='REF**', layer=('F.Fab' if ref_on_ffab else'F.SilkS'),
             at=(ref_pos_2 if ref_on_ffab else ref_pos_1)))
         if ref_on_ffab:
