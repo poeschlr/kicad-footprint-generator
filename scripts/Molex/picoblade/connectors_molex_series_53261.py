@@ -4,6 +4,8 @@ import os
 # export PYTHONPATH="${PYTHONPATH}<path to kicad-footprint-generator directory>"
 from KicadModTree import *
 
+addidional_pin1_marker = 0
+
 def round_to(n, precision):
     correction = 0.5 if n >= 0 else -0.5
     return int( n/precision+correction ) * precision
@@ -169,17 +171,17 @@ def generate_footprint(num_pins, lib_name = "Connectors_Molex", ref_on_ffab=Fals
 
     kicad_mod.append(PolygoneLine(polygone=poly_silk_bottom))
 
+    if addidional_pin1_marker:
+        silk_pin1_marker_bottom = y_pin_marker - footprintParams.silk_first_marker_bottom_to_pin_top
+        silk_pin1_marker_left = -outher_pin_to_0 - footprintParams.silk_first_marker_w/2.0
 
-    silk_pin1_marker_bottom = y_pin_marker - footprintParams.silk_first_marker_bottom_to_pin_top
-    silk_pin1_marker_left = -outher_pin_to_0 - footprintParams.silk_first_marker_w/2.0
-
-    poly_silk_pin1_marker = [
-        {'x':-outher_pin_to_0, 'y':silk_pin1_marker_bottom},
-        {'x':silk_pin1_marker_left, 'y':silk_pin1_marker_bottom - footprintParams.silk_first_marker_h},
-        {'x':silk_pin1_marker_left + footprintParams.silk_first_marker_w, 'y':silk_pin1_marker_bottom - footprintParams.silk_first_marker_h},
-        {'x':-outher_pin_to_0, 'y':silk_pin1_marker_bottom}
-    ]
-    kicad_mod.append(PolygoneLine(polygone=poly_silk_pin1_marker))
+        poly_silk_pin1_marker = [
+            {'x':-outher_pin_to_0, 'y':silk_pin1_marker_bottom},
+            {'x':silk_pin1_marker_left, 'y':silk_pin1_marker_bottom - footprintParams.silk_first_marker_h},
+            {'x':silk_pin1_marker_left + footprintParams.silk_first_marker_w, 'y':silk_pin1_marker_bottom - footprintParams.silk_first_marker_h},
+            {'x':-outher_pin_to_0, 'y':silk_pin1_marker_bottom}
+        ]
+        kicad_mod.append(PolygoneLine(polygone=poly_silk_pin1_marker))
     #########################################################################################################
     #                                              3D Model                                                 #
     #########################################################################################################
