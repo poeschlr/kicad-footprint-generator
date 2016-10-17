@@ -36,6 +36,8 @@ for pincount in range(2,16):
 
     # SMT type shrouded header,
     footprint_name = "JST_GH_" + jst_name + "_{pincount:02}x1.25mm_Straight".format(pincount=pincount)
+    
+    print(footprint_name)
 
     kicad_mod = KicadMod(footprint_name)
     kicad_mod.setDescription("JST GH series connector, " + jst_name + ", top entry type") 
@@ -44,8 +46,17 @@ for pincount in range(2,16):
 
     kicad_mod.setCenterPos({'x':0, 'y':-3.075})
 
+    #draw outline on the F.Fab layer
+    y1 = -4.25 / 2 - 2.25
+    y2 = y1 + 4.25
+    kicad_mod.addRectLine(
+        {'x': -B/2,'y': y1},
+        {'x':  B/2,'y': y2},
+        'F.Fab', 0.15
+    )
+    
     # set general values
-    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-7.5}, 'F.SilkS')
+    kicad_mod.addText('reference', 'REF**', {'x':0, 'y':-6.75}, 'F.SilkS')
     kicad_mod.addText('value', footprint_name, {'x':0, 'y':1.5}, 'F.Fab')
 
     #create outline
@@ -68,46 +79,51 @@ for pincount in range(2,16):
     T = 0.5
     
     #add bottom line
-    kicad_mod.addPolygoneLine([{'x':-B/2+mpad_w+0.6,'y':-0.1},
-                            {'x':B/2-mpad_w-0.6,'y':-0.1},
-                            {'x':B/2-mpad_w-0.6,'y':-0.1 - T},
-                            {'x':-B/2+mpad_w+0.6,'y':-0.1 - T},
-                            {'x':-B/2+mpad_w+0.6,'y':-0.1}])
+    kicad_mod.addPolygoneLine([{'x':-B/2+mpad_w+0.6,'y':0.05},
+                            {'x':B/2-mpad_w-0.6,'y':0.05},
+                            {'x':B/2-mpad_w-0.6,'y':0.05 - T},
+                            {'x':-B/2+mpad_w+0.6,'y':0.05 - T},
+                            {'x':-B/2+mpad_w+0.6,'y':0.05}])
                              
     #add left line
     kicad_mod.addPolygoneLine([{'x':-B/2-0.1,'y':-3.3},
-                                {'x':-B/2-0.1,'y':-4.4},
-                                {'x':-A/2-pad_w/2-0.4,'y':-4.4},
-                                {'x':-A/2-pad_w/2-0.4,'y':-4.4+T},
-                                {'x':-B/2-0.1+T,'y':-4.4+T},
+                                {'x':-B/2-0.1,'y':-4.5},
+                                {'x':-A/2-pad_w/2-0.4,'y':-4.5},
+                                {'x':-A/2-pad_w/2-0.4,'y':-4.5+T},
+                                {'x':-B/2-0.1+T,'y':-4.5+T},
                                 {'x':-B/2-0.1+T,'y':-3.3},
                                 {'x':-B/2-0.1,'y':-3.3}])
 
     #add right line
     kicad_mod.addPolygoneLine([{'x':B/2+0.1,'y':-3.3},
-                                {'x':B/2+0.1,'y':-4.4},
-                                {'x':A/2+pad_w/2+0.4,'y':-4.4},
-                                {'x':A/2+pad_w/2+0.4,'y':-4.4+T},
-                                {'x':B/2+0.1-T, 'y':-4.4+T},
+                                {'x':B/2+0.1,'y':-4.5},
+                                {'x':A/2+pad_w/2+0.4,'y':-4.5},
+                                {'x':A/2+pad_w/2+0.4,'y':-4.5+T},
+                                {'x':B/2+0.1-T, 'y':-4.5+T},
                                 {'x':B/2+0.1-T, 'y':-3.3},
                                 {'x':B/2+0.1,'y':-3.3}])                                  
                                 
                                 
     #add designator for pin #1
 
-    y1 = -6.25
-    x1 = 0
+    y1 = -5.25
 
     if pincount % 2 == 1: #odd pins
         x1 = -(pincount//2) * pad_spacing
     else: #even pins
         x1 = (-pincount/2 + 0.5) * pad_spacing
-                              
+        
+    xp = x1 - 1
 
-    kicad_mod.addPolygoneLine([{'x':x1,'y':y1},
-                               {'x':x1-0.25,'y':y1-0.5},
-                               {'x':x1+0.25,'y':y1-0.5},
-                               {'x':x1,'y':y1}])
+    m = 0.6
+       
+    marker = [{'x':xp,'y':y1},
+               {'x':xp-m,'y':y1-m/2},
+               {'x':xp-m,'y':y1+m/2},
+               {'x':xp,'y':y1}]
+
+    kicad_mod.addPolygoneLine(marker)
+    kicad_mod.addPolygoneLine(marker,layer='F.Fab')
                                
                                
     #add picture of each pin
@@ -126,6 +142,8 @@ for pincount in range(2,16):
                               
     #add courtyard
     kicad_mod.addRectLine({'x':-B/2-0.5,'y':-6.125},{'x':B/2+0.5,'y':0.525},'F.CrtYd',0.05)
+    
+    kicad_mod.model = "Connectors_JST.3dshapes/" + footprint_name + ".wrl"
 
     f = open(footprint_name + ".kicad_mod","w")
 
