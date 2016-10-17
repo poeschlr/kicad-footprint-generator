@@ -180,6 +180,16 @@ if __name__ == '__main__':
         out = RectLine(start=[x1,y1],end=[x2,y2],offset=0.1)
         footprint.append(out)
 
+        if fab_pin1_marker_type == 2:
+            fab_marker_left = -fab_first_marker_w/2.0
+            fab_marker_bottom = y1 + fab_first_marker_h
+            poly_fab_marker = [
+                {'x':fab_marker_left, 'y':y1},
+                {'x':0, 'y':fab_marker_bottom},
+                {'x':fab_marker_left + fab_first_marker_w, 'y':y1}
+            ]
+            footprint.append(PolygoneLine(polygone=poly_fab_marker, layer='F.Fab', width=fab_line_width))
+
         #wall thickness w
         w = 0.75
 
@@ -217,6 +227,17 @@ if __name__ == '__main__':
         y =  -2.75
         m = 0.3
 
+        poly_pin1_marker = [
+            {'x':x1-pin1_marker_offset+pin1_marker_linelen, 'y':y1-pin1_marker_offset},
+            {'x':x1-pin1_marker_offset, 'y':y1-pin1_marker_offset},
+            {'x':x1-pin1_marker_offset, 'y':y1-pin1_marker_offset+pin1_marker_linelen}
+        ]
+        if fab_pin1_marker_type == 2:
+            footprint.append(PolygoneLine(polygone=poly_pin1_marker, layer='F.SilkS', width=silk_line_width))
+        if fab_pin1_marker_type == 3:
+            footprint.append(PolygoneLine(polygone=poly_pin1_marker, layer='F.SilkS', width=silk_line_width))
+            footprint.append(PolygoneLine(polygone=poly_pin1_marker, layer='F.Fab', width=fab_line_width))
+
         pin = [
         {'x': 0,'y': y},
         {'x': -m,'y': y-2*m},
@@ -224,19 +245,10 @@ if __name__ == '__main__':
         {'x': 0,'y': y},
         ]
 
-        footprint.append(PolygoneLine(polygone=pin))
-        if fab_pin1_marker_type == 1:
-            footprint.append(PolygoneLine(polygone=pin,layer='F.Fab'))
 
-        if fab_pin1_marker_type == 2:
-            fab_marker_left = -fab_first_marker_w/2.0
-            fab_marker_bottom = y1 + fab_first_marker_h
-            poly_fab_marker = [
-                {'x':fab_marker_left, 'y':y1},
-                {'x':0, 'y':fab_marker_bottom},
-                {'x':fab_marker_left + fab_first_marker_w, 'y':y1}
-            ]
-            footprint.append(PolygoneLine(polygone=poly_fab_marker, layer='F.Fab', width=fab_line_width))
+        if fab_pin1_marker_type == 1:
+            footprint.append(PolygoneLine(polygone=pin))
+            footprint.append(PolygoneLine(polygone=pin,layer='F.Fab'))
 
         #Add a model
         footprint.append(Model(filename=_3dshapes + fp_name + ".wrl"))
