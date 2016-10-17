@@ -57,7 +57,6 @@ if len(sys.argv) > 2:
             _3dshapes += os.sep
         if not _3dshapes.endswith(".3dshapes"+os.sep):
             _3dshapes += ".3dshapes"+os.sep
-    #print _3dshapes
 
 if output_dir and not output_dir.endswith(os.sep):
     output_dir += os.sep
@@ -67,7 +66,7 @@ if not os.path.isdir(output_dir): #returns false if path does not yet exist!! (D
 
 # http://www.jst-mfg.com/product/pdf/eng/ePH.pdf
 #JST_PH_B10B-PH-K_10x2.00mm_Straight
-part = "B{n:02}B-PH-K" #JST part number format string
+part = "B{n}B-PH-K" #JST part number format string
 
 prefix = "JST_PH_"
 suffix = "_{n:02}x{p:.2f}mm_Straight"
