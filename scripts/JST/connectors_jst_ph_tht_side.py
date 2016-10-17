@@ -55,14 +55,12 @@ if len(sys.argv) > 2:
         value_fontwidth = 0.1
         fab_pin1_marker_type = 2
         value_inside = True
-        print _3dshapes
-
-    _3dshapes = sys.argv[2]
-    if _3dshapes.endswith(".3dshapes"):
-        _3dshapes += os.sep
-    if not _3dshapes.endswith(".3dshapes"+os.sep):
-        _3dshapes += ".3dshapes"+os.sep
-    #print _3dshapes
+    else:
+        _3dshapes = sys.argv[2]
+        if _3dshapes.endswith(".3dshapes"):
+            _3dshapes += os.sep
+        if not _3dshapes.endswith(".3dshapes"+os.sep):
+            _3dshapes += ".3dshapes"+os.sep
 
 if output_dir and not output_dir.endswith(os.sep):
     output_dir += os.sep
