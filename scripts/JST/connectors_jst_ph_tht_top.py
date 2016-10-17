@@ -4,7 +4,7 @@ import sys
 import os
 #sys.path.append(os.path.join(sys.path[0],"..","..","kicad_mod")) # load kicad_mod path
 
-import argparse
+
 # export PYTHONPATH="${PYTHONPATH}<path to kicad-footprint-generator directory>"
 from KicadModTree import *
 
