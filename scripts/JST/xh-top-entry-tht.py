@@ -21,7 +21,8 @@ import os
 output_dir = os.getcwd()
 _3dshapes = "Connectors_JST.3dshapes/"
 ref_on_ffab = False
-fab_line_width = 0.15
+fab_line_width = 0.1
+fab_pin1_marker_type = 1
 
 #if specified as an argument, extract the target directory for output footprints
 if len(sys.argv) > 1:
@@ -29,7 +30,6 @@ if len(sys.argv) > 1:
 
     if os.path.isabs(out_dir) and os.path.isdir(out_dir):
         output_dir = out_dir
-        print out_dir
     else:
         output_dir = os.path.join(os.getcwd(),out_dir)
 
@@ -37,6 +37,7 @@ if len(sys.argv) > 2:
     _3dshapes = sys.argv[2]
     ref_on_ffab = True
     fab_line_width = 0.05
+    fab_pin1_marker_type = 2
 
 if output_dir and not output_dir.endswith(os.sep):
     output_dir += os.sep
@@ -121,14 +122,7 @@ if __name__ == '__main__':
 
         #draw simple outline on F.Fab layer
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2],layer='F.Fab', width=fab_line_width))
-        fab_marker_left = -fab_first_marker_w/2.0
-        fab_marker_bottom = y1 + fab_first_marker_h
-        poly_fab_marker = [
-            {'x':fab_marker_left, 'y':y1},
-            {'x':0, 'y':fab_marker_bottom},
-            {'x':fab_marker_left + fab_first_marker_w, 'y':y1}
-        ]
-        footprint.append(PolygoneLine(polygone=poly_fab_marker, layer='F.Fab', width=fab_line_width))
+
         # set general values
         #footprint.append(Text(type='reference', text='REF**', at=[x_mid,-3.5], layer='F.SilkS'))
 
@@ -204,6 +198,18 @@ if __name__ == '__main__':
         ]
 
         footprint.append(PolygoneLine(polygone=pin))
+        if fab_pin1_marker_type == 1:
+            footprint.append(PolygoneLine(polygone=pin,layer='F.Fab'))
+
+        if fab_pin1_marker_type == 2:
+            fab_marker_left = -fab_first_marker_w/2.0
+            fab_marker_bottom = y1 + fab_first_marker_h
+            poly_fab_marker = [
+                {'x':fab_marker_left, 'y':y1},
+                {'x':0, 'y':fab_marker_bottom},
+                {'x':fab_marker_left + fab_first_marker_w, 'y':y1}
+            ]
+            footprint.append(PolygoneLine(polygone=poly_fab_marker, layer='F.Fab', width=fab_line_width))
 
         #Add a model
         footprint.append(Model(filename=_3dshapes + fp_name + ".wrl"))

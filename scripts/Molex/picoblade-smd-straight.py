@@ -52,13 +52,12 @@ pitch = 1.25
 pincount = range(2,16)
 
 #Molex part number
-#with plastic PCB retainer, 
 part_code = "53398-{n:02}71" #n = number of circuits
 
 part_name = "Molex_PicoBlade_{part}_{n:02}x{p:.2f}mm_Straight"
 
 #FP description and tags
-description = "Molex PicoBlade, single row, side entry type, surface mount, PN:{pn}"
+description = "Molex PicoBlade, single row, top entry type, surface mount, PN:{pn}"
 tags = "connector molex picoblade smt"
 
 #pad size
@@ -113,7 +112,7 @@ if __name__ == '__main__':
         footprint.append(Text(type='reference', text='REF**', at=[0,-3.25], layer='F.SilkS'))
         footprint.append(Text(type='value', text=fp_name, at=[0,4.25], layer='F.Fab'))
         
-        footprint.append(Text(type='user', text='%R', at=[0,1.5], layer='F.Fab'))
+        #footprint.append(Text(type='user', text='%R', at=[0,1.5], layer='F.Fab'))
         
         #draw the pins
         footprint.append(PadArray(center=[0,py],size=[pw,ph],pincount=pins,x_spacing=pitch,type=Pad.TYPE_SMT, shape=Pad.SHAPE_RECT, layers=Pad.LAYERS_SMT))
@@ -148,15 +147,18 @@ if __name__ == '__main__':
             {'x': A/2 + pw/2 + po,'y': yf1 - o},
             {'x': xf + o,'y': yf1 - o},
             {'x': xf + o,'y': my - mh/2 - po},
-            {'x': mx + mw/2 + po,'y': my - mh/2 - po},
-            {'x': mx + mw/2 + po,'y': my + mh/2 + po},
-            {'x': mx - mw/2 - po,'y': my + mh/2 + po},
-            {'x': mx - mw/2 - po,'y': yf2 + o},
-            {'x': 0,'y': yf2 + o},
+            {'x': E/2 + o,'y': my - mh/2 - po},
+            #{'x': mx + mw/2 + po,'y': my + mh/2 + po},
+            #{'x': mx - mw/2 - po,'y': my + mh/2 + po},
+            #{'x': mx - mw/2 - po,'y': yf2 + o},
+            #{'x': 0,'y': yf2 + o},
         ]
         
         footprint.append(PolygoneLine(polygone=side))
         footprint.append(PolygoneLine(polygone=side,x_mirror=0))
+        
+        # Draw bottom line
+        footprint.append(Line(start=[-mx+mw/2+po,yf2+o],end=[mx-mw/2-po,yf2+o]))
         
         #pin-1 marker
         p1_start = [-A/2-pw/2-po,yf1-o]
@@ -164,6 +166,20 @@ if __name__ == '__main__':
         footprint.append(Line(start=p1_start,end=p1_end))
         #footprint.append(Line(start=p1_start,end=p1_end,layer='F.Fab'))
 
+        # Add pin-1 marker to F.Fab
+        m = pw / 2
+        x = -A/2
+        y = yf1
+        
+        pin = [
+        {'x': x - m,'y': y},
+        {'x': x,'y': y + 2 * m},
+        {'x': x + m,'y': y},
+        {'x': x - m,'y': y},
+        ]
+         
+        footprint.append(PolygoneLine(polygone=pin, layer='F.Fab'))
+        
         #courtyard
         
         xc = mx + mw / 2

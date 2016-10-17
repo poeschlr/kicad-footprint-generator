@@ -128,16 +128,16 @@ for pincount in pins:
     #y-bottom
     yb = yt + 2.77
     #y-notch
-    yn = 1
+    yn = 0.5
     
     outline = [
-    {'x': 0,'y': yt},
-    {'x': -B/2 - pitch,'y': yt},
-    {'x': -B/2 - pitch,'y': yt},
-    {'x': -B/2 - pitch,'y': yt + yn},
-    {'x': -A/2,'y': yt + yn},
-    {'x': -A/2,'y': yb},
-    {'x': 0,'y': yb},
+        {'x': 0,'y': yt},
+        {'x': -B/2 - pitch,'y': yt},
+        {'x': -B/2 - pitch,'y': yt},
+        {'x': -B/2 - pitch,'y': yt + yn},
+        {'x': -A/2,'y': yt + yn},
+        {'x': -A/2,'y': yb},
+        {'x': 0,'y': yb},
     ]
     
     fp.append(PolygoneLine(polygone=outline,layer='F.Fab'))
@@ -153,17 +153,8 @@ for pincount in pins:
         {'x': -B/2, 'y': yt + a}], layer='F.Fab'))
         
     #draw pin-1 indicator on Silk.S
-    ya = yp
-    xa = -B/2 - pw/2 - 1
     
-    a = 0.5
-    
-    fp.append(PolygoneLine(polygone=[
-        {'x': xa , 'y': ya},
-        {'x': xa-a, 'y': ya - a/2},
-        {'x': xa-a, 'y': ya + a/2},
-        {'x': xa, 'y': ya},
-        ]))
+    fp.append(Circle(center=[-B/2 - 1.4, yp - 0.3], radius=0.2))
     
     #silkscreen
     #offset from pads
@@ -173,14 +164,18 @@ for pincount in pins:
     
     #Sides
     silk = [
-    {'x': -B/2 - pw/2 - op, 'y': yt - of},
-    {'x': -B/2 - of - pitch, 'y': yt - of},
-    {'x': -B/2 - of - pitch, 'y': yt - of + yn},
-    {'x': -A/2 - of, 'y': yt - of + yn},
-    {'x': -A/2 - of, 'y': ym - mh / 2 - op},
+        {'x': B/2 + pw/2 + op, 'y': yt - of},
+        {'x': B/2 + of + pitch, 'y': yt - of},
+        {'x': B/2 + of + pitch, 'y': yt - of + yn},
+        {'x': A/2 + of, 'y': yt - of + yn},
+        {'x': A/2 + of, 'y': ym - mh / 2 - op},
     ]
     
+    # Right hand side
     fp.append(PolygoneLine(polygone = silk))
+    
+    # Left hand side (pin 1)
+    silk= [{'x': B/2 + pw/2 + op,'y': yp - ph/2 - 0.15}] + silk
     fp.append(PolygoneLine(polygone = silk, x_mirror = 0))
     
     #bottom line

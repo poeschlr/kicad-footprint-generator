@@ -102,11 +102,14 @@ if __name__ == '__main__':
         
         #draw inside tab
         T = A/2 + 0.5
-        footprint.append(RectLine(start=[A/2-T/2,y1+t],end=[A/2+T/2,y1+2*t],layer='F.Fab'))
+        footprint.append(RectLine(start=[A/2-T/2,y1+t],end=[A/2+T/2,y1+2*t])) #,layer='F.Fab'))
+        
+        #offset off
+        off = 0.15
         
         #outline
         side = [
-        {'x': A/2-T/2-t,'y': y1},
+        {'x': A/2-T/2-t,'y': y1-off},
         {'x': A/2-T/2-t,'y': y1 + 2 * t},
         {'x': A/2-T/2-2*t,'y': y1 + 2 * t},
         {'x': A/2-T/2-2*t,'y': y1 + t},
@@ -115,11 +118,9 @@ if __name__ == '__main__':
         {'x': A/2,'y': y2 - t},
         ]
         
-        footprint.append(PolygoneLine(polygone=side, layer='F.Fab'))
-        footprint.append(PolygoneLine(polygone=side,x_mirror=A/2,layer='F.Fab'))
+        footprint.append(PolygoneLine(polygone=side)) #,  layer='F.Fab'))
+        footprint.append(PolygoneLine(polygone=side,x_mirror=A/2))# ,layer='F.Fab'))
         
-        #offset off
-        off = 0.15
         
         x1 -= off
         y1 -= off
@@ -129,16 +130,12 @@ if __name__ == '__main__':
         #draw outline
         footprint.append(RectLine(start=[x1,y1],end=[x2,y2]))
         
-        
-        
-        
-        
         #courtyard
         cy = RectLine(start=[x1,y1],end=[x2,y2],offset=0.5,layer='F.CrtYd',width=0.05,grid=0.05)
         footprint.append(cy)
         
         #add p1 marker
-        px = -2.55
+        px = x1 - 0.2
         m = 0.3
         
         marker = [
