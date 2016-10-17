@@ -49,7 +49,7 @@ if len(sys.argv) > 2:
     if sys.argv[2] == "TERA":
         ref_on_ffab = True
         fab_line_width = 0.05
-        silk_line_width = 0.15
+        silk_line_width = 0.12
         _3dshapes = "tera_Connectors_JST.3dshapes"+os.sep
         value_fontsize = [0.6,0.6]
         value_fontwidth = 0.1
