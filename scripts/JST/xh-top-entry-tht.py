@@ -19,14 +19,31 @@ import sys
 import os
 
 output_dir = os.getcwd()
-_3dshapes = "Connectors_JST.3dshapes/"
+_3dshapes = "Connectors_JST.3dshapes"+os.sep
 ref_on_ffab = False
 fab_line_width = 0.1
+silk_line_width = 0.15
+value_fontsize = [1,1]
+value_fontwidth=0.15
+silk_reference_fontsize=[1,1]
+silk_reference_fontwidth=0.15
+fab_reference_fontsize=[0.6,0.6]
+fab_reference_fontwidth=0.1
+
+CrtYd_offset = 0.5
+CrtYd_linewidth = 0.05
+
+pin1_marker_offset = 0.3
+pin1_marker_linelen = 1.25
 fab_pin1_marker_type = 1
 
 #if specified as an argument, extract the target directory for output footprints
 if len(sys.argv) > 1:
     out_dir = sys.argv[1]
+    if out_dir.endswith(".pretty"):
+        out_dir += os.sep
+    if not out_dir.endswith(".pretty"+os.sep):
+        out_dir += ".pretty"+os.sep
 
     if os.path.isabs(out_dir) and os.path.isdir(out_dir):
         output_dir = out_dir
@@ -34,10 +51,20 @@ if len(sys.argv) > 1:
         output_dir = os.path.join(os.getcwd(),out_dir)
 
 if len(sys.argv) > 2:
-    _3dshapes = sys.argv[2]
-    ref_on_ffab = True
-    fab_line_width = 0.05
-    fab_pin1_marker_type = 2
+    if sys.argv[2] == "TERA":
+        ref_on_ffab = True
+        fab_line_width = 0.05
+        silk_line_width = 0.15
+        _3dshapes = "tera_Connectors_JST.3dshapes"+os.sep
+        value_fontsize = [0.6,0.6]
+        value_fontwidth = 0.1
+        fab_pin1_marker_type = 2
+    else:
+        _3dshapes = sys.argv[2]
+        if _3dshapes.endswith(".3dshapes"):
+            _3dshapes += os.sep
+        if not _3dshapes.endswith(".3dshapes"+os.sep):
+            _3dshapes += ".3dshapes"+os.sep
 
 if output_dir and not output_dir.endswith(os.sep):
     output_dir += os.sep
