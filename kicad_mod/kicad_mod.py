@@ -22,7 +22,7 @@ def getFormatedFloat(val):
 
 def grid(val, spacing = 0.05):
     return int(val/spacing) * spacing
-    
+
 class KicadMod(object):
     def __init__(self, name):
         self.setModuleName(name)
@@ -61,21 +61,24 @@ class KicadMod(object):
 
 
     def addRawText(self, data):
-        self.text_array.append(data)    
+        self.text_array.append(data)
 
 
-    def addText(self, which_text, text, position, layer='F.SilkS'):
+    def addText(self, which_text, text, position, layer='F.SilkS', fontsize=[1,1], fontwidth=0.15):
         self.addRawText({'which_text':which_text
                         ,'text':text
                         ,'layer':layer
-                        ,'position':position})
+                        ,'position':position
+                        ,'fontsize':fontsize
+                        ,'fontwidth':fontwidth
+                        })
 
-    def addReference(self, text, position, layer='F.SilkS'):
-        self.addText('reference', text, position, layer)
+    def addReference(self, text, position, layer='F.SilkS', fontsize=[1,1], fontwidth=0.15):
+        self.addText('reference', text, position, layer, fontsize, fontwidth)
 
 
-    def addValue(self, text, position, layer='F.Fab'):
-        self.addText('value', text, position, layer)
+    def addValue(self, text, position, layer='F.Fab', fontsize=[1,1], fontwidth=0.15):
+        self.addText('value', text, position, layer, fontsize, fontwidth)
 
     def addRawLine(self, data):
         self.line_array.append(data)
@@ -132,7 +135,7 @@ class KicadMod(object):
             'drill': 0,
             'layers': ["F.Cu","F.Paste","F.Mask"]
         })
-      
+
     #create an un-numbered NPTH mechanical mounting pad
     def addMountingHole(self, position, size):
         self.addRawPad({
@@ -168,9 +171,9 @@ class KicadMod(object):
                                                          ,text=data['text'])
         output += self._savePosition(data['position'], 'at')
         output += ' (layer {layer})\n'.format(layer=data['layer'])
-        output += '    (effects (font (size 1 1) (thickness 0.15)))\n'
+        output += '    (effects (font (size {size[0]} {size[1]}) (thickness {thickness})))\n'.format(size=data['fontsize'], thickness=data['fontwidth'])
         output += '  )\n'
-        
+
         return output
 
 
@@ -188,11 +191,11 @@ class KicadMod(object):
         output = '  (fp_circle '
         output += self._savePosition(data['position'], 'center')
         output += ' '
-        
+
         dimensions = []
         dimensions = {'x':data['position']['x']+data['dimensions']['x']
                      ,'y':data['position']['y']+data['dimensions']['y']}
-        
+
         output += self._savePosition(dimensions, 'end')
         output += ' (layer {layer}) (width {width}))\n'.format(layer=data['layer']
                                                                 ,width=data['width'])
@@ -209,9 +212,9 @@ class KicadMod(object):
         output += ' (drill {drill}) '.format(drill=data['drill'])
         output += '(layers ' + ' '.join(data['layers']) + '))\n'
         return output
-        
+
     def _saveModel(self):
-        
+
         #model path
         output = "  (model {model}\n".format(model=self.model)
         #model position
@@ -219,9 +222,9 @@ class KicadMod(object):
         output += "    (scale (xyz {x} {y} {z}))\n".format(x=self.model_scale['x'],y=self.model_scale['y'],z=self.model_scale['z'])
         output += "    (rotate (xyz {x} {y} {z}))\n".format(x=self.model_rot['x'],y=self.model_rot['y'],z=self.model_rot['z'])
         output += "  )"
-            
+
         return output
-        
+
     def __str__(self):
         '''
         generate kicad_mod content
@@ -248,9 +251,9 @@ class KicadMod(object):
 
         for pad in self.pad_array:
             output += self._savePad(pad)
-            
+
         if (self.model):
-            
+
             output += self._saveModel()
 
         output = output + '\n)'
