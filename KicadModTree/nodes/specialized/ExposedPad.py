@@ -120,6 +120,8 @@ class ExposedPad(Node):
           The maximum radius for the paste pads.
           If the radius produced by the paste_radius_ratio parameter for the paste pad would
           exceed the maximum radius, the ratio is reduced to limit the radius.
+        * *paste_round_radius_exact* (``float``) --
+          Set an exact round radius for the paste pads.
 
         * *kicad4_compatible* (``bool``) --
           Makes sure the resulting pad is compatible with kicad 4. default False
@@ -140,8 +142,9 @@ class ExposedPad(Node):
 
         self.kicad4_compatible = kwargs.get('kicad4_compatible', False)
         self.paste_round_radius_handler = RoundRadiusHandler(
-                radius_ratio=kwargs.get('paste_round_radius_ratio', 0),
+                radius_ratio=kwargs.get('paste_radius_ratio', 0),
                 maximum_radius=kwargs.get('paste_maximum_radius', None),
+                round_radius_exact=kwargs.get('paste_round_radius_exact', None),
                 kicad4_compatible=self.kicad4_compatible
             )
 

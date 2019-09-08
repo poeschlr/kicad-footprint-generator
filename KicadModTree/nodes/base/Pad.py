@@ -23,6 +23,7 @@ from KicadModTree.nodes.base.Circle import Circle
 from KicadModTree.nodes.base.Line import Line
 from KicadModTree.nodes.base.Polygon import Polygon
 
+
 class RoundRadiusHandler(object):
     r"""Handles round radius setting of a pad
 
@@ -52,7 +53,6 @@ class RoundRadiusHandler(object):
         else:
             raise ValueError('radius ratio out of allowed range (0 <= rr <= 0.5)')
 
-
         self.maximum_radius = RoundRadiusHandler.__checkAbsoluteValue('maximum_radius', **kwargs)
         self.round_radius_exact = RoundRadiusHandler.__checkAbsoluteValue('round_radius_exact', **kwargs)
 
@@ -77,7 +77,10 @@ class RoundRadiusHandler(object):
 
         if self.round_radius_exact:
             if self.round_radius_exact > shortest_sidelength/2:
-                raise ValueError("requested round radius of {} is too large for pad size of {}".format(self.round_radius_exact, pad_size))
+                raise ValueError(
+                    "requested round radius of {} is too large for pad size of {}"
+                    .format(self.round_radius_exact, pad_size)
+                    )
             if self.maximum_radius:
                 return min(self.round_radius_exact, self.maximum_radius)/shortest_sidelength
             else:
@@ -127,6 +130,7 @@ class RoundRadiusHandler(object):
             self.maximum_radius = min(self.maximum_radius, limit)
         else:
             self.maximum_radius = limit
+
 
 class Pad(Node):
     r"""Add a Pad to the render tree
