@@ -257,8 +257,11 @@ class Gullwing():
         if 'round_rect_max_radius' in configuration:
             pad_shape_details['maximum_radius'] = configuration['round_rect_max_radius']
 
+        pad_radius = add_dual_or_quad_pad_border(kicad_mod, configuration, pad_details, device_params)
+
         EP_round_radius = 0
         if dimensions['has_EP']:
+            EP_round_radius = device_params.get('EP_round_radius_overwrite', pad_radius)
             EP_mask_size = EP_mask_size if EP_mask_size['x'] > 0 else None
 
             if with_thermal_vias:
@@ -291,8 +294,6 @@ class Gullwing():
 
             kicad_mod.append(EP)
             EP_round_radius = EP.getRoundRadius()
-
-        pad_radius = add_dual_or_quad_pad_border(kicad_mod, configuration, pad_details, device_params)
 
         body_edge = {
             'left': -dimensions['body_size_x'].nominal/2,

@@ -19,7 +19,7 @@ from copy import copy
 from KicadModTree.util.paramUtil import *
 from KicadModTree.Vector import *
 from KicadModTree.nodes.base.Polygon import *
-from KicadModTree.nodes.base.Pad import Pad
+from KicadModTree.nodes.base.Pad import Pad, RoundRadiusHandler
 from math import sqrt
 
 
@@ -225,8 +225,7 @@ class ChamferedPad(Node):
         self._initSize(**kwargs)
         self._initMirror(**kwargs)
         self._initPadSettings(**kwargs)
-        self.radius_ratio = kwargs.get('radius_ratio', 0)
-        self.maximum_radius = kwargs.get('maximum_radius')
+        self.round_radius_handler = RoundRadiusHandler(**kwargs)
         self.pad = self._generatePad()
 
     def _initSize(self, **kwargs):
@@ -271,10 +270,7 @@ class ChamferedPad(Node):
         if self.corner_selection.isAnySelected() and self.chamfer_size[0] > 0 and self.chamfer_size[1] > 0:
             is_chamfered = True
 
-        shortest_sidlength = min(self.size)
-        radius = shortest_sidlength*self.radius_ratio
-        if self.maximum_radius and radius > self.maximum_radius:
-            radius = self.maximum_radius
+        radius = self.round_radius_handler.getRoundRadius(min(self.size))
 
         if is_chamfered:
             outside = Vector2D(self.size.x/2, self.size.y/2)
@@ -284,7 +280,7 @@ class ChamferedPad(Node):
                       ]
 
             polygon_width = 0
-            if self.radius_ratio > 0:
+            if self.round_radius_handler.roundingRequested():
                 if self.chamfer_size[0] != self.chamfer_size[1]:
                     raise NotImplementedError('rounded chamfered pads are only supported for 45 degree chamfers')
                 # We prefer the use of rounded rectangle over chamfered pads.

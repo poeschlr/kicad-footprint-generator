@@ -23,6 +23,110 @@ from KicadModTree.nodes.base.Circle import Circle
 from KicadModTree.nodes.base.Line import Line
 from KicadModTree.nodes.base.Polygon import Polygon
 
+class RoundRadiusHandler(object):
+    r"""Handles round radius setting of a pad
+
+    :param \**kwargs:
+        See below
+
+    :Keyword Arguments:
+    * *radius_ratio* (``float``) --
+      The radius ratio of the rounded rectangle.
+      Ignored for every shape except round rect.
+    * *maximum_radius* (``float``) --
+      The maximum radius for the rounded rectangle.
+      If the radius produced by the radius_ratio parameter for the pad would
+      exceed the maximum radius, the ratio is reduced to limit the radius.
+      (This is useful for IPC-7351C compliance as it suggests 25% ratio with limit 0.25mm)
+      Ignored for every shape except round rect.
+    * *round_radius_exact* (``float``) --
+      Set an exact round radius for a pad.
+      Ignored for every shape except round rect
+    """
+    def __init__(self, **kwargs):
+        radius_ratio = kwargs.get('radius_ratio', 0)
+        if type(radius_ratio) not in [int, float]:
+            raise TypeError('radius ratio needs to be of type int or float')
+        if radius_ratio >= 0 and radius_ratio <= 0.5:
+            self.radius_ratio = radius_ratio
+        else:
+            raise ValueError('radius ratio out of allowed range (0 <= rr <= 0.5)')
+
+
+        self.maximum_radius = RoundRadiusHandler.__checkAbsoluteValue('maximum_radius', **kwargs)
+        self.round_radius_exact = RoundRadiusHandler.__checkAbsoluteValue('round_radius_exact', **kwargs)
+
+        self.kicad4_compatible = kwargs.get('kicad4_compatible', False)
+
+    @staticmethod
+    def __checkAbsoluteValue(name, **kwargs):
+        val = kwargs.get(name)
+        if val is not None:
+            if type(val) not in [int, float]:
+                raise TypeError('{} needs to be of type int or float'.format(name))
+        return val
+
+    def getRadiusRatio(self, shortest_sidelength):
+        r"""get the resulting round radius ratio
+
+        :param shortest_sidelength: shortest sidelength of a pad
+        :return: the resulting round radius ratio to be used for the pad
+        """
+        if self.kicad4_compatible:
+            return 0
+
+        if self.round_radius_exact:
+            if self.round_radius_exact > shortest_sidelength/2:
+                raise ValueError("requested round radius of {} is too large for pad size of {}".format(self.round_radius_exact, pad_size))
+            if self.maximum_radius:
+                return min(self.round_radius_exact, self.maximum_radius)/shortest_sidelength
+            else:
+                return self.round_radius_exact/shortest_sidelength
+        if self.maximum_radius:
+            if self.radius_ratio*shortest_sidelength > self.maximum_radius:
+                return self.maximum_radius/shortest_sidelength
+
+        return self.radius_ratio
+
+    def getRoundRadius(self, shortest_sidelength):
+        r"""get the resulting round radius
+
+        :param shortest_sidelength: shortest sidelength of a pad
+        :return: the resulting round radius to be used for the pad
+        """
+        return self.getRadiusRatio(shortest_sidelength)*shortest_sidelength
+
+    def roundingRequested(self):
+        r"""Check if the pad has a rounded corner
+
+        :return: True if rounding corners is required
+        """
+        if self.kicad4_compatible:
+            return False
+
+        if self.round_radius_exact is not None:
+            if self.round_radius_exact > 0:
+                return True
+            else:
+                return False
+
+        if self.radius_ratio > 0:
+            return True
+        else:
+            return False
+
+    def limitMaxRadius(self, limit):
+        r"""Set a new maximum limit
+
+        :param limit: the new limit.
+        """
+
+        if not self.roundingRequested():
+            return
+        if self.maximum_radius is not None:
+            self.maximum_radius = min(self.maximum_radius, limit)
+        else:
+            self.maximum_radius = limit
 
 class Pad(Node):
     r"""Add a Pad to the render tree
@@ -50,13 +154,20 @@ class Pad(Node):
           drill-size of the pad
         * *radius_ratio* (``float``) --
           The radius ratio of the rounded rectangle.
-          Ignored for every other shape.
+          Ignored for every shape except round rect.
         * *maximum_radius* (``float``) --
           The maximum radius for the rounded rectangle.
           If the radius produced by the radius_ratio parameter for the pad would
-          exceed the maximum radius, the ratio is reduced to limit the ratio.
+          exceed the maximum radius, the ratio is reduced to limit the radius.
           (This is useful for IPC-7351C compliance as it suggests 25% ratio with limit 0.25mm)
-          Ignored for every other shape.
+          Ignored for every shape except round rect.
+        * *round_radius_exact* (``float``) --
+          Set an exact round radius for a pad.
+          Ignored for every shape except round rect
+        * *round_radius_handler* (``RoundRadiusHandler``) --
+          An instance of the RoundRadiusHandler class
+          If this is given then all other round radius specifiers are Ignored
+          Ignored for every shape except round rect
         * *solder_paste_margin_ratio* (``float``) --
           solder paste margin ratio of the pad (default: 0)
         * *solder_paste_margin* (``float``) --
@@ -210,22 +321,12 @@ class Pad(Node):
         self.layers = kwargs.get('layers')
 
     def _initRadiusRatio(self, **kwargs):
-        radius_ratio = kwargs.get('radius_ratio', 0)
-        if type(radius_ratio) not in [int, float]:
-            raise TypeError('radius ratio needs to be of type int or float')
-        if radius_ratio >= 0 and radius_ratio <= 0.5:
-            self.radius_ratio = radius_ratio
+        if('round_radius_handler' in kwargs):
+            self.round_radius_handler = kwargs['round_radius_handler']
         else:
-            raise ValueError('radius ratio out of allowed range (0 <= rr <= 0.5)')
+            self.round_radius_handler = RoundRadiusHandler(**kwargs)
 
-        if kwargs.get('maximum_radius') is not None:
-            maximum_radius = kwargs.get('maximum_radius')
-            if type(maximum_radius) not in [int, float]:
-                raise TypeError('maximum radius needs to be of type int or float')
-
-            shortest_sidelength = min(self.size)
-            if self.radius_ratio*shortest_sidelength > maximum_radius:
-                self.radius_ratio = maximum_radius/shortest_sidelength
+        self.radius_ratio = self.round_radius_handler.getRadiusRatio(min(self.size))
 
         if self.radius_ratio == 0:
             self.shape = Pad.SHAPE_RECT
@@ -275,4 +376,4 @@ class Pad(Node):
                 if r > r_max:
                     r_max = r
             return r_max
-        return self.radius_ratio*min(self.size)
+        return self.round_radius_handler.getRoundRadius(min(self.size))
