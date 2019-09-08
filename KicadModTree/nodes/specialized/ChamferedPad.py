@@ -212,11 +212,17 @@ class ChamferedPad(Node):
           mirror y direction around offset "point"
 
         * *radius_ratio* (``float``) --
-          The radius ratio used if the pad has no chamfer
-          Default: 0 means pads do not included rounded corners (normal rectangles are used)
+          The radius ratio of the rounded rectangle.
         * *maximum_radius* (``float``) --
-          Only used if a radius ratio is given.
-          Limits the radius.
+          The maximum radius for the rounded rectangle.
+          If the radius produced by the radius_ratio parameter for the pad would
+          exceed the maximum radius, the ratio is reduced to limit the radius.
+          (This is useful for IPC-7351C compliance as it suggests 25% ratio with limit 0.25mm)
+        * *round_radius_exact* (``float``) --
+          Set an exact round radius for a pad.
+        * *round_radius_handler* (``RoundRadiusHandler``) --
+          An instance of the RoundRadiusHandler class
+          If this is given then all other round radius specifiers are Ignored
     """
 
     def __init__(self, **kwargs):
