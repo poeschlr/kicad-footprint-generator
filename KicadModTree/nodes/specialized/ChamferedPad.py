@@ -225,7 +225,12 @@ class ChamferedPad(Node):
         self._initSize(**kwargs)
         self._initMirror(**kwargs)
         self._initPadSettings(**kwargs)
-        self.round_radius_handler = RoundRadiusHandler(**kwargs)
+
+        if('round_radius_handler' in kwargs):
+            self.round_radius_handler = kwargs['round_radius_handler']
+        else:
+            self.round_radius_handler = RoundRadiusHandler(**kwargs)
+
         self.pad = self._generatePad()
 
     def _initSize(self, **kwargs):

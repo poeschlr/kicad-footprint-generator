@@ -131,6 +131,12 @@ class RoundRadiusHandler(object):
         else:
             self.maximum_radius = limit
 
+    def __str__(self):
+        return "ratio {}, max {}, exact {}, v4 compatible {}".format(
+                    self.radius_ratio, self.maximum_radius,
+                    self.round_radius_exact, self.kicad4_compatible
+                    )
+
 
 class Pad(Node):
     r"""Add a Pad to the render tree
