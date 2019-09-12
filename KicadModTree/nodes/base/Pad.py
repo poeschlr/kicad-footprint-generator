@@ -45,26 +45,14 @@ class RoundRadiusHandler(object):
       Ignored for every shape except round rect
     """
     def __init__(self, **kwargs):
-        radius_ratio = kwargs.get('radius_ratio', 0)
-        if type(radius_ratio) not in [int, float]:
-            raise TypeError('radius ratio needs to be of type int or float')
-        if radius_ratio >= 0 and radius_ratio <= 0.5:
-            self.radius_ratio = radius_ratio
-        else:
-            raise ValueError('radius ratio out of allowed range (0 <= rr <= 0.5)')
+        self.radius_ratio = getOptionalNumberTypeParam(
+                            kwargs, 'radius_ratio', default_value=0,
+                            low_limit=0, high_limit=0.5)
 
-        self.maximum_radius = RoundRadiusHandler.__checkAbsoluteValue('maximum_radius', **kwargs)
-        self.round_radius_exact = RoundRadiusHandler.__checkAbsoluteValue('round_radius_exact', **kwargs)
+        self.maximum_radius = getOptionalNumberTypeParam(kwargs, 'maximum_radius')
+        self.round_radius_exact = getOptionalNumberTypeParam(kwargs, 'round_radius_exact')
 
         self.kicad4_compatible = kwargs.get('kicad4_compatible', False)
-
-    @staticmethod
-    def __checkAbsoluteValue(name, **kwargs):
-        val = kwargs.get(name)
-        if val is not None:
-            if type(val) not in [int, float]:
-                raise TypeError('{} needs to be of type int or float'.format(name))
-        return val
 
     def getRadiusRatio(self, shortest_sidelength):
         r"""get the resulting round radius ratio
