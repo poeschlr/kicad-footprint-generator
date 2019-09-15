@@ -65,7 +65,6 @@ class ExposedPad(Node):
         * *paste_coverage* (``float``) --
           how much of the mask free area is covered with paste. (default: 0.65)
 
-
         * *via_layout* (``int``, ``[int, int]``) --
           thermal via layout specification.
           How many vias in x and y direction.

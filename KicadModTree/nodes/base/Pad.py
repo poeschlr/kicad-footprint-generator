@@ -33,16 +33,13 @@ class RoundRadiusHandler(object):
     :Keyword Arguments:
     * *radius_ratio* (``float``) --
       The radius ratio of the rounded rectangle.
-      Ignored for every shape except round rect.
     * *maximum_radius* (``float``) --
       The maximum radius for the rounded rectangle.
       If the radius produced by the radius_ratio parameter for the pad would
       exceed the maximum radius, the ratio is reduced to limit the radius.
       (This is useful for IPC-7351C compliance as it suggests 25% ratio with limit 0.25mm)
-      Ignored for every shape except round rect.
     * *round_radius_exact* (``float``) --
       Set an exact round radius for a pad.
-      Ignored for every shape except round rect
     """
     def __init__(self, **kwargs):
         self.radius_ratio = getOptionalNumberTypeParam(
