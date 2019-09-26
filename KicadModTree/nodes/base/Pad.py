@@ -87,7 +87,7 @@ class RoundRadiusHandler(object):
     def roundingRequested(self):
         r"""Check if the pad has a rounded corner
 
-        :return: True if rounding corners is required
+        :return: True are rounding corners is required
         """
         if self.kicad4_compatible:
             return False
@@ -161,7 +161,7 @@ class Pad(Node):
           Ignored for every shape except round rect
         * *round_radius_handler* (``RoundRadiusHandler``) --
           An instance of the RoundRadiusHandler class
-          If this is given then all other round radius specifiers are Ignored
+          If this is given then all other round radius specifiers are ignored
           Ignored for every shape except round rect
         * *solder_paste_margin_ratio* (``float``) --
           solder paste margin ratio of the pad (default: 0)

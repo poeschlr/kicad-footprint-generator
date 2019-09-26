@@ -48,6 +48,7 @@ class NoLead():
 
                 if 'ipc_generic_rules' in self.ipc_defintions:
                     self.configuration['min_ep_to_pad_clearance'] = self.ipc_defintions['ipc_generic_rules'].get('min_ep_to_pad_clearance', 0.2)
+
             except yaml.YAMLError as exc:
                 print(exc)
 
