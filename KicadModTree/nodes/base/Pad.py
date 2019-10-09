@@ -137,6 +137,9 @@ class Pad(Node):
         * *shape* (``Pad.SHAPE_CIRCLE``, ``Pad.SHAPE_OVAL``, ``Pad.SHAPE_RECT``, ``SHAPE_ROUNDRECT``,
         ``Pad.SHAPE_TRAPEZE``, ``SHAPE_CUSTOM``) --
           shape of the pad
+        * *layers* (``Pad.LAYERS_SMT``, ``Pad.LAYERS_THT``, ``Pad.LAYERS_NPTH``) --
+          layers on which are used for the pad
+          
         * *at* (``Vector2D``) --
           center position of the pad
         * *rotation* (``float``) --
@@ -147,6 +150,7 @@ class Pad(Node):
           offset of the pad
         * *drill* (``float``, ``Vector2D``) --
           drill-size of the pad
+          
         * *radius_ratio* (``float``) --
           The radius ratio of the rounded rectangle.
           Ignored for every shape except round rect.
@@ -163,14 +167,14 @@ class Pad(Node):
           An instance of the RoundRadiusHandler class
           If this is given then all other round radius specifiers are ignored
           Ignored for every shape except round rect
+          
         * *solder_paste_margin_ratio* (``float``) --
           solder paste margin ratio of the pad (default: 0)
         * *solder_paste_margin* (``float``) --
           solder paste margin of the pad (default: 0)
         * *solder_mask_margin* (``float``) --
           solder mask margin of the pad (default: 0)
-        * *layers* (``Pad.LAYERS_SMT``, ``Pad.LAYERS_THT``, ``Pad.LAYERS_NPTH``) --
-          layers on which are used for the pad
+
         * *x_mirror* (``[int, float](mirror offset)``) --
           mirror x direction around offset "point"
         * *y_mirror* (``[int, float](mirror offset)``) --
