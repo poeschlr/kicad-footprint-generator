@@ -186,7 +186,7 @@ class KicadFileHandler(FileHandler):
 
     def _serialize_CirclePoints(self, node):
         center_pos = node.getRealPosition(node.center_pos)
-        end_pos = node.getRealPosition(node.end_pos)
+        end_pos = node.getRealPosition(node.center_pos + (node.radius, 0))
 
         return [
                 ['center', center_pos.x, center_pos.y],
@@ -238,13 +238,16 @@ class KicadFileHandler(FileHandler):
             sexpr.append('hide')
         sexpr.append(SexprSerializer.NEW_LINE)
 
-        sexpr.append(['effects',
-                      ['font',
-                       ['size', node.size.x, node.size.y],
-                       ['thickness', node.thickness]
-                      ]
-                     ]
-                    )  # NOQA
+        effects = [
+                'effects',
+                ['font',
+                    ['size', node.size.x, node.size.y],
+                    ['thickness', node.thickness]]]
+
+        if node.mirror:
+            effects.append(['justify', 'mirror'])
+
+        sexpr.append(effects)
         sexpr.append(SexprSerializer.NEW_LINE)
 
         return sexpr
