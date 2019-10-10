@@ -87,7 +87,7 @@ class RoundRadiusHandler(object):
     def roundingRequested(self):
         r"""Check if the pad has a rounded corner
 
-        :return: True are rounding corners is required
+        :return: True if rounded corners are required
         """
         if self.kicad4_compatible:
             return False
@@ -139,7 +139,7 @@ class Pad(Node):
           shape of the pad
         * *layers* (``Pad.LAYERS_SMT``, ``Pad.LAYERS_THT``, ``Pad.LAYERS_NPTH``) --
           layers on which are used for the pad
-          
+
         * *at* (``Vector2D``) --
           center position of the pad
         * *rotation* (``float``) --
@@ -150,7 +150,7 @@ class Pad(Node):
           offset of the pad
         * *drill* (``float``, ``Vector2D``) --
           drill-size of the pad
-          
+
         * *radius_ratio* (``float``) --
           The radius ratio of the rounded rectangle.
           Ignored for every shape except round rect.
@@ -167,7 +167,7 @@ class Pad(Node):
           An instance of the RoundRadiusHandler class
           If this is given then all other round radius specifiers are ignored
           Ignored for every shape except round rect
-          
+
         * *solder_paste_margin_ratio* (``float``) --
           solder paste margin ratio of the pad (default: 0)
         * *solder_paste_margin* (``float``) --

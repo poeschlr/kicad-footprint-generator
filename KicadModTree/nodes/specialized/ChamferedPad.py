@@ -222,7 +222,7 @@ class ChamferedPad(Node):
           Set an exact round radius for a pad.
         * *round_radius_handler* (``RoundRadiusHandler``) --
           An instance of the RoundRadiusHandler class
-          If this is given then all other round radius specifiers are Ignored
+          If this is given then all other round radius specifiers are ignored
     """
 
     def __init__(self, **kwargs):
