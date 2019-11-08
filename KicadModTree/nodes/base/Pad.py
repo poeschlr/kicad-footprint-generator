@@ -43,7 +43,7 @@ class RoundRadiusHandler(object):
     """
     def __init__(self, **kwargs):
         self.radius_ratio = getOptionalNumberTypeParam(
-                            kwargs, 'radius_ratio', default_value=0,
+                            kwargs, 'radius_ratio', default_value=0.25,
                             low_limit=0, high_limit=0.5)
 
         self.maximum_radius = getOptionalNumberTypeParam(kwargs, 'maximum_radius')
@@ -60,17 +60,17 @@ class RoundRadiusHandler(object):
         if self.kicad4_compatible:
             return 0
 
-        if self.round_radius_exact:
+        if self.round_radius_exact is not None:
             if self.round_radius_exact > shortest_sidelength/2:
                 raise ValueError(
                     "requested round radius of {} is too large for pad size of {}"
                     .format(self.round_radius_exact, pad_size)
                     )
-            if self.maximum_radius:
+            if self.maximum_radius is not None:
                 return min(self.round_radius_exact, self.maximum_radius)/shortest_sidelength
             else:
                 return self.round_radius_exact/shortest_sidelength
-        if self.maximum_radius:
+        if self.maximum_radius is not None:
             if self.radius_ratio*shortest_sidelength > self.maximum_radius:
                 return self.maximum_radius/shortest_sidelength
 
@@ -92,16 +92,16 @@ class RoundRadiusHandler(object):
         if self.kicad4_compatible:
             return False
 
-        if self.round_radius_exact is not None:
-            if self.round_radius_exact > 0:
-                return True
-            else:
-                return False
-
-        if self.radius_ratio > 0:
-            return True
-        else:
+        if self.maximum_radius == 0:
             return False
+
+        if self.round_radius_exact == 0:
+            return False
+
+        if self.radius_ratio == 0:
+            return False
+
+        return True
 
     def limitMaxRadius(self, limit):
         r"""Set a new maximum limit

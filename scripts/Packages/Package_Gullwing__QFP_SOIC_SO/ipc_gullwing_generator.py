@@ -16,6 +16,9 @@ from ipc_pad_size_calculators import *
 from quad_dual_pad_border import add_dual_or_quad_pad_border
 from drawing_tools import nearestSilkPointOnOrthogonalLine
 
+sys.path.append(os.path.join(sys.path[0], "..", "utils"))
+from ep_handling_utils import getEpRoundRadiusParams
+
 ipc_density = 'nominal'
 ipc_doc_file = '../ipc_definitions.yaml'
 
@@ -259,19 +262,9 @@ class Gullwing():
 
         pad_radius = add_dual_or_quad_pad_border(kicad_mod, configuration, pad_details, device_params)
 
-        pad_shape_details = {}
-        pad_shape_details['shape'] = Pad.SHAPE_ROUNDRECT
-        pad_shape_details['radius_ratio'] = configuration.get('round_rect_radius_ratio', 0)
-        if 'round_rect_max_radius' in configuration:
-            pad_shape_details['maximum_radius'] = configuration['round_rect_max_radius']
-
-        pad_shape_details['round_radius_exact'] = device_params.get(
-                    'EP_round_radius_overwrite', pad_radius)
-        pad_shape_details['paste_radius_ratio'] = self.configuration['paste_radius_ratio']
-        pad_shape_details['paste_maximum_radius'] = self.configuration['paste_maximum_radius']
-
         EP_round_radius = 0
         if dimensions['has_EP']:
+            pad_shape_details = getEpRoundRadiusParams(device_params, self.configuration, pad_radius)
             EP_mask_size = EP_mask_size if EP_mask_size['x'] > 0 else None
 
             if with_thermal_vias:
