@@ -181,6 +181,7 @@ class ChamferedPadGrid(Node):
 
         * *radius_ratio* (``float``) --
           The radius ratio of the rounded rectangle.
+          (default 0 for backwards compatibility)
         * *maximum_radius* (``float``) --
           The maximum radius for the rounded rectangle.
           If the radius produced by the radius_ratio parameter for the pad would
@@ -236,11 +237,18 @@ class ChamferedPadGrid(Node):
             self.chamfer_size = toVectorUseCopyIfNumber(
                 kwargs.get('chamfer_size'), low_limit=0, must_be_larger=False)
 
+        if('round_radius_handler' in kwargs):
+            self.round_radius_handler = kwargs['round_radius_handler']
+        else:
+            # default radius ration 0 for backwards compatibility
+            self.round_radius_handler = RoundRadiusHandler(default_radius_ratio=0, **kwargs)
+
         self.padargs = copy(kwargs)
         self.padargs.pop('size', None)
         self.padargs.pop('number', None)
         self.padargs.pop('at', None)
         self.padargs.pop('chamfer_size', None)
+        self.padargs.pop('round_radius_handler', None)
 
     def chamferAvoidCircle(self, center, diameter, clearance=0):
         r""" set the chamfer such that the pad avoids a cricle located at near corner.
@@ -338,6 +346,7 @@ class ChamferedPadGrid(Node):
                     at=[x, y], number=self.number, size=self.size,
                     chamfer_size=self.chamfer_size,
                     corner_selection=corner,
+                    round_radius_handler=self.round_radius_handler,
                     **self.padargs
                     ))
         return pads

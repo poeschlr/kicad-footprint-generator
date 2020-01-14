@@ -31,8 +31,8 @@ class RoundRadiusHandler(object):
         See below
 
     :Keyword Arguments:
-    * *radius_ratio* (``float``) --
-      The radius ratio of the rounded rectangle.
+    * *radius_ratio* (``float [0 <= r <= 0.5]``) --
+      The radius ratio of the rounded rectangle. (default set by default_radius_ratio)
     * *maximum_radius* (``float``) --
       The maximum radius for the rounded rectangle.
       If the radius produced by the radius_ratio parameter for the pad would
@@ -40,10 +40,16 @@ class RoundRadiusHandler(object):
       (This is useful for IPC-7351C compliance as it suggests 25% ratio with limit 0.25mm)
     * *round_radius_exact* (``float``) --
       Set an exact round radius for a pad.
+    * *default_radius_ratio* (``float [0 <= r <= 0.5]``) --
+      This parameter allows to set the default radius ratio
+      (backwards compatibility option for chamfered pads)
     """
     def __init__(self, **kwargs):
+        default_radius_ratio = getOptionalNumberTypeParam(
+                            kwargs, 'default_radius_ratio', default_value=0.25,
+                            low_limit=0, high_limit=0.5)
         self.radius_ratio = getOptionalNumberTypeParam(
-                            kwargs, 'radius_ratio', default_value=0.25,
+                            kwargs, 'radius_ratio', default_value=default_radius_ratio,
                             low_limit=0, high_limit=0.5)
 
         self.maximum_radius = getOptionalNumberTypeParam(kwargs, 'maximum_radius')

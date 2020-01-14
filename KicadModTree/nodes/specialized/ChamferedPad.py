@@ -213,6 +213,7 @@ class ChamferedPad(Node):
 
         * *radius_ratio* (``float``) --
           The radius ratio of the rounded rectangle.
+          (default 0 for backwards compatibility)
         * *maximum_radius* (``float``) --
           The maximum radius for the rounded rectangle.
           If the radius produced by the radius_ratio parameter for the pad would
@@ -231,11 +232,6 @@ class ChamferedPad(Node):
         self._initSize(**kwargs)
         self._initMirror(**kwargs)
         self._initPadSettings(**kwargs)
-
-        if('round_radius_handler' in kwargs):
-            self.round_radius_handler = kwargs['round_radius_handler']
-        else:
-            self.round_radius_handler = RoundRadiusHandler(**kwargs)
 
         self.pad = self._generatePad()
 
@@ -268,10 +264,17 @@ class ChamferedPad(Node):
             self.chamfer_size = toVectorUseCopyIfNumber(
                 kwargs.get('chamfer_size'), low_limit=0, must_be_larger=False)
 
+        if('round_radius_handler' in kwargs):
+            self.round_radius_handler = kwargs['round_radius_handler']
+        else:
+            # default radius ration 0 for backwards compatibility
+            self.round_radius_handler = RoundRadiusHandler(default_radius_ratio=0, **kwargs)
+
         self.padargs = copy(kwargs)
         self.padargs.pop('size', None)
         self.padargs.pop('shape', None)
         self.padargs.pop('at', None)
+        self.padargs.pop('round_radius_handler', None)
 
     def _generatePad(self):
         if self.chamfer_size[0] >= self.size[0] or self.chamfer_size[1] >= self.size[1]:
@@ -293,7 +296,10 @@ class ChamferedPad(Node):
             polygon_width = 0
             if self.round_radius_handler.roundingRequested():
                 if self.chamfer_size[0] != self.chamfer_size[1]:
-                    raise NotImplementedError('rounded chamfered pads are only supported for 45 degree chamfers')
+                    raise NotImplementedError(
+                            'Rounded chamfered pads are only supported for 45 degree chamfers.'
+                            ' Chamfer {}'.format(self.chamfer_size)
+                            )
                 # We prefer the use of rounded rectangle over chamfered pads.
                 r_chamfer = self.chamfer_size[0] + sqrt(2)*self.chamfer_size[0]/2
                 if radius >= r_chamfer:
@@ -333,7 +339,7 @@ class ChamferedPad(Node):
         else:
             return Pad(
                     at=self.at, shape=Pad.SHAPE_ROUNDRECT, size=self.size,
-                    **self.padargs
+                    round_radius_handler=self.round_radius_handler, **self.padargs
                 )
 
     def chamferAvoidCircle(self, center, diameter, clearance=0):

@@ -137,7 +137,7 @@ class ExposedPad(Node):
         self.size_round_base = kwargs.get('size_round_base', 0.01)
         self.grid_round_base = kwargs.get('grid_round_base', 0.01)
 
-        self.round_radius_handler = RoundRadiusHandler(**kwargs)
+        self.round_radius_handler = RoundRadiusHandler(default_radius_ratio=0, **kwargs)
 
         self.kicad4_compatible = kwargs.get('kicad4_compatible', False)
         self.paste_round_radius_handler = RoundRadiusHandler(
