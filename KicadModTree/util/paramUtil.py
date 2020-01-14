@@ -165,7 +165,9 @@ def toVectorUseCopyIfNumber(value, length=2, low_limit=None, must_be_larger=True
 
     return result
 
-def getOptionalNumberTypeParam(kwargs, param_name, default_value=None,
+
+def getOptionalNumberTypeParam(
+        kwargs, param_name, default_value=None,
         low_limit=None, high_limit=None, allow_equal_limit=True):
     r""" Get a named parameter from packed dict and guarantee it is a number (float or int)
 
