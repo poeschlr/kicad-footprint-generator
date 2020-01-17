@@ -49,13 +49,15 @@ def description_gen(wire_def, fp_type):
         size_code = '{:.2f} square mm'.format(wire_def['area'])
 
     return (
-        'Soldered wire connection{}, for typical {} wire, '
+        'Soldered wire connection{}, for {} wire, '
+        '{} insulation, '
         'conductor diameter {:.2f}mm, outer diameter {:.2f}mm, '
         'sice source {}, '
         'bend radius 3 times outer diameter, '
         'generated with kicad-footprint-generator'
         .format(
                 fp_type, size_code,
+                wire_def['insulation'],
                 wire_def['diameter'], wire_def['outer_diameter'],
                 wire_def['source']
             )
@@ -77,6 +79,8 @@ def make_fp(wire_def, fp_type, configuration):
     kicad_mod.setDescription(description_gen(wire_def, fp_type['description']))
 
     kicad_mod.setTags(tag_gen(wire_def, fp_type['tag']))
+
+    kicad_mod.setAttribute('virtual')
 
     pad_drill = wire_def['diameter'] + 0.2
     pad_size = pad_drill + 1
@@ -185,7 +189,7 @@ def make_fp(wire_def, fp_type, configuration):
     ########################## Courtyard ################################
 
     crtyd_y = max(pad_size, npth_drill)/2 + crtyd_off
-    crtyd_left = -pad_size/2 - crtyd_off
+    crtyd_left = -max(pad_size, wire_def['outer_diameter'])/2 - crtyd_off
     if fp_type['relieve_count'] == 0:
         crtyd_right = -crtyd_left
     else:
@@ -231,10 +235,10 @@ def make_fp(wire_def, fp_type, configuration):
         body_edges={
             'top':-wire_def['outer_diameter']/2,
             'bottom':wire_def['outer_diameter']/2,
-            'left':-wire_def['diameter']/2,
-            'right':wire_def['diameter']/2+fp_type['relieve_count']*npth_offset
+            'left':-wire_def['outer_diameter']/2,
+            'right':wire_def['outer_diameter']/2+fp_type['relieve_count']*npth_offset
             },
-        courtyard={'top':-(pad_size/2+0.5), 'bottom':(pad_size/2+0.5)},
+        courtyard={'top':-crtyd_y, 'bottom':crtyd_y},
         fp_name=fp_name, text_y_inside_position='center'
         )
 
