@@ -39,26 +39,31 @@ def bend_radius(wire_def):
 
 def fp_name_gen(wire_def, fp_type):
     if 'area' in wire_def:
-        size_code = '{:.2f}sqmm'.format(wire_def['diameter'])
+        size_code = '{:.2f}sqmm'.format(wire_def['area'])
 
     return 'SolderWire-{}_D{:.2f}mm_OD{:.2f}mm{}'\
         .format(size_code, wire_def['diameter'], wire_def['outer_diameter'], fp_type)
 
 def description_gen(wire_def, fp_type):
     if 'area' in wire_def:
-        size_code = '{:.2f} square mm'.format(wire_def['diameter'])
+        size_code = '{:.2f} square mm'.format(wire_def['area'])
 
     return (
         'Soldered wire connection{}, for typical {} wire, '
         'conductor diameter {:.2f}mm, outer diameter {:.2f}mm, '
-        'bendradius 3 times outer diameter, '
+        'sice source {}, '
+        'bend radius 3 times outer diameter, '
         'generated with kicad-footprint-generator'
-        .format(fp_type, size_code, wire_def['diameter'], wire_def['outer_diameter'])
+        .format(
+                fp_type, size_code,
+                wire_def['diameter'], wire_def['outer_diameter'],
+                wire_def['source']
+            )
     )
 
 def tag_gen(wire_def, fp_type):
     if 'area' in wire_def:
-        size_code = '{:.2f}sqmm'.format(wire_def['diameter'])
+        size_code = '{:.2f}sqmm'.format(wire_def['area'])
 
     return 'connector wire {}{}'.format(size_code, fp_type)
 
