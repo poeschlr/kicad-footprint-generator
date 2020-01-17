@@ -4,6 +4,8 @@ import argparse
 import yaml
 import math
 
+from copy import deepcopy
+
 # load parent path of KicadModTree
 sys.path.append(os.path.join(sys.path[0], "..", "..", ".."))
 from KicadModTree import *  # NOQA
@@ -37,66 +39,76 @@ FOOTPRINT_TYPES = {
 def bend_radius(wire_def):
     return wire_def['outer_diameter'] * 3
 
-def fp_name_gen(wire_def, fp_type):
+def fp_name_gen(wire_def, fp_type, pincount, pitch):
     if 'area' in wire_def:
         size_code = '{:.2f}sqmm'.format(wire_def['area'])
 
-    return 'SolderWire-{}_D{:.2f}mm_OD{:.2f}mm{}'\
-        .format(size_code, wire_def['diameter'], wire_def['outer_diameter'], fp_type)
+    return 'SolderWire-{}_1x{:02d}{}_D{:.2f}mm_OD{:.2f}mm{}'.format(
+                    size_code, pincount,
+                    '' if pincount == 0 else '_P{:.2f}mm'.format(pitch),
+                    wire_def['diameter'], wire_def['outer_diameter'], fp_type
+                )
 
-def description_gen(wire_def, fp_type):
+def description_gen(wire_def, fp_type, pincount, pitch):
     if 'area' in wire_def:
         size_code = '{:.2f} square mm'.format(wire_def['area'])
 
+    d1 = 'for a single {size:s} wire' if pincount == 1 else 'for {count:d} times {size:s} wires'
+
     return (
-        'Soldered wire connection{}, for {} wire, '
+        'Soldered wire connection{}, {}, '
         '{} insulation, '
         'conductor diameter {:.2f}mm, outer diameter {:.2f}mm, '
-        'sice source {}, '
+        'size source {}, '
         'bend radius 3 times outer diameter, '
         'generated with kicad-footprint-generator'
         .format(
-                fp_type, size_code,
+                fp_type, d1.format(count=pincount, size=size_code),
                 wire_def['insulation'],
                 wire_def['diameter'], wire_def['outer_diameter'],
                 wire_def['source']
             )
     )
 
-def tag_gen(wire_def, fp_type):
+def tag_gen(wire_def, fp_type, pincount, pitch):
     if 'area' in wire_def:
         size_code = '{:.2f}sqmm'.format(wire_def['area'])
 
     return 'connector wire {}{}'.format(size_code, fp_type)
 
-def make_fp(wire_def, fp_type, configuration):
+def make_fp(wire_def, fp_type, pincount, configuration):
     crtyd_off= configuration['courtyard_offset']['connector']
     silk_pad_off = configuration['silk_pad_clearance'] + configuration['silk_line_width']/2
 
-    fp_name = fp_name_gen(wire_def, fp_type['name'])
-
-    kicad_mod = Footprint(fp_name)
-    kicad_mod.setDescription(description_gen(wire_def, fp_type['description']))
-
-    kicad_mod.setTags(tag_gen(wire_def, fp_type['tag']))
-
-    kicad_mod.setAttribute('virtual')
-
     pad_drill = wire_def['diameter'] + 0.2
-    pad_size = pad_drill + 1
+    pad_size = max(pad_drill + 1, wire_def['outer_diameter'])
 
     npth_drill = wire_def['outer_diameter'] + 0.5
     npth_offset = bend_radius(wire_def)*2
 
-    kicad_mod.append(Pad(
-            number=1, type=Pad.TYPE_THT, shape=Pad.SHAPE_ROUNDRECT,
-            at=(0, 0), drill=pad_drill, size=pad_size,
+    pitch = max(2*wire_def['outer_diameter'], pad_size+2, npth_drill+2)
+
+    fp_name = fp_name_gen(wire_def, fp_type['name'], pincount, pitch)
+
+    kicad_mod = Footprint(fp_name)
+    kicad_mod.setDescription(description_gen(wire_def, fp_type['description'], pincount, pitch))
+
+    kicad_mod.setTags(tag_gen(wire_def, fp_type['tag'], pincount, pitch))
+
+    kicad_mod.setAttribute('virtual')
+
+    prototype = Translation(0, 0)
+    kicad_mod.append(PadArray(
+            initial=1, increment=1, pincount=pincount,
+            type=Pad.TYPE_THT, shape=Pad.SHAPE_CIRCLE,
+            start=(0, 0), spacing=(pitch, 0),
+            drill=pad_drill, size=pad_size,
             radius_ratio=0.25, maximum_radius=0.25,
             layers=Pad.LAYERS_THT
         ))
 
     for i in range(fp_type['relieve_count']):
-        kicad_mod.append(Pad(
+        prototype.append(Pad(
                 number='', type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE,
                 at=(0, (i+1)*npth_offset), drill=npth_drill, size=npth_drill,
                 layers=Pad.LAYERS_NPTH
@@ -104,7 +116,7 @@ def make_fp(wire_def, fp_type, configuration):
 
     ######################### Fab Graphic ###############################
     for i in range(fp_type['relieve_count']+1):
-        kicad_mod.append(Circle(
+        prototype.append(Circle(
                 center=(0, i*npth_offset), radius=wire_def['outer_diameter']/2,
                 layer='F.Fab', width=configuration['fab_line_width']
             ))
@@ -114,12 +126,12 @@ def make_fp(wire_def, fp_type, configuration):
         for i in range((fp_type['relieve_count']+1)//2):
             sy = 2*i * npth_offset
             ey = (2*i+1) * npth_offset
-            kicad_mod.append(Line(
+            prototype.append(Line(
                     start=(-wire_def['outer_diameter']/2, sy),
                     end=(-wire_def['outer_diameter']/2, ey),
                     layer='F.Fab', width=configuration['fab_line_width']
                 ))
-            kicad_mod.append(Line(
+            prototype.append(Line(
                     start=(wire_def['outer_diameter']/2, sy),
                     end=(wire_def['outer_diameter']/2, ey),
                     layer='F.Fab', width=configuration['fab_line_width']
@@ -127,19 +139,19 @@ def make_fp(wire_def, fp_type, configuration):
 
     if fp_type['relieve_count']>1:
         for i in range(fp_type['relieve_count']):
-            kicad_mod.append(Circle(
+            prototype.append(Circle(
                     center=(0, (i+1)*npth_offset), radius=wire_def['outer_diameter']/2,
                     layer='B.Fab', width=configuration['fab_line_width']
                 ))
         for i in range((fp_type['relieve_count'])//2):
             sy = (2*i+1) * npth_offset
             ey = (2*i+2) * npth_offset
-            kicad_mod.append(Line(
+            prototype.append(Line(
                     start=(-wire_def['outer_diameter']/2, sy),
                     end=(-wire_def['outer_diameter']/2, ey),
                     layer='B.Fab', width=configuration['fab_line_width']
                 ))
-            kicad_mod.append(Line(
+            prototype.append(Line(
                     start=(wire_def['outer_diameter']/2, sy),
                     end=(wire_def['outer_diameter']/2, ey),
                     layer='B.Fab', width=configuration['fab_line_width']
@@ -161,11 +173,11 @@ def make_fp(wire_def, fp_type, configuration):
             top = pad_size/2 + silk_pad_off
 
         bottom = npth_offset - silk_y_rel_npth
-        kicad_mod.append(Line(
+        prototype.append(Line(
                 start=(silk_x, top), end=(silk_x, bottom),
                 layer='F.SilkS', width=configuration['silk_line_width']
             ))
-        kicad_mod.append(Line(
+        prototype.append(Line(
                 start=(-silk_x, top), end=(-silk_x, bottom),
                 layer='F.SilkS', width=configuration['silk_line_width']
             ))
@@ -177,11 +189,11 @@ def make_fp(wire_def, fp_type, configuration):
             top = (i+1)*npth_offset + silk_y_rel_npth
             bottom = (i+2)*npth_offset - silk_y_rel_npth
 
-            kicad_mod.append(Line(
+            prototype.append(Line(
                     start=(silk_x, top), end=(silk_x, bottom),
                     layer=layer, width=configuration['silk_line_width']
                 ))
-            kicad_mod.append(Line(
+            prototype.append(Line(
                     start=(-silk_x, top), end=(-silk_x, bottom),
                     layer=layer, width=configuration['silk_line_width']
                 ))
@@ -199,7 +211,7 @@ def make_fp(wire_def, fp_type, configuration):
         crtyd_bottom_main = npth_offset*fp_type['relieve_count'] + npth_drill/2 + crtyd_off
 
     layer = 'F.CrtYd'
-    kicad_mod.append(RectLine(
+    prototype.append(RectLine(
             start=Vector2D(-crtyd_x, crtyd_top).round_to(configuration['courtyard_grid']),
             end=Vector2D(crtyd_x, crtyd_bottom).round_to(configuration['courtyard_grid']),
             layer=layer, width=configuration['courtyard_line_width']
@@ -212,7 +224,7 @@ def make_fp(wire_def, fp_type, configuration):
         crtyd_top = (i)*npth_offset - (npth_drill/2 + crtyd_off)
         crtyd_bottom = (i)*npth_offset + npth_drill/2 + crtyd_off
 
-        kicad_mod.append(RectLine(
+        prototype.append(RectLine(
                 start=Vector2D(-crtyd_x, crtyd_top).round_to(configuration['courtyard_grid']),
                 end=Vector2D(crtyd_x, crtyd_bottom).round_to(configuration['courtyard_grid']),
                 layer=layer, width=configuration['courtyard_line_width']
@@ -225,7 +237,7 @@ def make_fp(wire_def, fp_type, configuration):
             crtyd_top = (i+1)*npth_offset - (npth_drill/2 + crtyd_off)
             crtyd_bottom = (i+2)*npth_offset + npth_drill/2 + crtyd_off
 
-            kicad_mod.append(RectLine(
+            prototype.append(RectLine(
                     start=Vector2D(-crtyd_x, crtyd_top).round_to(configuration['courtyard_grid']),
                     end=Vector2D(crtyd_x, crtyd_bottom).round_to(configuration['courtyard_grid']),
                     layer=layer, width=configuration['courtyard_line_width']
@@ -233,13 +245,22 @@ def make_fp(wire_def, fp_type, configuration):
 
 
     ######################### Text Fields ###############################
+    center_x = (pincount-1)*pitch/2
+
+    y1 = -wire_def['outer_diameter']/2
+    y2 = wire_def['outer_diameter']/2 + (npth_offset if fp_type['relieve_count'] > 0 else 0)
+
+    if pincount%2 == 0 and fp_type['relieve_count'] == 0:
+        y1 = crtyd_top_main
+        y2 = crtyd_bottom_main
+
     addTextFields(
         kicad_mod=kicad_mod, configuration=configuration,
         body_edges={
-            'left':-wire_def['outer_diameter']/2,
-            'right':wire_def['outer_diameter']/2,
-            'top':-wire_def['outer_diameter']/2,
-            'bottom':wire_def['outer_diameter']/2+fp_type['relieve_count']*npth_offset
+            'left':center_x - wire_def['outer_diameter']/2,
+            'right':center_x + wire_def['outer_diameter']/2,
+            'top':y1,
+            'bottom':y2
             },
         courtyard={'top':crtyd_top_main, 'bottom':crtyd_bottom_main},
         fp_name=fp_name, text_y_inside_position='center',
@@ -247,6 +268,9 @@ def make_fp(wire_def, fp_type, configuration):
         )
 
     ##################### Output and 3d model ############################
+    for i in range(pincount):
+        prototype.offset_x = i*pitch
+        kicad_mod.append(deepcopy(prototype))
 
     model3d_path_prefix = configuration.get('3d_model_prefix','${KISYS3DMOD}/')
 
@@ -268,7 +292,8 @@ def make_fp(wire_def, fp_type, configuration):
 
 def make_for_wire(wire_def, configuration):
     for fp_type in FOOTPRINT_TYPES:
-        make_fp(wire_def, FOOTPRINT_TYPES[fp_type], configuration)
+        for i in range(6):
+            make_fp(wire_def, FOOTPRINT_TYPES[fp_type], i+1, configuration)
 
 def make_for_file(filepath, configuration):
     with open(filepath, 'r') as wire_definition:
