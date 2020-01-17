@@ -98,75 +98,75 @@ def make_fp(wire_def, fp_type, configuration):
     for i in range(fp_type['relieve_count']):
         kicad_mod.append(Pad(
                 number='', type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE,
-                at=((i+1)*npth_offset, 0), drill=npth_drill, size=npth_drill,
+                at=(0, (i+1)*npth_offset), drill=npth_drill, size=npth_drill,
                 layers=Pad.LAYERS_NPTH
             ))
 
     ######################### Fab Graphic ###############################
     for i in range(fp_type['relieve_count']+1):
         kicad_mod.append(Circle(
-                center=(i*npth_offset, 0), radius=wire_def['outer_diameter']/2,
+                center=(0, i*npth_offset), radius=wire_def['outer_diameter']/2,
                 layer='F.Fab', width=configuration['fab_line_width']
             ))
 
     # wire on top side
     if fp_type['relieve_count']>0:
         for i in range((fp_type['relieve_count']+1)//2):
-            sx = 2*i * npth_offset
-            ex = (2*i+1) * npth_offset
+            sy = 2*i * npth_offset
+            ey = (2*i+1) * npth_offset
             kicad_mod.append(Line(
-                    start=(sx, -wire_def['outer_diameter']/2),
-                    end=(ex, -wire_def['outer_diameter']/2),
+                    start=(-wire_def['outer_diameter']/2, sy),
+                    end=(-wire_def['outer_diameter']/2, ey),
                     layer='F.Fab', width=configuration['fab_line_width']
                 ))
             kicad_mod.append(Line(
-                    start=(sx, wire_def['outer_diameter']/2),
-                    end=(ex, wire_def['outer_diameter']/2),
+                    start=(wire_def['outer_diameter']/2, sy),
+                    end=(wire_def['outer_diameter']/2, ey),
                     layer='F.Fab', width=configuration['fab_line_width']
                 ))
 
     if fp_type['relieve_count']>1:
         for i in range(fp_type['relieve_count']):
             kicad_mod.append(Circle(
-                    center=((i+1)*npth_offset, 0), radius=wire_def['outer_diameter']/2,
+                    center=(0, (i+1)*npth_offset), radius=wire_def['outer_diameter']/2,
                     layer='B.Fab', width=configuration['fab_line_width']
                 ))
         for i in range((fp_type['relieve_count'])//2):
-            sx = (2*i+1) * npth_offset
-            ex = (2*i+2) * npth_offset
+            sy = (2*i+1) * npth_offset
+            ey = (2*i+2) * npth_offset
             kicad_mod.append(Line(
-                    start=(sx, -wire_def['outer_diameter']/2),
-                    end=(ex, -wire_def['outer_diameter']/2),
+                    start=(-wire_def['outer_diameter']/2, sy),
+                    end=(-wire_def['outer_diameter']/2, ey),
                     layer='B.Fab', width=configuration['fab_line_width']
                 ))
             kicad_mod.append(Line(
-                    start=(sx, wire_def['outer_diameter']/2),
-                    end=(ex, wire_def['outer_diameter']/2),
+                    start=(wire_def['outer_diameter']/2, sy),
+                    end=(wire_def['outer_diameter']/2, ey),
                     layer='B.Fab', width=configuration['fab_line_width']
                 ))
 
     ######################### Silk Graphic ##############################
 
-    silk_y = wire_def['outer_diameter']/2 + configuration['silk_fab_offset']
+    silk_x = wire_def['outer_diameter']/2 + configuration['silk_fab_offset']
 
-    silk_helper_line = geometricLine(start=(0, silk_y), end=(npth_offset, silk_y))\
+    silk_helper_line = geometricLine(start=(silk_x, 0), end=(silk_x, npth_offset))\
         .cut(geometricCircle(center=(0,0), radius=(npth_drill/2 + silk_pad_off)))[1]
 
-    silk_x_rel_npth = silk_helper_line.start_pos['x']
+    silk_y_rel_npth = silk_helper_line.start_pos['x']
 
     if fp_type['relieve_count']>0:
-        if silk_y > pad_size/2 + silk_pad_off:
-            left = 0
+        if silk_x > pad_size/2 + silk_pad_off:
+            top = 0
         else:
-            left = pad_size/2 + silk_pad_off
+            top = pad_size/2 + silk_pad_off
 
-        right = npth_offset - silk_x_rel_npth
+        bottom = npth_offset - silk_y_rel_npth
         kicad_mod.append(Line(
-                start=(left, silk_y), end=(right, silk_y),
+                start=(silk_x, top), end=(silk_x, bottom),
                 layer='F.SilkS', width=configuration['silk_line_width']
             ))
         kicad_mod.append(Line(
-                start=(left, -silk_y), end=(right, -silk_y),
+                start=(-silk_x, top), end=(-silk_x, bottom),
                 layer='F.SilkS', width=configuration['silk_line_width']
             ))
 
@@ -174,31 +174,34 @@ def make_fp(wire_def, fp_type, configuration):
         for i in range(fp_type['relieve_count']-1):
             layer = 'F.SilkS' if i%2 == 1 else 'B.SilkS'
 
-            left = (i+1)*npth_offset + silk_x_rel_npth
-            right = (i+2)*npth_offset - silk_x_rel_npth
+            top = (i+1)*npth_offset + silk_y_rel_npth
+            bottom = (i+2)*npth_offset - silk_y_rel_npth
 
             kicad_mod.append(Line(
-                    start=(left, silk_y), end=(right, silk_y),
+                    start=(silk_x, top), end=(silk_x, bottom),
                     layer=layer, width=configuration['silk_line_width']
                 ))
             kicad_mod.append(Line(
-                    start=(left, -silk_y), end=(right, -silk_y),
+                    start=(-silk_x, top), end=(-silk_x, bottom),
                     layer=layer, width=configuration['silk_line_width']
                 ))
 
     ########################## Courtyard ################################
 
-    crtyd_y = max(pad_size, npth_drill)/2 + crtyd_off
-    crtyd_left = -max(pad_size, wire_def['outer_diameter'])/2 - crtyd_off
+    crtyd_x = max(pad_size, npth_drill)/2 + crtyd_off
+    crtyd_top = -max(pad_size, wire_def['outer_diameter'])/2 - crtyd_off
+    crtyd_top_main = crtyd_top
     if fp_type['relieve_count'] == 0:
-        crtyd_right = -crtyd_left
+        crtyd_bottom = -crtyd_top
+        crtyd_bottom_main = crtyd_bottom
     else:
-        crtyd_right = npth_offset + npth_drill/2 + crtyd_off
+        crtyd_bottom = npth_offset + npth_drill/2 + crtyd_off
+        crtyd_bottom_main = npth_offset*fp_type['relieve_count'] + npth_drill/2 + crtyd_off
 
     layer = 'F.CrtYd'
     kicad_mod.append(RectLine(
-            start=Vector2D(crtyd_left, -crtyd_y).round_to(configuration['courtyard_grid']),
-            end=Vector2D(crtyd_right, crtyd_y).round_to(configuration['courtyard_grid']),
+            start=Vector2D(-crtyd_x, crtyd_top).round_to(configuration['courtyard_grid']),
+            end=Vector2D(crtyd_x, crtyd_bottom).round_to(configuration['courtyard_grid']),
             layer=layer, width=configuration['courtyard_line_width']
         ))
 
@@ -206,12 +209,12 @@ def make_fp(wire_def, fp_type, configuration):
         i = fp_type['relieve_count']
         layer = 'B.CrtYd' if i%2 == 1 else 'F.CrtYd'
 
-        crtyd_left = (i)*npth_offset - (npth_drill/2 + crtyd_off)
-        crtyd_right = (i)*npth_offset + npth_drill/2 + crtyd_off
+        crtyd_top = (i)*npth_offset - (npth_drill/2 + crtyd_off)
+        crtyd_bottom = (i)*npth_offset + npth_drill/2 + crtyd_off
 
         kicad_mod.append(RectLine(
-                start=Vector2D(crtyd_left, -crtyd_y).round_to(configuration['courtyard_grid']),
-                end=Vector2D(crtyd_right, crtyd_y).round_to(configuration['courtyard_grid']),
+                start=Vector2D(-crtyd_x, crtyd_top).round_to(configuration['courtyard_grid']),
+                end=Vector2D(crtyd_x, crtyd_bottom).round_to(configuration['courtyard_grid']),
                 layer=layer, width=configuration['courtyard_line_width']
             ))
 
@@ -219,12 +222,12 @@ def make_fp(wire_def, fp_type, configuration):
         for i in range(fp_type['relieve_count']-1):
             layer = 'F.CrtYd' if i%2 == 1 else 'B.CrtYd'
 
-            crtyd_left = (i+1)*npth_offset - (npth_drill/2 + crtyd_off)
-            crtyd_right = (i+2)*npth_offset + npth_drill/2 + crtyd_off
+            crtyd_top = (i+1)*npth_offset - (npth_drill/2 + crtyd_off)
+            crtyd_bottom = (i+2)*npth_offset + npth_drill/2 + crtyd_off
 
             kicad_mod.append(RectLine(
-                    start=Vector2D(crtyd_left, -crtyd_y).round_to(configuration['courtyard_grid']),
-                    end=Vector2D(crtyd_right, crtyd_y).round_to(configuration['courtyard_grid']),
+                    start=Vector2D(-crtyd_x, crtyd_top).round_to(configuration['courtyard_grid']),
+                    end=Vector2D(crtyd_x, crtyd_bottom).round_to(configuration['courtyard_grid']),
                     layer=layer, width=configuration['courtyard_line_width']
                 ))
 
@@ -233,13 +236,14 @@ def make_fp(wire_def, fp_type, configuration):
     addTextFields(
         kicad_mod=kicad_mod, configuration=configuration,
         body_edges={
-            'top':-wire_def['outer_diameter']/2,
-            'bottom':wire_def['outer_diameter']/2,
             'left':-wire_def['outer_diameter']/2,
-            'right':wire_def['outer_diameter']/2+fp_type['relieve_count']*npth_offset
+            'right':wire_def['outer_diameter']/2,
+            'top':-wire_def['outer_diameter']/2,
+            'bottom':wire_def['outer_diameter']/2+fp_type['relieve_count']*npth_offset
             },
-        courtyard={'top':-crtyd_y, 'bottom':crtyd_y},
-        fp_name=fp_name, text_y_inside_position='center'
+        courtyard={'top':crtyd_top_main, 'bottom':crtyd_bottom_main},
+        fp_name=fp_name, text_y_inside_position='center',
+        allow_rotation=True
         )
 
     ##################### Output and 3d model ############################
