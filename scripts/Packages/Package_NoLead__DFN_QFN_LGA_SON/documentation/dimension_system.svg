@@ -840,8 +840,8 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="3.5757576"
-     inkscape:cx="486.91777"
-     inkscape:cy="80.982508"
+     inkscape:cx="498.94319"
+     inkscape:cy="36.796068"
      inkscape:window-x="40"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
@@ -880,6 +880,7 @@
      x="82.762314"
      y="-140.36955"
      style="stroke-width:0.31842667px">1</tspan></text>
+
 
 
 
@@ -983,6 +984,7 @@
 
 
 
+
 <text
    xml:space="preserve"
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.13617229px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.40680864px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -995,6 +997,7 @@
      x="144.84718"
      y="-201.01978"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.40680864px">EP_size_x</tspan></text>
+
 
 
 
@@ -1015,6 +1018,7 @@
 
 
 
+
 <text
    transform="scale(1,-1)"
    id="text6103"
@@ -1027,6 +1031,7 @@
      x="211.92433"
      id="tspan6101"
      sodipodi:role="line">pitch</tspan></text>
+
 
 
 
@@ -1079,6 +1084,7 @@
 
 
 
+
 <text
    transform="matrix(0,1,1,0,0,0)"
    id="text6486"
@@ -1091,6 +1097,7 @@
      x="112.15712"
      id="tspan6484"
      sodipodi:role="line">EP_size_y</tspan></text>
+
 
 
 
@@ -1268,6 +1275,7 @@
      id="tspan7207"
      sodipodi:role="line">lead_length</tspan></text>
 
+
 <text
    xml:space="preserve"
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.75px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1280,6 +1288,7 @@
      y="-33.281788"
      style="text-align:center;text-anchor:middle;stroke-width:0.75px"
      id="tspan7859">Simple QFN package</tspan></text>
+
 
 
 
@@ -1356,6 +1365,7 @@
      x="282.96017"
      id="tspan6098"
      sodipodi:role="line">overall_height</tspan></text>
+
 <path
    inkscape:connector-curvature="0"
    id="path8138"
@@ -1372,12 +1382,13 @@
      style="text-align:center;text-anchor:middle;stroke-width:0.75px"
      y="-37.716698"
      x="414.33676"
-     sodipodi:role="line">Lead length different</tspan><tspan
+     sodipodi:role="line">Different lead length</tspan><tspan
      style="text-align:center;text-anchor:middle;stroke-width:0.75px"
      y="-25.216698"
      x="414.33676"
      sodipodi:role="line"
      id="tspan9404">for horizontal and vertical leads</tspan></text>
+
 <path
    inkscape:connector-curvature="0"
    id="path9258"
@@ -1399,6 +1410,7 @@
      x="374.694"
      id="tspan9264"
      sodipodi:role="line">1</tspan></text>
+
 <path
    sodipodi:nodetypes="cc"
    inkscape:connector-curvature="0"
@@ -1431,6 +1443,7 @@
      x="452.70844"
      id="tspan9304"
      sodipodi:role="line">lead_width</tspan></text>
+
 <path
    style="color:#000000;overflow:visible;fill:none;fill-opacity:0.72030652;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:5.090909;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
    d="m 392.89159,126.26291 v -6.00409"
@@ -1463,6 +1476,7 @@
      x="398.71594"
      y="-129.67328"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.40680864px">pitch</tspan></text>
+
 <g
    transform="matrix(-1,0,0,1,581.74956,-40.903468)"
    id="g9358"><path
@@ -1529,6 +1543,7 @@
      x="449.9122"
      y="-60.503441"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:start;text-anchor:start;stroke-width:0.40680864px">lead_length_V</tspan></text>
+
 <g
    id="g10758"
    transform="translate(240.96347,-40.903468)"><path
@@ -1590,4 +1605,5 @@
      x="415.36465"
      y="-129.89972"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:start;text-anchor:start;stroke-width:0.40680864px">lead_length_H</tspan></text>
+
 </g></svg>
