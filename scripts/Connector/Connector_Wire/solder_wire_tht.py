@@ -20,19 +20,19 @@ FOOTPRINT_TYPES = {
         'name': '',
         'description': '',
         'tag': '',
-        'relieve_count': 0
+        'relief_count': 0
     },
-    'relieve':{
-        'name': '_Relieve',
-        'description': ' with feed through strain relieve',
-        'tag': ' strain-relieve',
-        'relieve_count': 1
+    'relief':{
+        'name': '_Relief',
+        'description': ' with feed through strain relief',
+        'tag': ' strain-relief',
+        'relief_count': 1
     },
-    'relieve2x':{
-        'name': '_Relieve2x',
-        'description': ' with double feed through strain relieve',
-        'tag': ' double-strain-relieve',
-        'relieve_count': 2
+    'relief2x':{
+        'name': '_Relief2x',
+        'description': ' with double feed through strain relief',
+        'tag': ' double-strain-relief',
+        'relief_count': 2
     }
 }
 
@@ -41,24 +41,24 @@ def bend_radius(wire_def):
 
 def fp_name_gen(wire_def, fp_type, pincount, pitch):
     if 'area' in wire_def:
-        size_code = '{:.2f}sqmm'.format(wire_def['area'])
+        size_code = '{:g}sqmm'.format(wire_def['area'])
 
-    return 'SolderWire-{}_1x{:02d}{}_D{:.2f}mm_OD{:.2f}mm{}'.format(
+    return 'SolderWire-{}_1x{:02d}{}_D{:g}mm_OD{:g}mm{}'.format(
                     size_code, pincount,
-                    '' if pincount == 0 else '_P{:.2f}mm'.format(pitch),
+                    '' if pincount == 0 else '_P{:g}mm'.format(pitch),
                     wire_def['diameter'], wire_def['outer_diameter'], fp_type
                 )
 
 def description_gen(wire_def, fp_type, pincount, pitch):
     if 'area' in wire_def:
-        size_code = '{:.2f} square mm'.format(wire_def['area'])
+        size_code = '{:g} mm²'.format(wire_def['area'])
 
     d1 = 'for a single {size:s} wire' if pincount == 1 else 'for {count:d} times {size:s} wires'
 
     return (
         'Soldered wire connection{}, {}, '
         '{} insulation, '
-        'conductor diameter {:.2f}mm, outer diameter {:.2f}mm, '
+        'conductor diameter {:g}mm, outer diameter {:g}mm, '
         'size source {}, '
         'bend radius 3 times outer diameter, '
         'generated with kicad-footprint-generator'
@@ -72,7 +72,7 @@ def description_gen(wire_def, fp_type, pincount, pitch):
 
 def tag_gen(wire_def, fp_type, pincount, pitch):
     if 'area' in wire_def:
-        size_code = '{:.2f}sqmm'.format(wire_def['area'])
+        size_code = '{:g}sqmm'.format(wire_def['area'])
 
     return 'connector wire {}{}'.format(size_code, fp_type)
 
@@ -107,7 +107,7 @@ def make_fp(wire_def, fp_type, pincount, configuration):
             layers=Pad.LAYERS_THT
         ))
 
-    for i in range(fp_type['relieve_count']):
+    for i in range(fp_type['relief_count']):
         prototype.append(Pad(
                 number='', type=Pad.TYPE_NPTH, shape=Pad.SHAPE_CIRCLE,
                 at=(0, (i+1)*npth_offset), drill=npth_drill, size=npth_drill,
@@ -115,15 +115,15 @@ def make_fp(wire_def, fp_type, pincount, configuration):
             ))
 
     ######################### Fab Graphic ###############################
-    for i in range(fp_type['relieve_count']+1):
+    for i in range(fp_type['relief_count']+1):
         prototype.append(Circle(
                 center=(0, i*npth_offset), radius=wire_def['outer_diameter']/2,
                 layer='F.Fab', width=configuration['fab_line_width']
             ))
 
     # wire on top side
-    if fp_type['relieve_count']>0:
-        for i in range((fp_type['relieve_count']+1)//2):
+    if fp_type['relief_count']>0:
+        for i in range((fp_type['relief_count']+1)//2):
             sy = 2*i * npth_offset
             ey = (2*i+1) * npth_offset
             prototype.append(Line(
@@ -137,13 +137,13 @@ def make_fp(wire_def, fp_type, pincount, configuration):
                     layer='F.Fab', width=configuration['fab_line_width']
                 ))
 
-    if fp_type['relieve_count']>1:
-        for i in range(fp_type['relieve_count']):
+    if fp_type['relief_count']>1:
+        for i in range(fp_type['relief_count']):
             prototype.append(Circle(
                     center=(0, (i+1)*npth_offset), radius=wire_def['outer_diameter']/2,
                     layer='B.Fab', width=configuration['fab_line_width']
                 ))
-        for i in range((fp_type['relieve_count'])//2):
+        for i in range((fp_type['relief_count'])//2):
             sy = (2*i+1) * npth_offset
             ey = (2*i+2) * npth_offset
             prototype.append(Line(
@@ -166,7 +166,7 @@ def make_fp(wire_def, fp_type, pincount, configuration):
 
     silk_y_rel_npth = silk_helper_line.start_pos['x']
 
-    if fp_type['relieve_count']>0:
+    if fp_type['relief_count']>0:
         if silk_x > pad_size/2 + silk_pad_off:
             top = 0
         else:
@@ -182,8 +182,8 @@ def make_fp(wire_def, fp_type, pincount, configuration):
                 layer='F.SilkS', width=configuration['silk_line_width']
             ))
 
-    if fp_type['relieve_count']>1:
-        for i in range(fp_type['relieve_count']-1):
+    if fp_type['relief_count']>1:
+        for i in range(fp_type['relief_count']-1):
             layer = 'F.SilkS' if i%2 == 1 else 'B.SilkS'
 
             top = (i+1)*npth_offset + silk_y_rel_npth
@@ -203,12 +203,12 @@ def make_fp(wire_def, fp_type, pincount, configuration):
     crtyd_x = max(pad_size, npth_drill)/2 + crtyd_off
     crtyd_top = -max(pad_size, wire_def['outer_diameter'])/2 - crtyd_off
     crtyd_top_main = crtyd_top
-    if fp_type['relieve_count'] == 0:
+    if fp_type['relief_count'] == 0:
         crtyd_bottom = -crtyd_top
         crtyd_bottom_main = crtyd_bottom
     else:
         crtyd_bottom = npth_offset + npth_drill/2 + crtyd_off
-        crtyd_bottom_main = npth_offset*fp_type['relieve_count'] + npth_drill/2 + crtyd_off
+        crtyd_bottom_main = npth_offset*fp_type['relief_count'] + npth_drill/2 + crtyd_off
 
     layer = 'F.CrtYd'
     prototype.append(RectLine(
@@ -217,8 +217,8 @@ def make_fp(wire_def, fp_type, pincount, configuration):
             layer=layer, width=configuration['courtyard_line_width']
         ))
 
-    if fp_type['relieve_count']>0:
-        i = fp_type['relieve_count']
+    if fp_type['relief_count']>0:
+        i = fp_type['relief_count']
         layer = 'B.CrtYd' if i%2 == 1 else 'F.CrtYd'
 
         crtyd_top = (i)*npth_offset - (npth_drill/2 + crtyd_off)
@@ -230,8 +230,8 @@ def make_fp(wire_def, fp_type, pincount, configuration):
                 layer=layer, width=configuration['courtyard_line_width']
             ))
 
-    if fp_type['relieve_count']>1:
-        for i in range(fp_type['relieve_count']-1):
+    if fp_type['relief_count']>1:
+        for i in range(fp_type['relief_count']-1):
             layer = 'F.CrtYd' if i%2 == 1 else 'B.CrtYd'
 
             crtyd_top = (i+1)*npth_offset - (npth_drill/2 + crtyd_off)
@@ -248,9 +248,9 @@ def make_fp(wire_def, fp_type, pincount, configuration):
     center_x = (pincount-1)*pitch/2
 
     y1 = -wire_def['outer_diameter']/2
-    y2 = wire_def['outer_diameter']/2 + (npth_offset if fp_type['relieve_count'] > 0 else 0)
+    y2 = wire_def['outer_diameter']/2 + (npth_offset if fp_type['relief_count'] > 0 else 0)
 
-    if pincount%2 == 0 and fp_type['relieve_count'] == 0:
+    if pincount%2 == 0 and fp_type['relief_count'] == 0:
         y1 = crtyd_top_main
         y2 = crtyd_bottom_main
 
