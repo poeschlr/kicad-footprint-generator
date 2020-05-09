@@ -10,10 +10,15 @@ from copy import deepcopy
 sys.path.append(os.path.join(sys.path[0], "..", "..", ".."))
 from KicadModTree import *  # NOQA
 from KicadModTree.util.geometric_util import geometricLine, geometricCircle
+from KicadModTree.util.paramUtil import round_to
 
  # load parent path of tools
 sys.path.append(os.path.join(sys.path[0], "..", "..", "tools"))
 from footprint_text_fields import addTextFields
+
+DEFAULT_MIN_PAD_DRILL_INC = 0.2
+DEFAULT_PAD_DRILL_INC_FACTOR = 1.25
+DEFAULT_RELIEF_DRILL_INC = 0.5
 
 FOOTPRINT_TYPES = {
     'plain':{
@@ -45,7 +50,7 @@ def fp_name_gen(wire_def, fp_type, pincount, pitch):
 
     return 'SolderWire-{}_1x{:02d}{}_D{:g}mm_OD{:g}mm{}'.format(
                     size_code, pincount,
-                    '' if pincount == 0 else '_P{:g}mm'.format(pitch),
+                    '' if pincount == 1 else '_P{:g}mm'.format(pitch),
                     wire_def['diameter'], wire_def['outer_diameter'], fp_type
                 )
 
@@ -80,10 +85,13 @@ def make_fp(wire_def, fp_type, pincount, configuration):
     crtyd_off= configuration['courtyard_offset']['connector']
     silk_pad_off = configuration['silk_pad_clearance'] + configuration['silk_line_width']/2
 
-    pad_drill = wire_def['diameter'] + 0.2
+    pad_drill = max(wire_def['diameter'] + configuration['min_pad_drill_inc'],
+                    wire_def['diameter'] * configuration['pad_drill_factor'])
+    pad_drill = round_to(pad_drill, 0.05)
     pad_size = max(pad_drill + 1, wire_def['outer_diameter'])
 
-    npth_drill = wire_def['outer_diameter'] + 0.5
+    npth_drill = wire_def['outer_diameter'] + configuration['relief_drill_inc']
+    npth_drill = round_to(npth_drill, 0.05)
     npth_offset = bend_radius(wire_def)*2
 
     pitch = max(2*wire_def['outer_diameter'], pad_size+2, npth_drill+2)
@@ -314,8 +322,20 @@ if __name__ == "__main__":
         )
     parser.add_argument(
         '--global_config', type=str, nargs='?',
-        help='the config file defining how the footprint will look like. (KLC)',
+        help='The config file defining how the footprint will look like. (KLC)',
         default='../../tools/global_config_files/config_KLCv3.0.yaml'
+        )
+    parser.add_argument(
+        '--minimum_pad_drill_oversize', type=float, default=DEFAULT_MIN_PAD_DRILL_INC,
+        help='Determines the minimum for how much the pads PTH drill is increased compared to conductor diameter.'
+        )
+    parser.add_argument(
+        '--pad_drill_factor', type=float, default=DEFAULT_PAD_DRILL_INC_FACTOR,
+        help='Determines the multiplicator for pad drill size compared to conductor diameter'
+        )
+    parser.add_argument(
+        '--relief_drill_oversize', type=float, default=DEFAULT_RELIEF_DRILL_INC,
+        help='Determines how much the relief NPTH drill is increased compared to outer diameter.'
         )
 
     args = parser.parse_args()
@@ -325,6 +345,10 @@ if __name__ == "__main__":
             configuration = yaml.safe_load(config_stream)
         except yaml.YAMLError as exc:
             print(exc)
+
+    configuration['pad_drill_factor'] = args.pad_drill_factor
+    configuration['min_pad_drill_inc'] = args.minimum_pad_drill_oversize
+    configuration['relief_drill_inc'] = args.relief_drill_oversize
 
     for filepath in args.wire_def:
         make_for_file(filepath, configuration)
